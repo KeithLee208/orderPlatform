@@ -17,7 +17,7 @@
   </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>电子药历</el-dropdown-item>
-            <el-dropdown-item>医学智库</el-dropdown-item>
+          <el-dropdown-item>医学智库</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown menu-align="end">
@@ -28,7 +28,7 @@
 
           <el-dropdown-item>个人设置</el-dropdown-item>
 
-            <el-dropdown-item>注销</el-dropdown-item>
+          <el-dropdown-item>注销</el-dropdown-item>
 
         </el-dropdown-menu>
       </el-dropdown>
@@ -56,7 +56,6 @@
   .nav-1st .nav-active {
     color: #333;
   }
-
   .header {
     width: 100%;
     padding: 15px 45px;

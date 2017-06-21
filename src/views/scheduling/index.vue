@@ -29,8 +29,10 @@
   }
 .Scheduling-tab>span{
   display: inline-block;
+  text-align: center;
   width: 50px;
   background: red;
+  color: #FFF;
 }
 .Scheduling-tab>span.nav-active{
   background: blue;
