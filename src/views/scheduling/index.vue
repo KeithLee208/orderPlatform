@@ -26,6 +26,7 @@
   .Scheduling-tab{
     height: 60px;
     line-height: 60px;
+    cursor: default;
   }
 .Scheduling-tab>span{
   display: inline-block;

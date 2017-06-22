@@ -19,16 +19,27 @@
 
 <style scoped>
   .tp-card{
+    position: relative;
     width: 265px;
     height: 244px;
     float: left;
     border: 1px solid #e0e0e0;
-    margin: 5px 19px 5px 19px;
+    margin: 5px 19px 10px 19px;
     box-sizing: border-box;
     padding: 10px;
+    bottom: 0px;
+    transition:all .4s;
+    cursor: default;
+    box-shadow: 0px 0px 5px 0px rgba(128, 128, 128, 0.5);
+
+  }
+  .tp-card:hover{
+    bottom: 3px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 125, 251, 0.5);
   }
   .tp-card>p{
     height: 30px;
     line-height: 30px;
   }
+
 </style>
