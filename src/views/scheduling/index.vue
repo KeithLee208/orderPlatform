@@ -3,7 +3,7 @@
     <div class="filter-warrper">
       <div class="Scheduling-tab">
         <router-link to="/scheduling/attendacnce" exact tag="span">预约</router-link>
-        <router-link to="/scheduling/template" tag="span">排班</router-link>
+        <router-link to="/scheduling/template" tag="span">出班表</router-link>
       </div>
     </div>
     <div class="pagebody">

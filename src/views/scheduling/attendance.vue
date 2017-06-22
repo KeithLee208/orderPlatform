@@ -134,7 +134,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -144,23 +143,16 @@
 </script>
 
 <style scoped>
-  .pull-right {
-    float: right;
-  }
-
   .margin-right-10 {
     margin-right: 10px;
   }
-
   .page-head > div {
     height: 50px;
     line-height: 50px;
   }
-
   .page-head > div > span {
     display: inline-block;
   }
-
   .page-head > div > span > i {
     width: 20px;
     height: 20px;
@@ -169,20 +161,16 @@
     border: 1px solid #e0e0e0;
     margin: 12px 5px 0 10px;
   }
-
   .AdTable > .AdTableLeft, .AdTable > .AdTableRight {
     box-sizing: border-box;
     float: left;
   }
-
   .AdTable > .AdTableLeft {
     width: 15%;
   }
-
   .AdTable > .AdTableRight {
     width: 85%;
   }
-
   .AdTable{
     margin: 10px 0 10px 0;
     display: inline-block;
@@ -192,7 +180,6 @@
     height: 150px;
     line-height: 150px;
   }
-
   .AdTableLeft > div > i {
     width: 40px;
     height: 40px;
