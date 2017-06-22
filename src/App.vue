@@ -9,25 +9,13 @@
 </template>
 
 <script>
-  import WHeader from './components/header/Index'
-  import WFooter from './components/footer/index'
+  import WHeader from 'components/base/header/index'
+  import WFooter from 'components/base/footer/index'
   export default {
-    name: 'app',
-    components: {
-      WHeader, WFooter
-    },
-    mounted(){
-      this.Autoheight();
-
-    },
-    methods:{
-
-     Autoheight(){
-//        var b=document.documentElement.clientHeight-111;
-//        var bodyheight=document.getElementsByClassName('content-warrper')[0];
-//         bodyheight.style.height=b+'px';
-     }
-    }
+      name: 'app',
+      components: {
+        WHeader, WFooter
+      }
     }
 </script>
 

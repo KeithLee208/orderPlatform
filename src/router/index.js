@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import scheduling from '../views/scheduling/index'
 import attendacnce from '../views/scheduling/attendance'
 import template from '../views/scheduling/template'
-
-
 Vue.use(Router)
+
+const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 
 export default new Router({
   linkActiveClass: 'nav-active',

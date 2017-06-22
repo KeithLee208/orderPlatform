@@ -11,7 +11,7 @@
 
 <script>
   import api from '../../../api'
-  import tpcard from 'components/card/tp-card.vue'
+  import tpcard from 'components/base/card/tp-card.vue'
   export default{
     data(){
       return {
