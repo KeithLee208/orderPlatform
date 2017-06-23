@@ -28,9 +28,8 @@
   }
   .content-warrper{
     box-sizing: border-box;
-    display: inline-block;
     width: 100%;
-    height: 833px;
+    min-height: 833px;
     padding:20px;
     background: rgb(238,238,238);
   }
