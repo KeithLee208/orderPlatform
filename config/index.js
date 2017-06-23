@@ -7,7 +7,7 @@ module.exports = {
     index: path.resolve(__dirname, '../orderplantform/index.html'),
     assetsRoot: path.resolve(__dirname, '../orderplantform'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/lis/',
+    assetsPublicPath: '/orderplantform/',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.

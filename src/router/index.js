@@ -11,8 +11,6 @@ import ReservationRegistration from '../views/count/ReservationRegistration'
 import setting from '../views/setting/index'
 
 
-
-
 Vue.use(Router)
 
 export default new Router({
@@ -20,7 +18,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'scheduling',
+      name: 'index',
       component: scheduling
     },
     {
