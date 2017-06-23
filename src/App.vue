@@ -38,10 +38,20 @@
     width: 100%;
     min-height: 60px;
     margin-bottom: 20px;
+    padding: 10px;
+    box-sizing: border-box;
   }
   .pagebody{
     background: #fff;
     padding: 20px;
     box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+  }
+  .pull-left{
+    float: left;
+  }
+  .pull-right{
+    float: right;
   }
 </style>
