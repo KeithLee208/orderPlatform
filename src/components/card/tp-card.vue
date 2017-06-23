@@ -1,4 +1,5 @@
 <template>
+  <router-link to="/scheduling/templatesetting">
   <div class="tp-card">
     <p>{{card.TemplateName}} {{card.UseState}}</p>
     <p>使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
@@ -8,6 +9,7 @@
     <p>联合门诊：{{card.CombinedClinic}}个</p>
     <p>特需门诊：{{card.VIPClinic}}个</p>
   </div>
+  </router-link>
 </template>
 
 <script>

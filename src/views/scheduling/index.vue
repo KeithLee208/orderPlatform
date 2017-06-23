@@ -1,15 +1,15 @@
 <template id="Scheduling">
-<div class="Scheduling-body">
-    <div class="filter-warrper">
+  <div class="Scheduling-body">
+   <div class="filter-warrper">
       <div class="Scheduling-tab">
         <router-link to="/scheduling/attendacnce" exact tag="span">预约</router-link>
         <router-link to="/scheduling/template" tag="span">出班表</router-link>
       </div>
     </div>
     <div class="pagebody">
-    <router-view></router-view>
+      <router-view></router-view>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -23,19 +23,21 @@
 </script>
 
 <style scoped>
-  .Scheduling-tab{
+  .Scheduling-tab {
     height: 60px;
     line-height: 60px;
     cursor: default;
   }
-.Scheduling-tab>span{
-  display: inline-block;
-  text-align: center;
-  width: 50px;
-  background: red;
-  color: #FFF;
-}
-.Scheduling-tab>span.nav-active{
-  background: blue;
-}
+
+  .Scheduling-tab > span {
+    display: inline-block;
+    text-align: center;
+    width: 50px;
+    background: red;
+    color: #FFF;
+  }
+
+  .Scheduling-tab > span.nav-active {
+    background: blue;
+  }
 </style>
