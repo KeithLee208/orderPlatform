@@ -10,7 +10,7 @@
     </div>
     <div class="setting-body">
       <div class="setting-main">
-        <div style="height: 30px; line-height: 30px;padding: 20px">
+        <div style="height: 30px; line-height: 30px;">
           <el-button @click="PrintVisible = true" class="pull-right" type="primary" size="small">打印</el-button>
           <el-button @click="ExportVisible = true" class="pull-right" type="primary" size="small">导出</el-button>
           <el-button @click="SubmitVisible = true" class="pull-right" type="primary" size="small">提交</el-button>
@@ -280,6 +280,8 @@
     height: 790px;
     display: inline-block;
     background: #fff;
+    padding: 20px;
+    box-sizing: border-box;
   }
   .AdTable > .AdTableLeft, .AdTable > .AdTableRight {
     box-sizing: border-box;

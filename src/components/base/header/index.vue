@@ -6,8 +6,8 @@
     </div>
     <div class="nav-1st">
       <router-link to="/order" exact tag="span">预约</router-link>
-      <router-link to="/scheduling" tag="span">排班</router-link>
-      <router-link to="/count" tag="span">统计</router-link>
+      <router-link to="/scheduling/attendacnce" tag="span">排班</router-link>
+      <router-link to="/count/ReservationRegistration" tag="span">统计</router-link>
       <router-link to="/setting" tag="span">设置</router-link>
     </div>
     <div class="icon-menu">
