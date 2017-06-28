@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="page-head">
-       <el-button class="pull-right" type="primary" size="small">创建模板</el-button>
+      <span style="position: absolute;right: 20px;top: -45px;">
+      <el-button :plain="true" type="info" >创建模板</el-button>
+      </span>
     </div>
     <div class="page-main">
       <tpcard v-for="num in TpCard" :card="num"></tpcard>
@@ -28,7 +30,7 @@
       CardlistInit(){
         api.get(api.url.Scheduling.Template).then(data => {
           this.TpCard=data;
-        console.log(this.TpCard);
+
       })
       }
     }
@@ -43,5 +45,11 @@
   display: inline-block;
   width: 100%;
 }
-
+.page-head{
+  box-sizing: border-box;
+  position: relative;
+}
+.pagebody{
+  background: none;
+}
 </style>
