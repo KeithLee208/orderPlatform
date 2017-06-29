@@ -49,5 +49,7 @@
   .pull-right{
     float: right;
   }
-
+ .pull-width{
+   width: 100%;
+ }
 </style>
