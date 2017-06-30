@@ -38,7 +38,6 @@
     box-sizing: border-box;
   }
   .pagebody{
-
     box-sizing: border-box;
     display: inline-block;
     width: 100%;

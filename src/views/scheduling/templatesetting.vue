@@ -25,13 +25,7 @@
                 <el-button @click="ExportVisible = true" type="primary" size="small">导出</el-button>
                 <el-button @click="PrintVisible = true" type="primary" size="small">打印</el-button>
                  <!--设置-->
-              <el-dialog
-             title="排班模板设置"
-             :visible.sync="SettingVisible"
-             size="large"
-             :show-close="false"
-             top="5%"
-           >
+              <el-dialog  title="排班模板设置" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
              <div class="Adjustment" style="">
                <a>调整记录</a>
              </div>

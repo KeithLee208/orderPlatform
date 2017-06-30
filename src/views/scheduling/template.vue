@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-head">
-            <span style="position: absolute;right: 20px;top: -45px;">
+      <span class="creat-btn" style="position: absolute;right: 20px;top: -45px;">
       <el-button :plain="true" type="info" >创建模板</el-button>
       </span>
     </div>
