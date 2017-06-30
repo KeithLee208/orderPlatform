@@ -5,7 +5,7 @@
       <span>
         <el-date-picker
           size="small"
-        v-model="value6"
+        v-model="value7"
         type="daterange"
         placeholder="选择日期范围">
     </el-date-picker>
@@ -29,7 +29,11 @@
 
 <script>
   export default{
-    name: 'footer'
+    data() {
+      return{
+        value7: ''
+      }
+    }
   }
 </script>
 

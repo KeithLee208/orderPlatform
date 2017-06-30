@@ -34,16 +34,11 @@
     background: rgb(238,238,238);
   }
   .filter-warrper{
-    background: #fff;
     width: 100%;
-    min-height: 60px;
-    margin-bottom: 20px;
-    padding: 10px;
     box-sizing: border-box;
   }
   .pagebody{
-    background: #fff;
-    padding: 20px;
+
     box-sizing: border-box;
     display: inline-block;
     width: 100%;
@@ -54,4 +49,7 @@
   .pull-right{
     float: right;
   }
+ .pull-width{
+   width: 100%;
+ }
 </style>

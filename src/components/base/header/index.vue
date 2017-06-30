@@ -1,8 +1,8 @@
 <template>
   <nav class="header">
     <div class="logo">
-      <i></i>
-      <span>预约系统</span>
+      <!--<i></i>-->
+      <span>LOGO</span>
     </div>
     <div class="nav-1st">
       <router-link to="/order" exact tag="span">预约</router-link>
@@ -11,39 +11,7 @@
       <router-link to="/setting" tag="span">设置</router-link>
     </div>
     <div class="icon-menu">
-      <el-dropdown menu-align="end">
-        <span class="el-dropdown-link">
-   <i class="el-icon-caret-bottom el-icon--right"></i>
-  </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>电子药历</el-dropdown-item>
-          <el-dropdown-item>医学智库</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-      <el-dropdown menu-align="end">
-        <span class="el-dropdown-link">
-   <i class="el-icon-caret-bottom el-icon--right"></i>
-  </span>
-        <el-dropdown-menu slot="dropdown">
-
-          <el-dropdown-item>个人设置</el-dropdown-item>
-
-          <el-dropdown-item>注销</el-dropdown-item>
-
-        </el-dropdown-menu>
-      </el-dropdown>
-      <el-dropdown menu-align="end">
-        <span class="el-dropdown-link">
-   <i class="el-icon-caret-bottom el-icon--right"></i>
-  </span>
-        <el-dropdown-menu slot="dropdown">
-
-          <el-dropdown-item>个人设置</el-dropdown-item>
-
-          <el-dropdown-item>注销</el-dropdown-item>
-
-        </el-dropdown-menu>
-      </el-dropdown>
+      1
     </div>
   </nav>
 </template>
@@ -54,7 +22,7 @@
 </script>
 <style scoped>
   .nav-1st .nav-active {
-    color: #333;
+    color: #fff;
   }
   .header {
     width: 100%;
@@ -62,7 +30,7 @@
     box-sizing: border-box;
     line-height: 25px;
     border-bottom: 1px solid #EAEFF5;
-    background-color: #fff;
+    background-color: rgb(63,81,181);
     height: 60px;
     z-index: 5;
   }
@@ -71,7 +39,10 @@
     float: left;
     line-height: 25px;
   }
-
+  .header > .logo>span{
+    color: #fff;
+    font-size: 20px;
+  }
   .header > .logo > i {
     float: left;
     height: 25px;

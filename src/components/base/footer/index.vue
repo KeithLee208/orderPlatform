@@ -20,6 +20,7 @@
     border-top: 1px solid #F2F2F2;
     cursor: default;
     bottom: 0;
+    z-index:2009;
   }
   footer p{
     color: #ccc;

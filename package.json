@@ -14,7 +14,8 @@
     "vue-router": "^2.3.1",
     "wued-ui": "^1.3.11",
     "axios": "^0.16.2",
-    "babel-preset-es2015":"^6.24.1"
+    "babel-preset-es2015":"^6.24.1",
+    "vuedraggable": "^2.11.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
