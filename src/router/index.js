@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import scheduling from '../views/scheduling/index'
-import order from '../views/order/index'
-import attendacnce from '../views/scheduling/attendance'
 import template from '../views/scheduling/template'
 import templatesetting from '../views/scheduling/templatesetting'
 import attendacncelist from '../views/scheduling/attendacncelist'
@@ -11,6 +8,10 @@ import RegistrationClassification from '../views/count/RegistrationClassificatio
 import ReservationRegistration from '../views/count/ReservationRegistration'
 import setting from '../views/setting/index'
 
+const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
+const attendacnce = r => require.ensure([], () => r(require('../views/scheduling/attendance')), 'scheduling');
+
+const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
 Vue.use(Router)
 
@@ -32,6 +33,7 @@ export default new Router({
       name: 'scheduling',
       component: scheduling,
       children:[
+        { path: '/scheduling/attendacnce', component: attendacnce},
         { path: '/scheduling/attendacnce', component: attendacnce},
         { path: '/scheduling/template', component: template},
         { path: '/scheduling/templatesetting', component: templatesetting},

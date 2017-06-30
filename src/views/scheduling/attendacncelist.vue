@@ -26,124 +26,56 @@
               </span>
           </div>
         </div>
-        <div class="Att-row">
+        <div class="Att-row" v-for="item in attList">
           <div class="Att-row-lable">
-            外科
+            {{item.name}}
           </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
-          </div>
-        </div>
-        <div class="Att-row">
-          <div class="Att-row-lable">
-            外科
-          </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
-          </div>
-        </div>
-        <div class="Att-row">
-          <div class="Att-row-lable">
-            外科
-          </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
-          </div>
-        </div>
-        <div class="Att-row">
-          <div class="Att-row-lable">
-            外科
-          </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
-          </div>
-        </div>
-        <div class="Att-row">
-          <div class="Att-row-lable">
-            外科
-          </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
-          </div>
-        </div>
-        <div class="Att-row">
-          <div class="Att-row-lable">
-            外科
-          </div>
-          <div class="Att-row-data">
-            <span>胃肠科（东院）</span>
-            <span>烧伤科</span>
-            <span>胸心外科</span>
-            <span>脑外科（西园）</span>
-            <span>胃肠科（西院）</span>
-            <span>心血管科</span>
-            <span>泌尿外科</span>
-            <span>烧伤科</span>
-            <span>口腔科门诊（东院）</span>
-            <span>胸心外科</span>
-            <span>胃肠科（东院）</span>
+          <div class="Att-row-data" v-for="att in item.children">
+            <span>{{att.name}}</span>
           </div>
         </div>
       </div>
       </div>
   </div>
 </template>
-
 <script>
   export default {
     data() {
       return {
-
+        attList:[
+          {
+              name:"外科",
+              children:[
+                { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
+                { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
+                { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
+              ]
+          },
+          {
+            name:"外科",
+            children:[
+              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
+              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
+              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
+            ]
+          },
+          {
+            name:"外科",
+            children:[
+              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
+              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
+              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
+            ]
+          },
+          {
+            name:"外科",
+            children:[
+              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
+              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
+              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
+            ]
+          }
+        ]
       }
     },
     methods: {
@@ -162,7 +94,6 @@
     display: inline-block;
     background: #fff;
   }
-
   .setting-main {
     width: 100%;
     height: 790px;
@@ -171,13 +102,13 @@
     padding: 20px;
     box-sizing: border-box;
   }
-.Att-list-title{
-  color: #999;
-  height: 30px;
-  line-height: 30px;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 10px;
-}
+  .Att-list-title{
+    color: #999;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+  }
   .Att-list-title>.name{
     color: #333;
     margin-right: 20px;

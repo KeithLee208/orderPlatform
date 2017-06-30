@@ -2,7 +2,6 @@
   <div class="Scheduling-body">
    <div class="filter-warrper">
       <div class="Scheduling-tab">
-        <!--<router-link to="/scheduling/attendacnce" exact tag="span">科主任出班表</router-link>-->
         <router-link to="/scheduling/attendacnce" exact tag="span">科室出班表</router-link>
         <router-link to="/scheduling/attendacncelist" exact tag="span">医务科出班表</router-link>
         <router-link to="/scheduling/attendacncelist" exact tag="span">门办出班表</router-link>
@@ -10,32 +9,26 @@
         <router-link to="/scheduling/template" tag="span">医务科排班模板</router-link>
         <router-link to="/scheduling/template" tag="span">门办排班模板</router-link>
       </div>
-
     </div>
     <div class="pagebody">
       <router-view></router-view>
     </div>
   </div>
 </template>
-
 <script>
-
   export default{
     data(){
       return {
         msg: '1'
       }
     }
-
   }
 </script>
-
 <style scoped>
   .Scheduling-tab {
     height: 32px;
     cursor: default;
   }
-
   .Scheduling-tab > span {
     display: inline-block;
     text-align: center;
@@ -47,10 +40,8 @@
     background: #fff;
     border-radius: 4px;
   }
-
   .Scheduling-tab > span.nav-active {
     background: #3f51b5;
     color: #fff;
   }
-
 </style>

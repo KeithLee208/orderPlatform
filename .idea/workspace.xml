@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="10d17751-95e2-4ae3-af23-23f887f33bc2" name="默认的" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.vue" afterPath="$PROJECT_DIR$/src/App.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/scheduling/template.vue" afterPath="$PROJECT_DIR$/src/views/scheduling/template.vue" />
@@ -9,12 +10,15 @@
     <ignored path="orderPlatform.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+=======
+>>>>>>> d854b5aee27c08ce9d139210327b7c46a3f2083e
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -585,6 +589,20 @@
       <collection />
     </option>
   </component>
+=======
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <created>1498783045564</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1498783045564</updated>
+    </task>
+    <servers />
+  </component>
+>>>>>>> d854b5aee27c08ce9d139210327b7c46a3f2083e
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -592,6 +610,7 @@
     <breakpoint-manager />
     <watches-manager />
   </component>
+<<<<<<< HEAD
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/views/scheduling/attendacncelist.vue">
       <provider selected="true" editor-type-id="text-editor">
@@ -1035,4 +1054,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> d854b5aee27c08ce9d139210327b7c46a3f2083e
 </project>
