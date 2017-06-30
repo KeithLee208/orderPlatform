@@ -200,6 +200,7 @@
 </template>
 
 <script>
+  import testpack from 'views/scheduling/index.vue'
   export default {
     data() {
       return {

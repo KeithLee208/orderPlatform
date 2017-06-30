@@ -8,7 +8,6 @@ const axios = require('axios');
 const mockUrl = process.env.NODE_ENV === 'production'
   ? config.build.assetsPublicPath + config.build.assetsSubDirectory
   : config.dev.assetsPublicPath + config.dev.assetsSubDirectory;
-
 const url = {};
 url.Scheduling = {};//预约
 url.Scheduling.Template = mockUrl + '/mock/tpcard.json';
