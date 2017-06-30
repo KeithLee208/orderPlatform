@@ -37,7 +37,7 @@
     </p>
 
     <div v-if="TimeShow==='false'" class="tp-card-footer">
-      <el-button type="success">提交模板</el-button>
+      <el-button type="danger">删除模板</el-button>
     </div>
 
   </div>

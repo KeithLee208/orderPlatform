@@ -273,7 +273,7 @@
             <span>周六</span>
             <span>周日</span>
           </div>
-          <div class="AdTable">
+          <div v-for="item in addtable" class="AdTable">
             <div class="AdTableLeft">
               <div>
                 <i></i>
@@ -333,106 +333,6 @@
               </div>
             </div>
           </div>
-          <div class="AdTable">
-            <div class="AdTableLeft">
-              <div>
-                <i></i>
-                <p>
-                  <span>主治医师</span>
-                  <span>张文</span>
-                </p>
-              </div>
-            </div>
-            <div class="AdTableRight">
-              <div class="table-body">
-                <div class="border-top-1">
-                  <span>上午</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>下午</span>
-                  <span></span>
-                   <span>
-                    <div class="ordered expert">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                  </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>晚上</span>
-                  <span></span>
-                  <span>
-                    <div class="ordered default">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                  </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="AdTable">
-            <div class="AdTableLeft">
-              <div>
-                <i></i>
-                <p>
-                  <span>主治医师</span>
-                  <span>张文</span>
-                </p>
-              </div>
-            </div>
-            <div class="AdTableRight">
-              <div class="table-body">
-                <div class="border-top-1">
-                  <span>上午</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>下午</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>晚上</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -458,6 +358,7 @@
           value3: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
           desc: ''
         },
+        addtable:[1,2,3],
         pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;

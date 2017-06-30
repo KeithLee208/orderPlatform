@@ -23,83 +23,9 @@
       </div>
     </div>
     <div class="page-main">
-      <div class="AdTable">
+      <div class="AdTable" v-for="item in addtable">
         <div class="AdTableLeft">
           <div><i></i>普通门诊</div>
-        </div>
-        <div class="AdTableRight">
-          <div>
-            <span>上午</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div>
-            <span>下午</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div>
-            <span>晚上</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-      <div class="AdTable">
-        <div class="AdTableLeft">
-          <div><i></i>张文 主任医师</div>
-        </div>
-        <div class="AdTableRight">
-          <div>
-            <span>上午</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div>
-            <span>下午</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div>
-            <span>晚上</span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-      <div class="AdTable">
-        <div class="AdTableLeft">
-          <div><i></i>李峰 副主任医师</div>
         </div>
         <div class="AdTableRight">
           <div>
@@ -139,7 +65,13 @@
 </template>
 
 <script>
-  export default{}
+  export default{
+    data(){
+      return {
+        addtable:[1,2,3]
+      }
+    }
+  }
 </script>
 
 <style scoped>

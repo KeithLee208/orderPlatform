@@ -4,8 +4,8 @@ import template from '../views/scheduling/template'
 import templatesetting from '../views/scheduling/templatesetting'
 import attendacncelist from '../views/scheduling/attendacncelist'
 import count from '../views/count/index'
-import RegistrationClassification from '../views/count/RegistrationClassification'
-import ReservationRegistration from '../views/count/ReservationRegistration'
+import RegistrationClassification from '../views/count/registrationclassification'
+import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
 
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');

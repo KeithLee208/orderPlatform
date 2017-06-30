@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-head">
-      <span class="creat-btn" style="position: absolute;right: 20px;top: -45px;">
+      <span class="creat-btn">
       <el-button :plain="true" type="info" >创建模板</el-button>
       </span>
     </div>
@@ -39,10 +39,6 @@
 </script>
 
 <style scoped>
-  .pull-right {
-    float: right;
-  }
-
   .page-head,
   .page-main {
     display: inline-block;
@@ -56,5 +52,8 @@
 
   .pagebody {
     background: none;
+  }
+  .creat-btn{
+    position: absolute;right: 20px;top: -45px;
   }
 </style>
