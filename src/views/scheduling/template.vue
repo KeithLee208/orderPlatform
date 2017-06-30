@@ -32,7 +32,6 @@
       CardlistInit() {
         api.get(api.url.Scheduling.Template).then(data => {
           this.TpCard = data;
-
       })
       }
     }
