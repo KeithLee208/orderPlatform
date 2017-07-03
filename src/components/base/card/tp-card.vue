@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/scheduling/templatesetting">
+  <router-link to="/scheduling/templatesetting" exact tag="span">
   <div class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
     <div class="tp-card-head">
       <p>
@@ -12,34 +12,36 @@
          </span>
       </p>
 
-      <p v-if="TimeShow==='true'">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
+      <p class="used-time">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
 
     </div>
+    <div class="tp-card-body">
     <p class="tp-card-ksnum">
-      <span class="font-color-333">科室数量：</span>
-      <span class="pull-right">{{card.DepartmentNum}}个</span>
+      <span >科室数量：</span>
+      <span>{{card.DepartmentNum}}</span>
     </p>
     <p>
       <span>普通门诊：</span>
-      <span class="pull-right">{{card.DefaultClinic}}个</span>
+      <span class="tp-num pull-right">{{card.DefaultClinic}}</span>
     </p>
     <p>
       <span>专家门诊：</span>
-      <span class="pull-right">{{card.SpecialistClinic}}个</span>
+      <span class="tp-num pull-right">{{card.SpecialistClinic}}</span>
     </p>
     <p>
       <span>联合门诊：</span>
-      <span class="pull-right">{{card.CombinedClinic}}个</span>
+      <span class="tp-num pull-right">{{card.CombinedClinic}}</span>
     </p>
     <p>
       <span>特需门诊：</span>
-      <span class="pull-right">{{card.VIPClinic}}个</span>
+      <span class="tp-num pull-right">{{card.VIPClinic}}</span>
     </p>
-
-    <div v-if="TimeShow==='false'" class="tp-card-footer">
-      <el-button type="danger">删除模板</el-button>
+    <transition name="el-fade-in-linear">
+    <div v-if="TimeShow==='false'" v-on:click.stop="DeleteCard()" class="tp-card-close">
+      <i class="el-icon-close"></i>
     </div>
-
+    </transition>
+    </div>
   </div>
   </router-link>
 </template>
@@ -54,6 +56,9 @@
       }
     },
     methods:{
+      DeleteCard(){
+        alert('删除事件(阻止路由冒泡)');
+      },
       handleTpCardMouseOver(){
         this.TimeShow='false';
       },
@@ -71,57 +76,73 @@
   .tp-card{
     position: relative;
     min-width: 310px;
-    width: 24%;
-    height: 300px;
+    width: 19%;
+    height: 315px;
     float: left;
     border: 1px solid #e0e0e0;
     margin: 5px 1% 10px 0;
     box-sizing: border-box;
-    padding: 10px;
     bottom: 0px;
-    transition:all .1s;
+    transition:all .2s;
     cursor: default;
     background: #fff;
-
-
   }
   .tp-card:hover{
     bottom: 3px;
-    box-shadow: 0px 0px 5px 0px rgba(128, 128, 128, 0.5);
+    border: 1px solid rgb(132, 166, 181);
+    box-shadow: 0 0 20px rgba(63,81,181, 0.5);
   }
   .tp-card p{
-    height: 40px;
-    line-height: 40px;
+    height: 35px;
+    line-height: 35px;
   }
 .tp-card-head{
-  border-bottom: 1px solid #e0e0e0;
+  padding: 25px 25px 10px 25px;
+  border-bottom: 1px dashed #e0e0e0;
+}
+.tp-card-body{
+  padding: 10px 25px;
 }
   .start,.unstart{
-    padding: 0 10px 0 10px;
     height: 30px;
     line-height: 30px;
     text-align: center;
     display: inline-block;
-    border-radius: 6px;
+    border-radius: 4px;
     color: #fff;
   }
   .start{
-    background: rgb(19,188,87);
+    color: rgb(19,188,87);
   }
   .unstart{
-    background: rgb(204,204,204);
+    color: rgb(204,204,204);
   }
   .tp-card-title{
+    color: #333333;
     font-size: 16px;
+    font-weight: bold;
   }
-  .tp-card-ksnum{
+  .tp-card-body>p,.used-time{
+  color: #999;
+  }
+  .tp-card-ksnum>span{
     font-size: 14px;
+    color: #6FA6E1;
+  }
+  .tp-card-close{
+   position: absolute;
+    top: 6px;
+    right: 10px;
+    color:#999;
+    cursor: pointer;
+
+   }
+  .tp-card-close>i{
+    font-size: 12px;
+  }
+  .tp-card-body>p>.tp-num{
+    font-size: 13px;
+    font-weight: bold;
     color: #333;
   }
-  /*@media screen and (max-width:1025px){*/
-    /*.tp-card {*/
-/*display: none;*/
-    /*}*/
-  /*}*/
-
 </style>

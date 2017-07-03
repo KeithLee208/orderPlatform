@@ -1,8 +1,8 @@
 <template>
   <nav class="header">
     <div class="logo">
-      <!--<i></i>-->
-      <span>LOGO</span>
+      <i></i>
+      <span>上海六院预约平台</span>
     </div>
     <div class="nav-1st">
       <router-link to="/order" exact tag="span">预约</router-link>
@@ -23,12 +23,13 @@
 <style scoped>
   .nav-1st .nav-active {
     color: #fff;
+    border-bottom: 4px solid #fff;
   }
   .header {
     width: 100%;
-    padding: 15px 45px;
+    padding: 10px 20px;
     box-sizing: border-box;
-    line-height: 25px;
+    line-height: 35px;
     border-bottom: 1px solid #EAEFF5;
     background-color: rgb(63,81,181);
     height: 60px;
@@ -39,29 +40,37 @@
     float: left;
     line-height: 25px;
   }
-  .header > .logo>span{
-    color: #fff;
-    font-size: 20px;
-  }
-  .header > .logo > i {
+  .header > .logo>i{
+    width: 32px;
+    height: 35px;
+    display: inline-block;
+    background: url("./logo.png") left center no-repeat;
+    background-size:31px 25px ;
     float: left;
-    height: 25px;
-    width: 40px;
-    background: blue;
   }
-
+  .header > .logo>span{
+    float: left;
+    height: 35px;
+    line-height: 35px;
+    display: inline-block;
+    color: #fff;
+    font-size: 16px;
+    margin-left: 10px;
+  }
   .nav-1st {
     float: left;
     margin-left: 120px;
   }
 
   .nav-1st > span {
-    width: 120px;
+    width: 80px;
+    height: 45px;
     display: inline-block;
     text-align: center;
     font-size: 18px;
-    color: #ccc;
+    color: #fff;
     cursor: pointer;
+    margin: 0 30px;
   }
 
   .icon-menu {

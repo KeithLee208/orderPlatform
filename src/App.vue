@@ -51,4 +51,7 @@
  .pull-width{
    width: 100%;
  }
+  .color-333{
+    color: #333;
+  }
 </style>
