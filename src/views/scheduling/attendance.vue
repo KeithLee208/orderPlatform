@@ -51,10 +51,45 @@
           <div>
             <span>下午</span>
                   <span>
-                  <div @click="dialogVisible = true" class="ordered disease">
+                 <el-popover  placement="bottom" width="200" trigger="hover">
+                   <div class="fixed-info">
+                    <div class="fixed-body">
+                      <div class="fixed-title">出班信息</div>
+                      <p>
+                        <span class="fixed-label">出诊院区：</span>
+                        <span>黄埔院区</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">就诊科室：</span>
+                        <span>胸外科精品B</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">服务类型：</span>
+                        <span>特需</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">出诊时间：</span>
+                        <span>上午8:00-12:00</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">就诊地址：</span>
+                        <span>3号楼9楼胸外科（超过12个字换行）</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">号源数量：</span>
+                        <span>18</span>
+                      </p>
+                    </div>
+                     <div class="fixed-footer">
+                       <el-button @click="ShiftVisible = true" size="small" class="btn-blue">出班调整</el-button>
+                       <el-button size="small" class="btn-blue pull-right">调整记录</el-button>
+                     </div>
+                   </div>
+                  <div slot="reference" class="ordered disease">
                     <p>09:00-11:30</p>
                     <p>胸外科精品B</p>
                   </div>
+                  </el-popover>
                 </span>
             <span></span>
             <span></span>
@@ -86,6 +121,92 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      title="出班调整"
+      :visible.sync="ShiftVisible"
+      size="tiny"
+      :show-close="false">
+      <div>
+        <div class="now-num">已有32位患者预约</div>
+        <div class="now-info">
+          <div>
+            <span class="tab-label">调整类型</span>
+          <el-radio-group v-model="form1.resource" @change="FormChange">
+            <el-radio label="替诊"></el-radio>
+            <el-radio label="停诊"></el-radio>
+            <el-radio label="调班"></el-radio>
+          </el-radio-group>
+          </div>
+            <!--替诊-->
+            <el-form v-if="replace" ref="form" :model="form1" label-width="110px">
+            <el-form-item label="当前医生">
+              <span>张文</span>
+            </el-form-item>
+            <div class="line"></div>
+          <el-form-item label="替诊医生">
+            <el-select v-model="form1.data1" filterable placeholder="请选择">
+              <el-option
+                v-for="item in form1.region"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+            <el-form-item label="替诊原因">
+              <el-input type="textarea" v-model="form1.desc"></el-input>
+            </el-form-item>
+          </el-form>
+            <!--停诊-->
+            <el-form v-if="stop" ref="form" :model="form2" label-width="110px">
+              <el-form-item label="停诊时间">
+                <el-date-picker
+                  v-model="form2.date1"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="停诊原因">
+                <el-input type="textarea" v-model="form2.desc"></el-input>
+              </el-form-item>
+            </el-form>
+            <!--调班-->
+            <el-form v-if="change" ref="form" :model="form3" label-width="110px">
+              <el-form-item label="当前医生/科室">
+                <span>张文/黄埔院区胸外科1</span>
+              </el-form-item>
+              <el-form-item label="当前预约时间">
+                <span>2015/05/01</span>
+              </el-form-item>
+
+              <el-form-item label="调班医生">
+                <el-cascader
+                  placeholder="可搜索"
+                  :options="form3.options"
+                  filterable
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="调班时间">
+                <el-date-picker
+                  v-model="form3.date1"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <div class="line"></div>
+              <el-form-item label="调班原因">
+                <el-input type="textarea" v-model="form3.desc"></el-input>
+              </el-form-item>
+            </el-form>
+
+        </div>
+      </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button>恢复到最初排班</el-button>
+    <el-button @click="ShiftVisible = false">取 消</el-button>
+    <el-button type="primary" @click="MsgSuccess">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,7 +214,137 @@
   export default{
     data(){
       return {
-        addtable:[1,2,3]
+        addtable:[1,2,3],
+        ShiftVisible:true,
+        replace:true,
+        stop:false,
+        change:false,
+        form1: {
+          name: '',
+          region:[
+            {
+              value: '选项1',
+              label: '张晓峰'
+            }, {
+              value: '选项2',
+              label: '李云云'
+            }, {
+              value: '选项3',
+              label: '王海'
+            }, {
+              value: '选项4',
+              label: '刘峰'
+            }, {
+              value: '选项5',
+              label: '孙海'
+            }, {
+              value: '选项6',
+              label: '孙海6'
+            }, {
+              value: '选项7',
+              label: '孙海7'
+            }, {
+              value: '选项8',
+              label: '孙海8'
+            }, {
+              value: '选项9',
+              label: '孙海9'
+            }, {
+              value: '选项10',
+              label: '孙海10'
+            }, {
+              value: '选项11',
+              label: '孙海11'
+            }
+          ],
+          data1: '',
+          resource: '',
+          desc:''
+        },
+        form2: {
+          name: '',
+          region: '',
+          date1: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        form3: {
+          name: '',
+          region: '',
+          date1: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: '',
+          options: [
+            {
+            value: '1',
+            label: '李峰',
+            children: [
+              {
+              value: '黄埔院区胸外科1',
+              label: '黄埔院区胸外科1'
+            },
+              {
+              value: '黄埔院区胸外科2',
+              label: '黄埔院区胸外科2'
+            }]
+          },
+            {
+              value: '2',
+              label: '李云云',
+              children: [{
+                value: '徐汇院区胸外科精品A',
+                label: '徐汇院区胸外科精品A'
+              }, {
+                value: '徐汇院区胸外科精品B',
+                label: '徐汇院区胸外科精品B'
+              }]
+            },
+            {
+              value: '3',
+              label: '王浩',
+              children: [
+                {
+                value: '徐汇园区胸外科精品C',
+                label: '徐汇园区胸外科精品C'
+              },
+                {
+                value: '徐汇园区胸外科精品D',
+                label: '徐汇园区胸外科精品D'
+              }]
+            },
+
+          ]
+        }
+      }
+    },
+    methods: {
+      MsgSuccess() {
+        this.ShiftVisible=false;
+        this.$message({
+          message: '噢啦啦啦啦啦啦提交成功！',
+          type: 'success'
+        });
+      },
+      FormChange(value){
+        if (value == '替诊'){
+          this.replace=true;
+          this.stop=false;
+          this.change=false;
+        }
+        else if(value == '停诊'){
+          this.replace=false;
+          this.stop=true;
+          this.change=false;
+        }
+        else if(value == '调班'){
+          this.replace=false;
+          this.stop=false;
+          this.change=true;
+        }
       }
     }
   }
@@ -239,11 +490,13 @@
     height: 100%;
     display: inline-block;
     font-size: 14px;
+    box-sizing: border-box;
+    padding: 10px 0;
   }
 
   .ordered > p {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
   }
   /*default,expert,disease,union,VIP*/
 
@@ -329,5 +582,66 @@
     border-radius: 4px;
     margin: 15px 5px 0 10px;
     cursor: pointer;
+  }
+  .fixed-info{
+    padding: 5px;
+    color: #999;
+  }
+  .fixed-body{
+    border-bottom: 1px dashed #e0e0e0;
+    padding-bottom: 10px;
+  }
+  .fixed-body>p{
+    width: 100%;
+    display: inline-block;
+  }
+  .fixed-body>p>span{
+    display: inline-block;
+    float: left;
+    width: 130px;
+  }
+
+  .fixed-body>p>span.fixed-label{
+  width: 60px;
+}
+  .fixed-title{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #333;
+  }
+  .fixed-footer{
+    margin-top: 15px;
+  }
+  .btn-blue{
+    background: #fff;
+    border-color: #50bfff;
+    color: #50bfff;
+  }
+  .btn-blue:hover{
+    color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+  }
+  .now-num{
+    position: absolute;
+    top:15px;
+    right: 30px;
+    color: rgb(255,197,61);
+  }
+.tab-label{
+  width: 110px;
+  text-align: right;
+  display: inline-block;
+  font-size: 14px;
+  padding: 0px 12px 20px 0;
+  box-sizing: border-box;
+}
+  .line{
+    width: 100%;
+    float: left;
+    margin-bottom: 22px;
+    display: inline-block;
+    border-bottom: 1px dashed #e0e0e0;
   }
 </style>

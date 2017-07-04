@@ -42,7 +42,6 @@
                  </div>
                   <el-button type="text" slot="reference">{{att.name}}</el-button>
             </el-popover>
-
             </span>
           </div>
         </div>

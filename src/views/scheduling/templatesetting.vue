@@ -117,7 +117,7 @@
             <span>周六</span>
             <span>周日</span>
           </div>
-                   <div class="AdTable">
+         <div class="AdTable">
             <div class="AdTableLeft">
               <div>
                 <i></i>
@@ -411,7 +411,9 @@
     color: #bbb;
     margin-left: 15px;
   }
-
+  .setting-header > .used-time>i{
+    margin-right: 5px;
+  }
   .setting-body {
     width: 100%;
     padding: 20px;
