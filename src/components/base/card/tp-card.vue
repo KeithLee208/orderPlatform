@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/scheduling/templatesetting" exact tag="span">
+  <router-link to="/scheduling/clinic/tplist" exact tag="span">
   <div class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
     <div class="tp-card-head">
       <p>

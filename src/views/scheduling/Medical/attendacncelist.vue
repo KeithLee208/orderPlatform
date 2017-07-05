@@ -5,26 +5,6 @@
               <span><i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
             </div>
       <div class="Att-list-body">
-        <!--<div class="Att-row">-->
-          <!--<div class="Att-row-lable">-->
-            <!--口腔科-->
-          <!--</div>-->
-          <!--<div class="Att-row-data">-->
-            <!--<span>-->
- <!--<el-popover ref="popover3" placement="bottom" width="200" trigger="hover">-->
-                 <!--<div class="fixed-info">-->
-                  <!--<p class="fixed-info-title">服务类型</p>-->
-                  <!--<p><i class="default"></i>普通（10）</p>-->
-                  <!--<p><i class="expert"></i>专家（2）</p>-->
-                  <!--<p><i class="disease"></i>专病（3）</p>-->
-                  <!--<p><i class="union"></i>联合（4）</p>-->
-                  <!--<p><i class="VIP"></i>特需（5）</p>-->
-                 <!--</div>-->
-            <!--</el-popover>-->
-            <!--<el-button type="text" v-popover:popover3>口腔科（东院）</el-button>-->
-              <!--</span>-->
-          <!--</div>-->
-        <!--</div>-->
         <div class="Att-row" v-for="item in attList">
           <div class="Att-row-lable">
             {{item.name}}

@@ -1,5 +1,5 @@
 <template>
-  <div  class="setting-body">
+  <div class="setting-body">
     <div class="page-head">
       <div class="Att-list-title">
         当前模版：<span class="name">春季模板</span>
@@ -215,7 +215,7 @@
     data(){
       return {
         addtable:[1,2,3],
-        ShiftVisible:true,
+        ShiftVisible:false,
         replace:true,
         stop:false,
         change:false,
@@ -258,7 +258,7 @@
             }
           ],
           data1: '',
-          resource: '',
+          resource: '替诊',
           desc:''
         },
         form2: {

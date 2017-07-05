@@ -2,12 +2,12 @@
   <div class="Scheduling-body">
    <div class="filter-warrper">
       <div class="Scheduling-tab">
-        <router-link to="/scheduling/attendacnce" exact tag="span">科室出班表</router-link>
-        <router-link to="/scheduling/attendacncelist" exact tag="span">医务科出班表</router-link>
-        <router-link to="/scheduling/attendacncelist" exact tag="span">门办出班表</router-link>
-        <router-link to="/scheduling/template" tag="span">科室排班模板</router-link>
-        <router-link to="/scheduling/template" tag="span">医务科排班模板</router-link>
-        <router-link to="/scheduling/template" tag="span">门办排班模板</router-link>
+        <router-link to="/scheduling/department/worktable" exact tag="span">科室出班表</router-link>
+        <router-link to="/scheduling/department/templatesetting" tag="span">科室排班模板</router-link>
+        <router-link to="/scheduling/medical/wordtable" exact tag="span">医务科出班表</router-link>
+        <router-link to="/scheduling/medical/template" tag="span">医务科排班模板</router-link>
+        <router-link to="/scheduling/clinic/worklist" exact tag="span">门办出班表</router-link>
+        <router-link to="/scheduling/clinic/tpcard" tag="span">门办排班模板</router-link>
       </div>
     </div>
     <div class="pagebody">

@@ -1,10 +1,10 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link to="/scheduling/template" class="pull-right">
+      <router-link to="/scheduling/clinic/tplist" class="pull-right">
         <i class="el-icon-close"></i>
       </router-link>
-      <span>春季排班模板设置</span>
+      <span>XX排班模板设置/XX科室</span>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
@@ -20,12 +20,11 @@
               <span><i class="union"></i>联合（4）</span>
               <span><i class="VIP"></i>特需（5）</span>
                <span class="pull-right">
-                <el-button @click="SettingVisible = true" icon="plus" type="primary" size="small">设置排班模板</el-button>
-                <el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>
+                <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <el-button @click="ExportVisible = true" type="primary" size="small">导出</el-button>
                 <el-button @click="PrintVisible = true" type="primary" size="small">打印</el-button>
                  <!--设置-->
-              <el-dialog  title="排班模板设置" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
+              <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
              <div class="Adjustment" style="">
                <a>调整记录</a>
              </div>
@@ -298,10 +297,44 @@
                 <div>
                   <span>下午</span>
                   <span>
-                  <div @click="dialogVisible = true" class="ordered disease">
+                   <el-popover  placement="bottom" width="200" trigger="hover">
+                   <div class="fixed-info">
+                    <div class="fixed-body">
+                      <div class="fixed-title">出班信息</div>
+                      <p>
+                        <span class="fixed-label">出诊院区：</span>
+                        <span>黄埔院区</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">就诊科室：</span>
+                        <span>胸外科精品B</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">服务类型：</span>
+                        <span>特需</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">出诊时间：</span>
+                        <span>上午8:00-12:00</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">就诊地址：</span>
+                        <span>3号楼9楼胸外科（超过12个字换行）</span>
+                      </p>
+                      <p>
+                        <span class="fixed-label">号源数量：</span>
+                        <span>18</span>
+                      </p>
+                    </div>
+                     <div class="fixed-footer">
+                       <el-button @click="SettingVisible = true" size="small" class="btn-blue pull-right">查看详情</el-button>
+                     </div>
+                   </div>
+                  <div slot="reference" class="ordered disease">
                     <p>09:00-11:30</p>
                     <p>胸外科精品B</p>
                   </div>
+                  </el-popover>
                 </span>
                   <span></span>
                   <span></span>
@@ -651,5 +684,67 @@
     width: 100%;
     height: 880px;
     background: #fff;
+  }
+
+  .fixed-info{
+    padding: 5px;
+    color: #999;
+  }
+  .fixed-body{
+    border-bottom: 1px dashed #e0e0e0;
+    padding-bottom: 10px;
+  }
+  .fixed-body>p{
+    width: 100%;
+    display: inline-block;
+  }
+  .fixed-body>p>span{
+    display: inline-block;
+    float: left;
+    width: 130px;
+  }
+
+  .fixed-body>p>span.fixed-label{
+    width: 60px;
+  }
+  .fixed-title{
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #333;
+  }
+  .fixed-footer{
+    margin-top: 15px;
+  }
+  .btn-blue{
+    background: #fff;
+    border-color: #50bfff;
+    color: #50bfff;
+  }
+  .btn-blue:hover{
+    color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+  }
+  .now-num{
+    position: absolute;
+    top:15px;
+    right: 30px;
+    color: rgb(255,197,61);
+  }
+  .tab-label{
+    width: 110px;
+    text-align: right;
+    display: inline-block;
+    font-size: 14px;
+    padding: 0px 12px 20px 0;
+    box-sizing: border-box;
+  }
+  .line{
+    width: 100%;
+    float: left;
+    margin-bottom: 22px;
+    display: inline-block;
+    border-bottom: 1px dashed #e0e0e0;
   }
 </style>

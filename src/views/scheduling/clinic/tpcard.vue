@@ -6,14 +6,15 @@
       </span>
     </div>
     <div class="page-main">
-      <tpcard v-for="num in TpCard" :card="num"></tpcard>
+        <tpcard v-for="num in TpCard" :card="num">
+        </tpcard>
     </div>
   </div>
 </template>
 
 <script>
-  import api from '../../../api'
-  import tpcard from '../../components/base/card/tp-card'
+  import api from '../../../../api'
+  import tpcard from '../../../components/base/card/tp-card'
   export default {
     data() {
       return {
