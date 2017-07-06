@@ -3,7 +3,9 @@
             <div class="Att-list-title">
               当前模版：<span class="name">春季模板</span>
               <span><i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
-              <el-button class="pull-right btn-blue" @click="SettingVisible=true" type="primary" size="small">设置出班</el-button>
+               <span class="setting-btn">
+                 <el-button class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
+               </span>
               <el-dialog title="设置出班" :visible.sync="SettingVisible" size="tiny">
               <div>
                 <el-form ref="form" :model="form" label-width="80px">
@@ -133,8 +135,9 @@
     color: #999;
     height: 40px;
     line-height: 30px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #E7ECF4;
     margin-bottom: 10px;
+    position: relative;
   }
   .Att-list-title>.name{
     color: #333;
@@ -232,5 +235,8 @@
     color: #fff;
     background-color: #20a0ff;
     border-color: #20a0ff;
+  }
+  .setting-btn{
+    position: absolute;right: -20px;top: -70px;
   }
 </style>

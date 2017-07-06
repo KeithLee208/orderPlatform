@@ -17,7 +17,7 @@
     line-height: 50px;
     text-align: center;
     background-color: #fff;
-    border-top: 1px solid #F2F2F2;
+    border-top: 1px solid #E7ECF4;
     cursor: default;
     bottom: 0;
     z-index:2009;

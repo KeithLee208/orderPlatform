@@ -21,6 +21,7 @@
 
 <style>
   @import './../static/css/reset.css';
+  @import './../static/font/iconfont.css';
   body {
     overflow-x: hidden;
     background-color: #f9f9f9;
@@ -31,7 +32,7 @@
     width: 100%;
     min-height: 833px;
     padding:20px;
-    background: rgb(238,238,238);
+    background: #F3F6FA;
   }
   .filter-warrper{
     width: 100%;

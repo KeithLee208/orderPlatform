@@ -93,8 +93,8 @@
               <div>
                 <i></i>
                 <p>
-                  <span>主治医师</span>
-                  <span>张文</span>
+                  <span class="name">主治医师</span>
+                  <span class="position">张文</span>
                 </p>
               </div>
             </div>
@@ -160,8 +160,8 @@
                   <span></span>
                   <span>
                   <div class="ordered union">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
+                    <p class="name">09:00-11:30</p>
+                    <p class="position">胸外科精品B</p>
                   </div>
                 </span>
                   <span></span>
@@ -187,7 +187,7 @@
           <el-dialog
             title="出班调整"
             :visible.sync="ShiftVisible"
-            size="tiny"
+            size="small"
             :show-close="false">
             <div>
               <div class="now-num">已有32位患者预约</div>
@@ -241,7 +241,9 @@
                   <el-form-item label="当前预约时间">
                     <span>2015/05/01</span>
                   </el-form-item>
-
+                  <div class="change-icon">
+                    <i class="icon iconfont icon-duihuan"></i>
+                  </div>
                   <el-form-item label="调班医生">
                     <el-cascader
                       placeholder="可搜索"
@@ -326,9 +328,9 @@
               </div>
             </div>
             <span slot="footer" class="dialog-footer">
-                            <el-button @click="SettingVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="SettingVisible = false">确定</el-button>
-                          </span>
+              <el-button @click="RecordVisible = false">取 消</el-button>
+              <el-button type="primary" @click="RecordVisible = false">确定</el-button>
+            </span>
           </el-dialog>
         </div>
       </div>
@@ -519,6 +521,7 @@
     font-size: 14px;
     color: #bbb;
     margin-left: 15px;
+    color: rgba(255,255,255,.5);
   }
   .setting-header > .used-time>i{
     margin-right: 5px;
@@ -558,13 +561,16 @@
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
+    margin-top: 10px;
   }
 
   .table-time > span {
     width: 12.5%;
-    height: 55px;
-    line-height: 55px;
+    height: 45px;
+    line-height: 45px;
     float: left;
+    font-size: 14px;
+    font-weight: bold;
     text-align: center;
     box-sizing: border-box;
   }
@@ -607,30 +613,37 @@
   }
 
   .AdTableLeft > div > i {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     float: left;
-    margin: 53px 0px;
-    background: red;
+    margin: 60px 0px;
+    background: url("../../../../static/img/man.png") center center no-repeat;
   }
 
   .AdTableLeft > div > p {
     float: left;
-    width: 120px;
+    width: 100px;
     height: 166px;
     text-align: center;
-    padding: 50px 0;
+    padding: 70px 0;
     box-sizing: border-box;
   }
 
   .AdTableLeft > div > p > span {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
     width: 100px;
     display: inline-block;
     float: left;
   }
-
+  .AdTableLeft > div > p>.name{
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+  }
+  .AdTableLeft > div > p>.position{
+    color: #999;
+  }
   .table-body > div {
     width: 100%;
     display: inline-block;
@@ -638,7 +651,7 @@
   }
 
   .table-body > .border-top-1 {
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #D4DEED;
   }
 
   .table-body > div > span {
@@ -648,21 +661,24 @@
     float: left;
     text-align: center;
     box-sizing: border-box;
-    border-left: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #D4DEED;
+    border-bottom: 1px solid #D4DEED;
     box-sizing: border-box;
   }
+  /*-------------------------*/
 
   .ordered {
     width: 100%;
     height: 100%;
     display: inline-block;
     font-size: 14px;
+    padding: 10px 0 10px 0;
+    box-sizing: border-box;
   }
 
   .ordered > p {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
   }
   /*default,expert,disease,union,VIP*/
 
@@ -876,5 +892,16 @@
   }
   .time-left>i.active{
     background: #20a0ff;
+  }
+  .change-icon{
+    text-align: center;
+    float: left;
+    width: 100%;
+    position: relative;
+    top: -15px;
+  }
+  .change-icon>i{
+    font-size: 60px;
+    color: rgb(62,156,255);
   }
 </style>

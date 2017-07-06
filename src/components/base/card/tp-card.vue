@@ -79,18 +79,19 @@
     width: 19%;
     height: 315px;
     float: left;
-    border: 1px solid #e0e0e0;
+    border:1px solid transparent;
     margin: 5px 1% 10px 0;
     box-sizing: border-box;
-    bottom: 0px;
+    bottom: 1px;
     transition:all .2s;
     cursor: default;
     background: #fff;
+    border-radius:2px ;
   }
   .tp-card:hover{
     bottom: 3px;
-    border: 1px solid rgb(132, 166, 181);
-    box-shadow: 0 0 20px rgba(63,81,181, 0.5);
+    border: 1px solid rgba(132, 166, 181,.6);
+    box-shadow: 0 0 15px rgba(63,81,181, 0.3);
   }
   .tp-card p{
     height: 35px;

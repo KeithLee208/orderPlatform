@@ -9,14 +9,13 @@
     </div>
     <div class="setting-body">
       <div class="setting-main">
-        <div>
           <div class="page-head">
             <div class="type-filter">
               <span><i class="el-icon-menu all"></i>全部</span>
               <span class="submit"><i></i>已提交（10）</span>
               <span class="unsubmit"><i></i>待提交（2）</span>
                <span class="pull-right">
-                <el-button icon="plus" type="primary" size="small">设置排班模板</el-button>
+                <el-button @click="SettingVisible=true"  type="primary" size="small">设置费用及号序 </el-button>
               </span>
             </div>
           </div>
@@ -45,8 +44,103 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
+    <el-dialog  title="设置费用及号序" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
+      <div class="Adjustment" style="">
+        <a>调整记录</a>
+      </div>
+      <div>
+        <el-form  ref="form" :model="form" label-width="80px">
+          <el-form-item label="服务类型">
+            <div class="type-filter in-model">
+              <span ><i class="el-icon-menu all"></i>全部</span>
+              <span><i class="default"></i>普通（10）</span>
+              <span><i class="expert"></i>专家（2）</span>
+              <span><i class="disease"></i>专病（3）</span>
+              <span><i class="union"></i>联合（4）</span>
+              <span><i class="VIP"></i>特需（5）</span>
+            </div>
+          </el-form-item>
+          <el-form-item label="选择医生">
+            <el-col :span="14">
+              <el-select v-model="form.region" placeholder="请选择医生">
+                <el-option label="赵大宝" value="赵大宝"></el-option>
+                <el-option label="秦明" value="秦明"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="选择病种">
+                <el-select v-model="form.region" placeholder="请选择病种">
+                  <el-option label="赵大宝" value="赵大宝"></el-option>
+                  <el-option label="秦明" value="秦明"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="选择院区">
+            <el-radio-group v-model="form.radio">
+              <el-radio :label="1">徐汇院区</el-radio>
+              <el-radio :label="2">黄埔院区</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="选择科室">
+            <el-select style="width: 30%" v-model="form.value5" multiple filterable placeholder="请选择">
+              <el-option
+                v-for="item in form.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="就诊时间">
+            <el-checkbox-group v-model="form.type">
+              <el-checkbox label="周一" name="type"></el-checkbox>
+              <el-checkbox label="周二" name="type"></el-checkbox>
+              <el-checkbox label="周三" name="type"></el-checkbox>
+              <el-checkbox label="周四" name="type"></el-checkbox>
+              <el-checkbox label="周五" name="type"></el-checkbox>
+              <el-checkbox label="周六" name="type"></el-checkbox>
+              <el-checkbox label="周七" name="type"></el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="出诊时间">
+            <el-col :span="14">
+              <el-radio-group v-model="form.resource">
+                <el-radio label="上午 8:00-12:00"></el-radio>
+                <el-radio label="下午 13:00-17:00"></el-radio>
+                <el-radio label="晚上 17:00-22:00"></el-radio>
+              </el-radio-group>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="时间段">
+                <el-time-picker
+                  is-range
+                  v-model="form.value3"
+                  placeholder="选择时间范围">
+                </el-time-picker>
+              </el-form-item>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="服务费用">
+            <el-radio-group v-model="form.cost" @change="CostChange">
+              <el-radio label="1" >按号序设置费用</el-radio>
+              <el-radio label="2" >不按号序设置费用</el-radio>
+            </el-radio-group>
+            <span class="cost">服务总费用</span>
+            <el-input class="cost-input" ></el-input>元
+          </el-form-item>
+          <div v-if="Source">1</div>
+          <div v-if="UnSource">2</div>
+
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button  @click="SettingVisible = false" >取消</el-button>
+        <el-button @click="MsgSuccess" type="primary">保存</el-button>
+        <el-button type="success" >保存并设置下一位</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,6 +148,9 @@
   export default {
     data() {
       return {
+        SettingVisible:false,
+        Source:false,
+        UnSource:false,
         attList:[
           {
             name:"外科",
@@ -87,7 +184,36 @@
               { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
             ]
           }
-        ]
+        ],
+        form: {
+          name: '',
+          region: '',
+          radio: '1',
+          radio2: '1',
+          type: [],
+          resource: '',
+          value3: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
+          desc: '',
+          cost:'',
+          options: [
+            {
+            value: '1',
+            label: '脑外科'
+          }, {
+            value: '2',
+            label: '胸外科精品A'
+          }, {
+            value: '3',
+            label: '呼吸内科'
+          }, {
+            value: '4',
+            label: '胸外科精品B'
+          }, {
+            value: '5',
+            label: '骨科'
+          }],
+          value5:''
+        }
         }
     },
     methods: {
@@ -103,6 +229,20 @@
           message: '成功！',
           type: 'success'
         });
+      },
+      CostChange(value){
+        if (value == '1')
+        {
+          this.Source=true;
+          this.UnSource=false;
+          console.log(this.Source);
+        }
+        else if(value == '2')
+        {
+          this.Source=false;
+          this.UnSource=true;
+
+        }
       }
     }
   };
@@ -134,6 +274,7 @@
     font-size: 14px;
     color: #bbb;
     margin-left: 15px;
+    color: rgba(255,255,255,.5);
   }
   .setting-header > .used-time>i{
     margin-right: 5px;
@@ -296,5 +437,68 @@
     border-radius: 4px;
     margin: 0px 20px 0 10px;
     cursor: pointer;
+  }
+
+
+  .page-head > div {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .type-filter > span {
+    display: inline-block;
+    cursor: default;
+  }
+
+  .type-filter > span > .all {
+    border: 1px solid transparent;
+    margin-top: 15px;
+    color: #e0e0e0;
+    font-size: 16px;
+  }
+
+  .type-filter > span > .default {
+    background: #fff;
+  }
+
+  .type-filter > span > .expert {
+    border: 1px solid rgb(192, 229, 255);
+    background: rgb(233, 246, 255);
+  }
+
+  .type-filter > span > .disease {
+    border: 1px solid rgb(188, 241, 212);
+    background: rgb(231, 250, 240);
+  }
+
+  .type-filter > span > .union {
+    border: 1px solid rgb(254, 235, 195);
+    background: rgb(255, 248, 234);
+  }
+
+  .type-filter > span > .VIP {
+    border: 1px solid rgb(255, 204, 204);
+    background: rgb(255, 237, 237);
+  }
+
+  .type-filter > span > i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin: 15px 5px 0 10px;
+    cursor: pointer;
+  }
+  .in-model > span > i, .in-model > span>.all{
+    margin: 10px 5px 0 10px;
+  }
+  .cost{
+    width: 100px;
+    margin: 0 10px 0 40px;
+  }
+  .cost-input{
+    width: 100px;
+    margin: 0 10px 0 0px;
   }
 </style>
