@@ -1,10 +1,11 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link to="/scheduling/clinic/tpcard">
+      <router-link tag="span" to="/scheduling/clinic/tpcard">
         <i class="el-icon-arrow-left"></i>
+        <span>XX出班模板</span>
       </router-link>
-      <span>XX出班模板</span>
+
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
@@ -45,10 +46,10 @@
           </div>
         </div>
     </div>
-    <el-dialog  title="设置费用及号序" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
-      <div class="Adjustment" style="">
-        <a>调整记录</a>
-      </div>
+    <el-dialog  title="设置费用及号序" :visible.sync="SettingVisible" size="large"  top="5%">
+      <!--<div class="Adjustment" style="">-->
+        <!--<a>调整记录</a>-->
+      <!--</div>-->
       <div>
         <el-form  ref="form" :model="form" label-width="80px">
           <el-form-item label="服务类型">
@@ -130,8 +131,10 @@
             <span class="cost">服务总费用</span>
             <el-input class="cost-input" ></el-input>元
           </el-form-item>
-          <div v-if="Source">1</div>
-          <div v-if="UnSource">2</div>
+          <div v-if="Source">
+            <div>（按号序设置费用）</div>
+          </div>
+          <div v-if="UnSource">（不按号序设置费用内容）</div>
 
         </el-form>
       </div>
@@ -268,6 +271,7 @@
 
   .setting-header > span {
     font-size: 16px;
+    cursor: pointer;
   }
 
   .setting-header > .used-time {
@@ -295,7 +299,7 @@
   }
 
   .Adjustment{
-    height: 25px; line-height:25px;position: absolute;right: 20px;top: 30px;
+    height: 25px; line-height:25px;position: absolute;right: 40px;top: 45px;
   }
   .Adjustment>a{
     text-decoration: none;
@@ -331,14 +335,44 @@
   .type-filter > span > .default {
     background: #fff;
   }
+
+  .type-filter > span > .expert {
+    border: 1px solid rgb(192, 229, 255);
+    background: rgb(233, 246, 255);
+  }
+
+  .type-filter > span > .disease {
+    border: 1px solid rgb(188, 241, 212);
+    background: rgb(231, 250, 240);
+  }
+
+  .type-filter > span > .union {
+    border: 1px solid rgb(254, 235, 195);
+    background: rgb(255, 248, 234);
+  }
+
+  .type-filter > span > .VIP {
+    border: 1px solid rgb(255, 204, 204);
+    background: rgb(255, 237, 237);
+  }
+
+  .type-filter > span > i {
+    width: 16px;
+    height: 16px;
+    float: left;
+
+    border-radius: 4px;
+    margin: 15px 5px 0 10px;
+    cursor: pointer;
+  }
   .type-filter>.submit{
-    color:#20a0ff;
+    color:#3f51b5;
   }
   .type-filter>.unsubmit{
     color:#e0e0e0;
   }
   .type-filter>.submit>i{
-    background: #20a0ff;
+    background: #3f51b5;
   }
   .type-filter>.unsubmit>i{
     background: #e0e0e0;
@@ -371,17 +405,19 @@
     cursor: default;
   }
   .Att-row>.Att-row-lable{
-    position: absolute;
-    width: 150px;
+    font-weight: bold;
+    font-size: 14px;
+    width: 100%;
     height: 40px;
     line-height: 40px;
-    left: 0;
-    top: 0;
+
   }
   .Att-row>.Att-row-data{
     width: 100%;
     box-sizing: border-box;
-    padding-left: 150px;
+    display: inline-block;
+    border-bottom: 1px dashed #e0e0e0;
+    padding-bottom: 15px;
   }
   .Att-row-data>span{
     float: left;
@@ -462,4 +498,8 @@
     background-color: #20a0ff;
     border-color: #20a0ff;
   }
+  .el-button--text{
+    color: #3f51b5;
+  }
+
 </style>

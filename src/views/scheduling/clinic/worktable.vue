@@ -189,7 +189,7 @@
             title="出班调整"
             :visible.sync="ShiftVisible"
             size="small"
-            :show-close="false">
+            >
             <div>
               <div class="now-num">已有32位患者预约</div>
               <div class="now-info">

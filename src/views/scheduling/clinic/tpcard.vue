@@ -5,7 +5,7 @@
       <el-button class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
       </span>
     </div>
-    <el-dialog title="模板名称" :visible.sync="CreatVisible" size="tiny" :show-close="false">
+    <el-dialog title="模板名称" :visible.sync="CreatVisible" size="tiny">
               <div>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-input placeholder="请输入模板名称" v-model="form.name"></el-input>

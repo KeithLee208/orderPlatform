@@ -30,10 +30,10 @@
                     </el-tooltip>
                 </span>
                  <!--设置-->
-              <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
-             <div class="Adjustment" style="">
-               <a>调整记录</a>
-             </div>
+              <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">
+             <!--<div class="Adjustment" style="">-->
+               <!--<a>调整记录</a>-->
+             <!--</div>-->
             <div>
               <el-form  ref="form" :model="form" label-width="80px">
                   <el-form-item label="服务类型">
@@ -218,7 +218,7 @@
               </span>
             </el-dialog>
                  <!--导出-->
-              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" :show-close="false">
+              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" >
               <span>
               <p>起始时间：
                 <el-date-picker
@@ -310,7 +310,7 @@
                       </p>
                     </div>
                      <div class="fixed-footer">
-                       <el-button @click="SettingVisible = true" size="small" class="btn-blue pull-right">查看详情</el-button>
+                       <el-button @click="SettingVisible = true" type="text" size="small">查看详情</el-button>
                      </div>
                    </div>
                   <div slot="reference" class="ordered disease">
