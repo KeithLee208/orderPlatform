@@ -223,7 +223,7 @@
     float: left;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
-    margin: 0px 20px 0 10px;
+    margin: 0px 20px 0 0px;
     cursor: pointer;
   }
   .btn-blue {

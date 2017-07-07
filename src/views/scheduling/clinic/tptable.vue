@@ -21,8 +21,14 @@
               <span><i class="VIP"></i>特需（5）</span>
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
-                <el-button @click="ExportVisible = true" type="primary" size="small">导出</el-button>
-                <el-button @click="PrintVisible = true" type="primary" size="small">打印</el-button>
+                <span class="icon-group">
+                  <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
+                     <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
+                 <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                    </el-tooltip>
+                </span>
                  <!--设置-->
               <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large" :show-close="false" top="5%">
              <div class="Adjustment" style="">
@@ -734,5 +740,12 @@
     margin-bottom: 22px;
     display: inline-block;
     border-bottom: 1px dashed #e0e0e0;
+  }
+  .icon-group>i{
+    margin-left: 15px;
+    color: rgb(192,189,185);
+  }
+  .icon-group>i:hover{
+    color: rgb(89,100,185);
   }
 </style>

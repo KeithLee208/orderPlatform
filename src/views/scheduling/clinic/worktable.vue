@@ -20,9 +20,10 @@
               <span><i class="union"></i>联合（4）</span>
               <span><i class="VIP"></i>特需（5）</span>
                <span class="pull-right">
-                <el-button @click="ExportVisible = true" type="primary" size="small">导出</el-button>
-                <el-button @click="PrintVisible = true" type="primary" size="small">打印</el-button>
-
+                 <span class="icon-group">
+                 <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
+                 <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                </span>
                  <!--打印-->
               <el-dialog title="打印出班表" :visible.sync="PrintVisible" size="tiny">
               <span>
@@ -51,7 +52,7 @@
               </span>
             </el-dialog>
                  <!--导出-->
-              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" :show-close="false">
+              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" >
               <span>
               <p>起始时间：
                 <el-date-picker
@@ -143,8 +144,8 @@
                       </p>
                     </div>
                      <div class="fixed-footer">
-                       <el-button @click="ShiftVisible = true" size="small" class="btn-blue">出班调整</el-button>
-                       <el-button @click="RecordVisible = true" size="small" class="btn-blue pull-right">调整记录</el-button>
+                       <el-button class="fixed-footer-btn" @click="ShiftVisible = true" type="text" size="small" >出班调整</el-button>
+                       <el-button @click="RecordVisible = true" type="text" size="small">调整记录</el-button>
 
                      </div>
                    </div>
@@ -903,5 +904,16 @@
   .change-icon>i{
     font-size: 60px;
     color: rgb(62,156,255);
+  }
+  .icon-group>i{
+    margin-left: 15px;
+    color: rgb(192,189,185);
+  }
+  .icon-group>i:hover{
+    color: rgb(89,100,185);
+  }
+  .fixed-footer-btn{
+    border-right: 1px solid #e0e0e0;
+    padding-right: 15px;
   }
 </style>

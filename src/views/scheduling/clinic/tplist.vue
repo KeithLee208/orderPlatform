@@ -15,7 +15,7 @@
               <span class="submit"><i></i>已提交（10）</span>
               <span class="unsubmit"><i></i>待提交（2）</span>
                <span class="pull-right">
-                <el-button @click="SettingVisible=true"  type="primary" size="small">设置费用及号序 </el-button>
+                <el-button class="btn-blue" @click="SettingVisible=true" type="primary">设置费用及号序 </el-button>
               </span>
             </div>
           </div>
@@ -335,19 +335,18 @@
     color:#20a0ff;
   }
   .type-filter>.unsubmit{
-    color:#ccc;
+    color:#e0e0e0;
   }
   .type-filter>.submit>i{
     background: #20a0ff;
   }
   .type-filter>.unsubmit>i{
-    background: #ccc;
+    background: #e0e0e0;
   }
   .type-filter > span > i {
     width: 16px;
     height: 16px;
     float: left;
-    border: 1px solid #e0e0e0;
     border-radius: 4px;
     margin: 16px 5px 0 10px;
     cursor: pointer;
@@ -435,7 +434,7 @@
     float: left;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
-    margin: 0px 20px 0 10px;
+    margin: 0px 20px 0 0px;
     cursor: pointer;
   }
 
@@ -445,54 +444,6 @@
     line-height: 50px;
   }
 
-  .type-filter > span {
-    display: inline-block;
-    cursor: default;
-  }
-
-  .type-filter > span > .all {
-    border: 1px solid transparent;
-    margin-top: 15px;
-    color: #e0e0e0;
-    font-size: 16px;
-  }
-
-  .type-filter > span > .default {
-    background: #fff;
-  }
-
-  .type-filter > span > .expert {
-    border: 1px solid rgb(192, 229, 255);
-    background: rgb(233, 246, 255);
-  }
-
-  .type-filter > span > .disease {
-    border: 1px solid rgb(188, 241, 212);
-    background: rgb(231, 250, 240);
-  }
-
-  .type-filter > span > .union {
-    border: 1px solid rgb(254, 235, 195);
-    background: rgb(255, 248, 234);
-  }
-
-  .type-filter > span > .VIP {
-    border: 1px solid rgb(255, 204, 204);
-    background: rgb(255, 237, 237);
-  }
-
-  .type-filter > span > i {
-    width: 16px;
-    height: 16px;
-    float: left;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    margin: 15px 5px 0 10px;
-    cursor: pointer;
-  }
-  .in-model > span > i, .in-model > span>.all{
-    margin: 10px 5px 0 10px;
-  }
   .cost{
     width: 100px;
     margin: 0 10px 0 40px;
@@ -500,5 +451,15 @@
   .cost-input{
     width: 100px;
     margin: 0 10px 0 0px;
+  }
+  .btn-blue {
+    background: #fff;
+    border-color: #50bfff;
+    color: #50bfff;
+  }
+  .btn-blue:hover {
+    color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
   }
 </style>
