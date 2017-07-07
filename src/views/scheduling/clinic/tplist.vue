@@ -408,22 +408,22 @@
     font-weight: bold;
     font-size: 14px;
     width: 100%;
-    height: 40px;
-    line-height: 40px;
+    height: 20px;
+    line-height: 20px;
 
   }
   .Att-row>.Att-row-data{
     width: 100%;
     box-sizing: border-box;
     display: inline-block;
-    border-bottom: 1px dashed #e0e0e0;
+    border-bottom: 1px dashed #E7ECF4;
     padding-bottom: 15px;
   }
   .Att-row-data>span{
     float: left;
     width: 185px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     color: rgb(32,178,255);
   }
   .Att-list-body{
