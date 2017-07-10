@@ -820,8 +820,8 @@
   }
   .now-num{
     position: absolute;
-    top:15px;
-    right: 30px;
+    top:18px;
+    right: 36px;
     color: rgb(255,197,61);
   }
   .tab-label{

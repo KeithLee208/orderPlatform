@@ -258,7 +258,7 @@
     display: inline-block;
     line-height: 60px;
     padding: 0 30px 0 30px;
-    background: #3f51b5;
+    background:rgb(63,81,181);
     color: #fff;
     border-bottom: 1px solid #e0e0e0;
     cursor: default;
@@ -416,7 +416,7 @@
     width: 100%;
     box-sizing: border-box;
     display: inline-block;
-    border-bottom: 1px dashed #E7ECF4;
+    border-bottom: 1px solid #E7ECF4;
     padding-bottom: 15px;
   }
   .Att-row-data>span{
@@ -499,7 +499,7 @@
     border-color: #20a0ff;
   }
   .el-button--text{
-    color: #3f51b5;
+    color: #1d90e6;
   }
 
 </style>

@@ -75,8 +75,6 @@
   }
   .tp-card{
     position: relative;
-    min-width: 310px;
-    width: 19%;
     height: 315px;
     float: left;
     border:1px solid transparent;
@@ -87,6 +85,30 @@
     cursor: default;
     background: #fff;
     border-radius:2px ;
+  }
+  @media screen and (max-width: 1440px) {
+    .tp-card{
+      min-width: 250px;
+      width: 19%;
+    }
+  }
+  @media screen and (max-width: 1920px) {
+    .tp-card{
+      min-width: 260px;
+      width: 19%;
+    }
+  }
+  @media screen and (max-width: 1366px) {
+    .tp-card{
+      min-width: 310px;
+      width: 24%;
+    }
+  }
+  @media screen and (max-width: 1024px) {
+    .tp-card{
+      min-width: 300px;
+      width: 32%;
+    }
   }
   .tp-card:hover{
     bottom: 3px;

@@ -12,7 +12,7 @@
 },
   {
     "TemplateName":"夏季模板",
-    "UseState":"正在使用",
+    "UseState":"未启用",
     "StartTime":"2017/02/03",
     "EndTime":"2017/05/03",
     "DepartmentNum":"10",

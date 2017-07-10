@@ -11,7 +11,13 @@
       <router-link to="/setting" tag="span">设置</router-link>
     </div>
     <div class="icon-menu">
-      1
+      <i class="iconfont icon-sousuo"></i>
+      <i class="iconfont icon-tixing">
+        <sup style="background-color: #ff4949;height: 18px;"></sup>
+      </i>
+      <span style="margin-left: 20px;">胸外科</span>
+       <i style="font-size: 24px;" class="iconfont icon-adminmoren"></i>
+      李峰
     </div>
   </nav>
 </template>
@@ -75,12 +81,14 @@
 
   .icon-menu {
     float: right;
+    color: #FFFFFF;
+    font-size: 18px;
   }
 
   .icon-menu > i {
     height: 24px;
     width: 24px;
-    background: black;
+    font-size: 18px;
     display: inline-block;
     margin-left: 40px;
     cursor: pointer;
