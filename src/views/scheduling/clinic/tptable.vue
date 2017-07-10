@@ -26,8 +26,8 @@
                      <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
-                 <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
-                    </el-tooltip>
+                    <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                  </el-tooltip>
                 </span>
                  <!--设置-->
               <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">

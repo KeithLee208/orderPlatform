@@ -20,9 +20,13 @@
               <span><i class="union"></i>联合（4）</span>
               <span><i class="VIP"></i>特需（5）</span>
                <span class="pull-right">
-                 <span class="icon-group">
-                 <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
-                 <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                <span class="icon-group">
+                  <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
+                     <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
+                    <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                  </el-tooltip>
                 </span>
                  <!--打印-->
               <el-dialog title="打印出班表" :visible.sync="PrintVisible" size="tiny">

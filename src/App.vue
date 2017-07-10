@@ -55,4 +55,34 @@
   .color-333{
     color: #333;
   }
+  @media screen and (max-width: 1024px){
+    .header > .logo>span{
+      display: none !important;
+    }
+    .nav-1st{
+      margin-left: 0px !important;
+    }
+  }
+  ::-webkit-scrollbar
+  {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track-piece
+  {
+    background-color: #CCCCCC;
+    -webkit-border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:vertical
+  {
+    height: 5px;
+    background-color: #999;
+    -webkit-border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:horizontal
+  {
+    width: 5px;
+    background-color: #CCCCCC;
+    -webkit-border-radius: 6px;
+  }
 </style>
