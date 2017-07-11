@@ -1,95 +1,37 @@
 <template>
   <div>
     <div class="Channel-Warrper">
-      <draggable  @start="drag=true" @end="drag=false">
-        <div class="channel-box default">
-          <p class="top">5</p>
-          <p class="footer">非预约</p>
-        </div>
-        <div class="channel-box hospital">
-          <p class="top">3</p>
-          <p class="footer">院内预约</p>
-        </div>
-        <div class="channel-box weChat">
-          <p class="top">10</p>
-          <p class="footer">官微预约</p>
-        </div>
-        <div class="channel-box web">
-          <p class="top">8</p>
-          <p class="footer">挂号网预约</p>
-        </div>
-        <div class="channel-box official">
-          <p class="top">4</p>
-          <p class="footer">官网预约</p>
+      <draggable @update="datadragEnd"  @start="drag=true" @end="drag=false">
+        <div v-for="item in channal" :key="channal.index" class="channel-box" :class="item.type">
+          <p class="top">{{item.num}}</p>
+          <p class="footer">{{item.name}}</p>
         </div>
       </draggable>
     </div>
     <div class="production">
-      <el-button class="pull-right" type="success">生成号序</el-button>
+      <el-button @click="production()" class="pull-right" type="success">生成号序</el-button>
     </div>
-    <div>
+    <div v-if="ball">
       <div class="ball-row">
-        <draggable  @start="drag=true" @end="drag=false">
-                   <span>
-                     <i>1</i>
-                   </span>
-                    <span>
-                     <i>2</i>
-                   </span>
-                    <span>
-                     <i>3</i>
-                   </span>
-                    <span>
-                     <i class="hospital">4</i>
-                   </span>
-                    <span>
-                     <i class="hospital">5</i>
-                   </span>
-                    <span>
-                     <i class="hospital">6</i>
-                   </span>
-                    <span>
-                     <i class="weChat">7</i>
-                   </span>
-                    <span>
-                     <i class="weChat">8</i>
-                   </span>
-                    <span>
-                     <i class="weChat">9</i>
-                   </span>
-                    <span>
-                     <i class="weChat">10</i>
-                   </span>
-                   <span>
-                     <i class="weChat">11</i>
-                   </span>
-                    <span>
-                     <i class="web">12</i>
-                   </span>
-                    <span>
-                     <i class="web">13</i>
-                   </span>
-                    <span>
-                     <i class="web">14</i>
-                   </span>
-                    <span>
-                     <i class="web">15</i>
-                   </span>
-                    <span>
-                     <i class="official">16</i>
-                   </span>
-                    <span>
-                     <i class="official">17</i>
-                   </span>
-                    <span>
-                     <i class="official">18</i>
-                   </span>
-                    <span>
-                     <i class="official">19</i>
-                   </span>
-                    <span>
-                     <i class="plus el-icon-plus"></i>
-                   </span>
+        <draggable  @update="datadragEnd" @start="drag=true" @end="drag=false">
+             <span v-for="item1 in num1">
+               <i>{{item1}}</i>
+             </span>
+              <span v-for="item2 in num2">
+               <i class="hospital">{{item2+num1}}</i>
+             </span>
+              <span v-for="item3 in num3">
+               <i class="wechat">{{item3+num1+num2}}</i>
+             </span>
+              <span v-for="item4 in num4">
+               <i class="web">{{item4+num1+num2+num3}}</i>
+             </span>
+              <span v-for="item5 in num5">
+               <i class="official">{{item5+num1+num2+num3+num4}}</i>
+             </span>
+              <span>
+               <i class="plus el-icon-plus"></i>
+             </span>
         </draggable>
       </div>
     </div>
@@ -99,6 +41,58 @@
 <script>
   import draggable from 'vuedraggable'
   export default{
+    data(){
+      return{
+       channal:[
+         {
+         name:'非预约',
+         num:'5',
+         type:'default',
+         index:0
+         },
+         {
+           name:'院内预约',
+           num:'3',
+           type:'hospital',
+           index:1
+         },
+         {
+           name:'官微预约',
+           num:'10',
+           type:'wechat',
+           index:2
+         },
+         {
+           name:'挂号网预约',
+           num:'8',
+           type:'web',
+           index:3
+         },
+         {
+           name:'官网预约',
+           num:'4',
+           type:'official',
+           index:4
+         }
+       ],
+        ball:false,
+        num1:5,
+        num2:3,
+        num3:10,
+        num4:8,
+        num5:4
+      }
+    },
+    methods:{
+      production(){
+        this.ball=true;
+      },
+      datadragEnd (evt) {
+        console.log(this.channal)
+
+//        console.log(this.draggedContext.element.name)
+      }
+    },
     components:{
       draggable
     }
@@ -106,9 +100,7 @@
 </script>
 
 <style scoped>
-  .Channel{
-    margin-left: 80px;
-  }
+
   .Channel-Warrper{
     margin: 20px 0 20px 0;
   }
@@ -136,7 +128,7 @@
   .channel-box.hospital{
     color: #20a0ff;
   }
-  .channel-box.weChat{
+  .channel-box.wechat{
     color: #0caf4e;
   }
   .channel-box.web{
@@ -188,7 +180,7 @@
     background: #e9f6ff;
     color: #20a0ff;
   }
-  .ball-row>div>span>i.weChat{
+  .ball-row>div>span>i.wechat{
     border: 1px solid #bcf1d4;
     background: #e7faf0;
     color: #0caf4e;

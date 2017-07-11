@@ -646,7 +646,9 @@
     display: inline-block;
     margin-bottom: 20px;
   }
-
+  .Channel{
+    margin-left: 80px;
+  }
   .UnChannel{
     margin-top: 20px;
   }
