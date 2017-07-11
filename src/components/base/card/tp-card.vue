@@ -1,6 +1,6 @@
 <template>
   <router-link to="/scheduling/clinic/tplist" exact tag="span">
-  <div class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
+  <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
     <div class="tp-card-head">
       <p>
          <span class="tp-card-title">{{card.TemplateName}}</span>
@@ -37,7 +37,7 @@
       <span class="tp-num pull-right">{{card.VIPClinic}}</span>
     </p>
     <transition name="el-fade-in-linear">
-    <div v-if="TimeShow==='false'" v-on:click.stop="DeleteCard()" class="tp-card-close">
+    <div v-if="TimeShow==false" v-on:click.stop="DeleteCard()" class="tp-card-close">
       <i class="el-icon-close"></i>
     </div>
     </transition>
@@ -52,18 +52,19 @@
     props: ['card'],
     data(){
       return{
-      TimeShow:'true'
+      TimeShow:true,
+      CardShow:true
       }
     },
     methods:{
       DeleteCard(){
-        alert('删除事件(阻止路由冒泡)');
+        this.CardShow=false;
       },
       handleTpCardMouseOver(){
-        this.TimeShow='false';
+        this.TimeShow=false;
       },
       handleTpCardMouseLeave(){
-        this.TimeShow='true';
+        this.TimeShow=true;
       }
     }
     }
