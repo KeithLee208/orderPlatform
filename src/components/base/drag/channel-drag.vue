@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="Channel-Warrper">
-      <draggable @update="datadragEnd"  @start="drag=true" @end="drag=false">
-        <div v-for="item in channal" :key="channal.index" class="channel-box" :class="item.type">
-          <p class="top">{{item.num}}</p>
-          <p class="footer">{{item.name}}</p>
-        </div>
+      <draggable v-model="channal" @update="datadragEnd"  @start="drag=true" @end="drag=false">
+        <transition-group :name="'flip-list'">
+           <div v-for="item in channal" :key="item.num" class="channel-box" :class="item.type">
+            <p class="top">{{item.num}}</p>
+            <p class="footer">{{item.name}}</p>
+          </div>
+        </transition-group>
       </draggable>
     </div>
     <div class="production">
@@ -13,26 +15,16 @@
     </div>
     <div v-if="ball">
       <div class="ball-row">
-        <draggable  @update="datadragEnd" @start="drag=true" @end="drag=false">
-             <span v-for="item1 in num1">
-               <i>{{item1}}</i>
+        <draggable  v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
+          <transition-group tag="div" :name="'flip-list'">
+             <span v-for="item1 in ballList" :key="item1.index">
+               <i :class="item1.type">{{item1.index}}</i>
              </span>
-              <span v-for="item2 in num2">
-               <i class="hospital">{{item2+num1}}</i>
-             </span>
-              <span v-for="item3 in num3">
-               <i class="wechat">{{item3+num1+num2}}</i>
-             </span>
-              <span v-for="item4 in num4">
-               <i class="web">{{item4+num1+num2+num3}}</i>
-             </span>
-              <span v-for="item5 in num5">
-               <i class="official">{{item5+num1+num2+num3+num4}}</i>
-             </span>
+          </transition-group>
+        </draggable>
               <span>
                <i class="plus el-icon-plus"></i>
              </span>
-        </draggable>
       </div>
     </div>
   </div>
@@ -46,61 +38,140 @@
        channal:[
          {
          name:'非预约',
-         num:'5',
+         num:5,
          type:'default',
-         index:0
+         children:
+           [
+             {
+              name:88
+             },
+             {
+               name:89
+             },
+             {
+               name:90
+             },
+             {
+               name:91
+             },
+             {
+               name:92
+             },
+           ]
          },
          {
            name:'院内预约',
-           num:'3',
+           num:3,
            type:'hospital',
-           index:1
+           children:
+             [
+               {
+                 name:1
+               },
+               {
+                 name:2
+               },
+               {
+                 name:3
+               }
+             ]
          },
          {
            name:'官微预约',
-           num:'10',
+           num:4,
            type:'wechat',
-           index:2
+           children:
+             [
+               {
+                 name:78
+               },
+               {
+                 name:79
+               },
+               {
+                 name:60
+               },
+               {
+                 name:81
+               }
+             ]
          },
          {
            name:'挂号网预约',
-           num:'8',
+           num:2,
            type:'web',
-           index:3
+           children:
+             [
+               {
+                 name:18
+               },
+               {
+                 name:19
+               }
+             ]
          },
          {
            name:'官网预约',
-           num:'4',
+           num:1,
            type:'official',
-           index:4
+           children:
+             [
+               {
+                 name:1
+               }
+             ]
          }
        ],
         ball:false,
-        num1:5,
-        num2:3,
-        num3:10,
-        num4:8,
-        num5:4
+        ballList:[],
+      }
+    },
+    computed:{
+      listString(){
+        return JSON.stringify(this.channal, null, 2);
       }
     },
     methods:{
       production(){
         this.ball=true;
+        let newArr = [];
+        var mynum=0;
+        for(var x=0;x<this.channal.length;x++){
+
+          for(var y=0;y<this.channal[x].num;y++){
+            newArr.push({index:y+mynum+1,type:this.channal[x].type});
+          }
+          mynum+=y;
+        }
+
+//        console.log(newArr);
+//        for(var i=0;i<this.channal.length;i++){
+//          sum += this.channal[i].num;
+//            newArr.push({name:i,type:''});
+//          for(var x=0;x<sum;x++){
+//            newArr[i].type.push(x);
+//          }
+//        }
+//        console.log(newArr);
+//        for(var x=0;)
+//        this.channal.map( item => {
+//            item.children.map( item1 => {
+//                newArr.push({name:item1.name,type:item.type});
+//            });
+//        });
+        this.ballList = newArr;
       },
       datadragEnd (evt) {
-        console.log(this.channal)
 
-//        console.log(this.draggedContext.element.name)
       }
     },
     components:{
       draggable
-    }
+    },
   }
 </script>
 
 <style scoped>
-
   .Channel-Warrper{
     margin: 20px 0 20px 0;
   }
@@ -154,7 +225,7 @@
   .ball-row>span:last-child{
     border-right: 1px transparent;
   }
-  .ball-row>div>span
+  .ball-row>div>div>span
   {
     display: inline-block;
     width: 10%;
@@ -164,7 +235,8 @@
     float: left;
     padding: 10px;
   }
-  .ball-row>div>span>i{
+
+  .ball-row>div>div>span>i{
     cursor: pointer;
     display: inline-block;
     font-style: normal;
@@ -175,27 +247,56 @@
     border: 1px solid #e0e0e0;
     font-size: 18px;
   }
-  .ball-row>div>span>i.hospital{
+  .ball-row>span
+  {
+    display: inline-block;
+    width: 10%;
+    height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    padding: 10px;
+  }
+  .ball-row>span>i{
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+  }
+  .ball-row>div>div>span>i.hospital{
     border: 1px solid #c0e5ff;
     background: #e9f6ff;
     color: #20a0ff;
   }
-  .ball-row>div>span>i.wechat{
+  .ball-row>div>div>span>i.wechat{
     border: 1px solid #bcf1d4;
     background: #e7faf0;
     color: #0caf4e;
   }
-  .ball-row>div>span>i.web{
+  .ball-row>div>div>span>i.web{
     border: 1px solid #feebc3;
     background: #fff8ea;
     color: #e8a623;
   }
-  .ball-row>div>span>i.official{
+  .ball-row>div>div>span>i.official{
     border: 1px solid #ffcccc;
     background: #ffeded;
     color: #ff4949;
   }
-  .ball-row>div>span>i.plus{
+  .ball-row>span>i.plus{
     color: #e0e0e0;
   }
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+
+  .no-move {
+    transition: transform 0s;
+  }
+
 </style>
