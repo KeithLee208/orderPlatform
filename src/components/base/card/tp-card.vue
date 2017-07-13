@@ -1,14 +1,21 @@
 <template>
   <router-link to="/scheduling/clinic/tplist" exact tag="span">
+    <transition name="el-zoom-in-top">
   <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
     <div class="tp-card-head">
       <p>
-         <span class="tp-card-title">{{card.TemplateName}}</span>
-         <span v-if="card.UseState==='正在使用'" class="pull-right">
-           <span class="start">{{card.UseState}}</span>
+         <span class="tp-card-title">{{card.mbmc}}</span>
+         <span v-if="card.shzt==='TG'" class="pull-right">
+           <span class="start">审核通过</span>
          </span>
-        <span v-if="card.UseState==='未启用'" class="pull-right">
-           <span class="unstart">{{card.UseState}}</span>
+        <span v-if="card.shzt==='BG'" class="pull-right">
+           <span class="unstart">不通过</span>
+         </span>
+        <span v-if="card.shzt==='WS'" class="pull-right">
+           <span class="unstart">未审核</span>
+         </span>
+        <span v-if="card.shzt==='SZ'" class="pull-right">
+           <span class="unstart">审核中</span>
          </span>
       </p>
 
@@ -43,6 +50,7 @@
     </transition>
     </div>
   </div>
+      </transition>
   </router-link>
 </template>
 

@@ -10,8 +10,8 @@ const mockUrl = process.env.NODE_ENV === 'production'
   : config.dev.assetsPublicPath + config.dev.assetsSubDirectory;
 const url = {};
 url.Scheduling = {};//预约
-url.Scheduling.Template = mockUrl + '/mock/tpcard.json';
-
+// url.Scheduling.Template = mockUrl + '/mock/tpcard.json';
+url.Scheduling.Template = 'http://rapapi.org/mockjsdata/20337/PAT.WEB.APPOINTMENT.SCHEDULE.Q00';
 axios.interceptors.request.use( config => {
   //这里可以加一些交互动作，比如来个进度条开始效果
   return config;

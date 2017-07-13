@@ -54,12 +54,12 @@
         <el-form  ref="form" :model="form" label-width="80px">
           <el-form-item label="服务类型">
             <div class="type-filter in-model">
-              <span ><i class="el-icon-menu all"></i>全部</span>
-              <span><i class="default"></i>普通（10）</span>
-              <span><i class="expert"></i>专家（2）</span>
-              <span><i class="disease"></i>专病（3）</span>
-              <span><i class="union"></i>联合（4）</span>
-              <span><i class="VIP"></i>特需（5）</span>
+              <span><i class="el-icon-menu all"></i>全部</span>
+              <span v-for="(item,index) in form.type.category">
+                <!--,{active:active==index}-->
+                <i @click="selection(index)"  :class="[item.type,{active:form.type.active==index}]"></i>
+                {{item.text}}（{{item.num}}）
+              </span>
             </div>
           </el-form-item>
           <el-form-item label="选择医生">
@@ -95,14 +95,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="就诊时间">
-            <el-checkbox-group v-model="form.type">
-              <el-checkbox label="周一" name="type"></el-checkbox>
-              <el-checkbox label="周二" name="type"></el-checkbox>
-              <el-checkbox label="周三" name="type"></el-checkbox>
-              <el-checkbox label="周四" name="type"></el-checkbox>
-              <el-checkbox label="周五" name="type"></el-checkbox>
-              <el-checkbox label="周六" name="type"></el-checkbox>
-              <el-checkbox label="周七" name="type"></el-checkbox>
+            <el-checkbox-group v-model="form.time">
+              <el-checkbox label="周一" name="time"></el-checkbox>
+              <el-checkbox label="周二" name="time"></el-checkbox>
+              <el-checkbox label="周三" name="time"></el-checkbox>
+              <el-checkbox label="周四" name="time"></el-checkbox>
+              <el-checkbox label="周五" name="time"></el-checkbox>
+              <el-checkbox label="周六" name="time"></el-checkbox>
+              <el-checkbox label="周七" name="time"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="出诊时间">
@@ -235,7 +235,37 @@
           region: '',
           radio: '1',
           radio2: '1',
-          type: [],
+          type: {
+            active:0,
+            category:[
+                  {
+                    type:'default',
+                    text:'普通',
+                    num:10,
+                                      },
+                  {
+                    type:'expert',
+                    text:'专家',
+                    num:2
+                  },
+                  {
+                    type:'disease',
+                    text:'专病',
+                    num:3
+                  },
+                  {
+                    type:'union',
+                    text:'联合',
+                    num:4
+                  },
+                  {
+                    type:'VIP',
+                    text:'特需',
+                    num:5
+                  }
+            ]
+    },
+          time:[],
           resource: '',
           value3: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
           desc: '',
@@ -318,6 +348,9 @@
       },
       AddCard(){
         alert('增加卡片事件.');
+      },
+      selection(index){
+        this.form.type.active=index;
       }
     },
     components:{
@@ -400,6 +433,14 @@
     cursor: default;
   }
 
+  .type-filter > span > i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    border-radius: 4px;
+    margin: 15px 5px 0 10px;
+    cursor: pointer;
+  }
   .type-filter > span > .all {
     border: 1px solid transparent;
     margin-top: 15px;
@@ -408,37 +449,40 @@
   }
 
   .type-filter > span > .default {
+    border: 1px solid #e0e0e0;
     background: #fff;
+  }
+  .type-filter > span > .default.active{
+    background:#e0e0e0;
   }
 
   .type-filter > span > .expert {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
-
+  .type-filter > span > .expert.active{
+    background:rgb(192, 229, 255);
+  }
   .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
   }
-
+  .type-filter > span > .disease.active{
+    background:rgb(188, 241, 212);
+  }
   .type-filter > span > .union {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
-
+  .type-filter > span > .union.active{
+    background:rgb(254, 235, 195);
+  }
   .type-filter > span > .VIP {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
   }
-
-  .type-filter > span > i {
-    width: 16px;
-    height: 16px;
-    float: left;
-
-    border-radius: 4px;
-    margin: 15px 5px 0 10px;
-    cursor: pointer;
+  .type-filter > span > .VIP.active{
+    background:rgb(255, 204, 204);
   }
   .type-filter>.submit{
     color:#3f51b5;

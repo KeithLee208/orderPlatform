@@ -47,7 +47,8 @@
     methods: {
       CardlistInit() {
         api.get(api.url.Scheduling.Template).then(data => {
-          this.TpCard = data;
+          this.TpCard = data.Response.Body;
+        console.log( this.TpCard);
       })
       },
       MsgSuccess(){
