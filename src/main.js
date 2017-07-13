@@ -5,9 +5,10 @@ import App from './App'
 import router from './router'
 import 'wued-ui/lib/theme-default/index.css'
 import WuedUI from 'wued-ui'
-
+import wnhttp from "../api/wnhttp";
 Vue.config.productionTip = false
 Vue.use(WuedUI)
+Vue.use(wnhttp, { mode: 'mock' });
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
