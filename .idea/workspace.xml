@@ -39,32 +39,18 @@
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tplist.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="7020">
-              <caret line="260" column="29" lean-forward="false" selection-start-line="260" selection-start-column="29" selection-end-line="260" selection-end-column="29" />
+              <caret line="260" column="21" lean-forward="false" selection-start-line="260" selection-start-column="21" selection-end-line="260" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="App.vue" pinned="false" current-in-tab="false">
+      <file leaf-file-name="App.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/App.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="567">
               <caret line="22" column="30" lean-forward="false" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/base/header/index.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="15" column="59" lean-forward="false" selection-start-line="15" selection-start-column="59" selection-end-line="15" selection-end-column="59" />
-              <folding>
-                <element signature="n#style#0;n#sup#0;n#i#1;n#div#2;n#nav#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#2;n#nav#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#i#2;n#div#2;n#nav#0;n#template#0;n#!!top" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -106,7 +92,7 @@
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/worktable.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="22221">
-              <caret line="823" column="13" lean-forward="false" selection-start-line="823" selection-start-column="13" selection-end-line="823" selection-end-column="13" />
+              <caret line="823" column="3" lean-forward="true" selection-start-line="823" selection-start-column="3" selection-end-line="823" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -336,9 +322,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../临床药师工作站/cpworkstation/cpworkstation-master" />
+    <property name="last_opened_file_path" value="E:/学习资料/ele/element-dev" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -379,21 +366,23 @@
       <workItem from="1499521012375" duration="1017000" />
       <workItem from="1499568042934" duration="1014000" />
       <workItem from="1499646227044" duration="300000" />
+      <workItem from="1499756212638" duration="51000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6826000" />
+    <option name="totallyTimeSpent" value="6877000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26691332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -751,7 +740,7 @@
     <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/worktable.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22221">
-          <caret line="823" column="13" lean-forward="false" selection-start-line="823" selection-start-column="13" selection-end-line="823" selection-end-column="13" />
+          <caret line="823" column="3" lean-forward="true" selection-start-line="823" selection-start-column="3" selection-end-line="823" selection-end-column="3" />
           <folding />
         </state>
       </provider>
@@ -789,7 +778,7 @@
     <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tplist.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7020">
-          <caret line="260" column="29" lean-forward="false" selection-start-line="260" selection-start-column="29" selection-end-line="260" selection-end-column="29" />
+          <caret line="260" column="21" lean-forward="false" selection-start-line="260" selection-start-column="21" selection-end-line="260" selection-end-column="21" />
           <folding />
         </state>
       </provider>
@@ -821,14 +810,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="22" column="30" lean-forward="false" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/font/demo.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -845,6 +826,14 @@
             <element signature="n#style#0;n#span#0;n#div#2;n#nav#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#i#2;n#div#2;n#nav#0;n#template#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="22" column="30" lean-forward="false" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+          <folding />
         </state>
       </provider>
     </entry>

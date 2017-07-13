@@ -15,6 +15,9 @@
       name: 'app',
       components: {
         WHeader, WFooter
+      },
+      created(){
+
       }
     }
 </script>
