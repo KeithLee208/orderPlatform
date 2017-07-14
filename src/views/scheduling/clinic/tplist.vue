@@ -63,20 +63,16 @@
             </div>
           </el-form-item>
           <el-form-item label="选择医生">
-            <el-col :span="14">
               <el-select v-model="form.region" placeholder="请选择医生">
                 <el-option label="赵大宝" value="赵大宝"></el-option>
                 <el-option label="秦明" value="秦明"></el-option>
               </el-select>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="选择病种">
-                <el-select v-model="form.region" placeholder="请选择病种">
-                  <el-option label="赵大宝" value="赵大宝"></el-option>
-                  <el-option label="秦明" value="秦明"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
+          </el-form-item>
+          <el-form-item label="选择病种">
+            <el-select v-model="form.region" placeholder="请选择病种">
+              <el-option label="赵大宝" value="赵大宝"></el-option>
+              <el-option label="秦明" value="秦明"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="选择院区">
             <el-radio-group v-model="form.radio">
@@ -191,6 +187,7 @@
 </template>
 
 <script>
+  import api from '../../../../api'
   import channeldrag from '../../../components/base/drag/channel-drag.vue'
   export default {
     data() {
@@ -297,6 +294,11 @@
         }
         }
     },
+    created() {
+    this.$nextTick(() => {
+      this.DiseaseInit();//专病病种
+  })
+  },
     methods: {
       MsgSuccess() {
         this.SubmitVisible=false;
@@ -351,6 +353,11 @@
       },
       selection(index){
         this.form.type.active=index;
+      },
+      DiseaseInit(){
+//        api.get(api.url.public.disease).then(data => {
+//          this.TpCard = data.Response.Body;
+//      })
       }
     },
     components:{

@@ -46,9 +46,8 @@
     },
     methods: {
       CardlistInit() {
-        api.get(api.url.Scheduling.Template).then(data => {
+        api.get(api.url.scheduling.template).then(data => {
           this.TpCard = data.Response.Body;
-        console.log( this.TpCard);
       })
       },
       MsgSuccess(){

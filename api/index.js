@@ -9,9 +9,11 @@ const mockUrl = process.env.NODE_ENV === 'production'
   ? config.build.assetsPublicPath + config.build.assetsSubDirectory
   : config.dev.assetsPublicPath + config.dev.assetsSubDirectory;
 const url = {};
-url.Scheduling = {};//预约
+url.public={};//公共服务
+url.public.disease='http://rapapi.org/mockjsdata/20337/PAT.WEB.APPOINTMENT.BASEINFO.Q07';//专病病种
+url.scheduling = {};//预约
 // url.Scheduling.Template = mockUrl + '/mock/tpcard.json';
-url.Scheduling.Template = 'http://rapapi.org/mockjsdata/20337/PAT.WEB.APPOINTMENT.SCHEDULE.Q00';
+url.scheduling.template = 'http://rapapi.org/mockjsdata/20337/PAT.WEB.APPOINTMENT.SCHEDULE.Q00';
 axios.interceptors.request.use( config => {
   //这里可以加一些交互动作，比如来个进度条开始效果
   return config;
