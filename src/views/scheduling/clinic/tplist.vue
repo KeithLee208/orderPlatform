@@ -69,9 +69,13 @@
               </el-select>
           </el-form-item>
           <el-form-item label="选择病种">
-            <el-select v-model="form.region" placeholder="请选择病种">
-              <el-option label="赵大宝" value="赵大宝"></el-option>
-              <el-option label="秦明" value="秦明"></el-option>
+            <el-select v-model="form.diseasevalue" placeholder="请选择病种">
+              <el-option
+                v-for="item in form.disease"
+                :key="item.zydm"
+                :label="item.zymc"
+                :value="item.zydm">
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="选择院区">
@@ -156,7 +160,6 @@
               </el-form-item>
             </el-form>
           </div>
-
           <div class="form-line"></div>
           <el-form-item label="配置号序">
             <span class="num-info">(当前号源数18)</span>
@@ -229,6 +232,8 @@
         ],
         form: {
           name: '',
+          disease:[],
+          diseasevalue:'',
           region: '',
           radio: '1',
           radio2: '1',
@@ -355,9 +360,20 @@
         this.form.type.active=index;
       },
       DiseaseInit(){
-//        api.get(api.url.public.disease).then(data => {
-//          this.TpCard = data.Response.Body;
-//      })
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", { kstybm: '20000000.1.1.0320' }).then(data => {
+          this.form.disease = data;
+        let newArr = [];
+        for(var i=0;i<this.form.disease.length;i++){
+          newArr.push({zydm:this.form.disease[i].zydm,zymc:this.form.disease[i].zymc});
+        }
+        this.form.disease=newArr;
+        console.log(this.form.disease);
+      }).catch(err => {
+          console.log(err);
+        //这里错误有2种错误
+        //1. 服务端业务错误，错误码邮件中有
+        //2. 网络错误，本地网络断开、超时等
+      });
       }
     },
     components:{

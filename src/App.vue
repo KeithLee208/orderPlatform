@@ -15,17 +15,6 @@
       name: 'app',
       components: {
         WHeader, WFooter
-      },
-      created(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm: '20000000.1.1.0320' }).then(data => {
-          //data为具体数据，即：Body对象
-          console.log(data);
-        }).catch(err => {
-          console.log(err);
-          //这里错误有2种错误
-          //1. 服务端业务错误，错误码邮件中有
-          //2. 网络错误，本地网络断开、超时等
-        });
       }
     }
 </script>
