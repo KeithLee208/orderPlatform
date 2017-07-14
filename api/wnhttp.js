@@ -2,7 +2,7 @@
  * Created by sven on 2017/7/13.
  */
 import axios from "axios";
-import mockjs from "mockjs"; //或者 var mockjs = require('mockjs');
+import mockjs from "mockjs";
 const baseConfig = {
   baseUrl: 'http://172.16.0.131:8888/api',
   rap_baseUrl: 'http://rapapi.org/mockjs/20337/' //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
@@ -34,11 +34,11 @@ export default {
         };
         //请求web服务
         if (options.mode === "dev") {
-          axios.post(baseConfig.baseUrl, request)
+          axios.post(baseConfig.rap_baseUrl, request)
             .then(response => {
               let res = response.data.Body;
               let resHead = response.data.Head;
-              if (resHead.AckCode == "100.1" || esHead.AckCode == "100.2") {
+              if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {
                 //成功
                 resolve(res);
               } else {
@@ -59,9 +59,9 @@ export default {
           axios.post(baseConfig.rap_baseUrl + tranCode, request)
             .then(response => {
               var data = mockjs.mock(response.data);
-              let res = data.Body;
-              let resHead = data.Head;
-              if (resHead.AckCode == "100.1" || esHead.AckCode == "100.2") {
+              let res = data.Response.Body;
+              let resHead = data.Response.Head;
+              if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {
                 //成功
                 resolve(res);
               } else {
