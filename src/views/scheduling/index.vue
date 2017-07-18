@@ -21,6 +21,51 @@
       return {
         msg: '1'
       }
+    },
+    created(){
+      this.$nextTick(() => {
+          this.init();
+      })
+    },
+    methods:{
+        init(){
+          this.getDepartmentList();
+          this.getServiceTypeList();
+          this.getTimeSlotList();
+          this.getSpecDiseaseList();
+        },
+        //获取医院所有预约科室
+        getDepartmentList(){
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {}).then(data => {
+            this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
+          }).catch(err => {
+            console.log(err);
+          });
+        },
+        //获取服务类型
+      getServiceTypeList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {}).then(data => {
+          this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //获取时间段列表
+      getTimeSlotList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {}).then(data => {
+          this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //获取专病信息
+      getSpecDiseaseList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {}).then(data => {
+          this.$store.commit('scheduling/SET_SPECDISEASELIST',data)
+        }).catch(err => {
+          console.log(err);
+        });
+      }
     }
   }
 </script>

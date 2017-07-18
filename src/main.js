@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import 'wued-ui/lib/theme-default/index.css'
 import WuedUI from 'wued-ui'
 import wnhttp from "../api/wnhttp";
@@ -13,6 +14,7 @@ Vue.use(wnhttp, { mode: 'mock' });
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

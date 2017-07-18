@@ -1,9 +1,10 @@
 <template>
-  <router-link to="/scheduling/clinic/tplist" exact tag="span">
+  <router-link :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tptable':'/scheduling/clinic/tplist'"
+               exact tag="span">
     <transition name="el-zoom-in-top">
   <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
     <div class="tp-card-head">
-      <p>
+      <p v-if="$store.state.login.userInfo.type === '医务科'">
          <span class="tp-card-title">{{card.mbmc}}</span>
          <span v-if="card.shzt==='TG'" class="pull-right">
            <span class="start">审核通过</span>
@@ -18,12 +19,26 @@
            <span class="unstart">审核中</span>
          </span>
       </p>
-
+      <p v-if="$store.state.login.userInfo.type === '科室'">
+        <span class="tp-card-title">{{card.mbmc}}</span>
+        <span v-if="card.shzt==='TG'" class="pull-right">
+           <span class="start">已提交</span>
+         </span>
+        <span v-if="card.shzt==='BG'" class="pull-right">
+           <span class="unstart">待提交</span>
+         </span>
+        <span v-if="card.shzt==='WS'" class="pull-right">
+           <span class="unstart">数据有更新，待提交</span>
+         </span>
+      </p>
+      <p v-if="$store.state.login.userInfo.type === '门办'">
+        <span class="tp-card-title">{{card.mbmc}}</span>
+      </p>
       <p class="used-time">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
 
     </div>
     <div class="tp-card-body">
-    <p class="tp-card-ksnum">
+    <p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">
       <span >科室数量：</span>
       <span>{{card.DepartmentNum}}</span>
     </p>
@@ -43,10 +58,14 @@
       <span>特需门诊：</span>
       <span class="tp-num pull-right">{{card.VIPClinic}}</span>
     </p>
+    <p class="submit" >
+       <span v-if="$store.state.login.userInfo.type === '科室'">提交至医务科</span>
+       <span v-else-if="$store.state.login.userInfo.type === '医务科'">提交至门办</span>
+    </p>
     <transition name="el-fade-in-linear">
-    <div v-if="TimeShow==false" v-on:click.stop="DeleteCard()" class="tp-card-close">
-      <i class="el-icon-close"></i>
-    </div>
+      <div v-if="TimeShow==false" v-on:click.stop="DeleteCard()" class="tp-card-close">
+        <i class="el-icon-close"></i>
+      </div>
     </transition>
     </div>
   </div>
@@ -124,9 +143,19 @@
     border: 1px solid rgba(132, 166, 181,.6);
     box-shadow: 0 0 15px rgba(63,81,181, 0.3);
   }
+  .tp-card:hover .submit{
+    display: block;
+  }
   .tp-card p{
     height: 35px;
     line-height: 35px;
+  }
+  .submit {
+    color: #3F51B5 !important;
+    display: none;
+    position: absolute;
+    right: 25px;
+    bottom: 5px;
   }
 .tp-card-head{
   padding: 25px 25px 10px 25px;

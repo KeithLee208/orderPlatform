@@ -5,7 +5,7 @@ import axios from "axios";
 import mockjs from "mockjs";
 const baseConfig = {
   baseUrl: 'http://172.16.0.131:8888/api',
-  rap_baseUrl: 'http://rapapi.org/mockjs/20337/' //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
+  rap_baseUrl: 'http://rapapi.org/mockjsdata/20337/' //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
 };
 /**
  * options:{

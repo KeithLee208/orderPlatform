@@ -102,7 +102,7 @@
       }
     },
     created(){
-      console.log(this.$refs);
+
     }
     ,
     computed: {

@@ -25,7 +25,7 @@
               {{item.name}}
             </div>
             <div class="Att-row-data">
-                            <span v-for="(att,index) in item.children">
+            <span v-for="(att,index) in item.children">
               <router-link to="/scheduling/clinic/tptable">
                   <el-popover  placement="bottom" width="200" trigger="hover">
                  <div class="fixed-info">
@@ -36,7 +36,7 @@
                   <p><i class="union"></i>联合（4）</p>
                   <p><i class="VIP"></i>特需（5）</p>
                  </div>
-                  <el-button type="text" slot="reference">{{att.item.ksmc}}</el-button>
+                  <el-button type="text" slot="reference">{{att.ksmc}}</el-button>
             </el-popover>
                 </router-link>
             </span>
@@ -340,6 +340,7 @@
           let newArr = listArray.classifyArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
+        console.log(this.attList);
         for (var i = 0; i < data.length; i++) {
           selcetArr.push({
             ksbm: data[i].ksbm,

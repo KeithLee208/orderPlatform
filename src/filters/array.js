@@ -48,8 +48,9 @@ export function classifyArr (arr,key){
     }));
   arr.map(item => {
     newArr.map(newItem => {
-      if(item.name === newItem[key]){
-        newItem.children.push({item});
+      if(item[key] === newItem.name){
+        // newItem.children.push({item});
+        newItem.children[newItem.children.length] = item;
       }
     })
   });
