@@ -298,5 +298,10 @@
   .no-move {
     transition: transform 0s;
   }
+  .production {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
 
 </style>

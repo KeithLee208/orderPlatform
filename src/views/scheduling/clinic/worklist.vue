@@ -4,7 +4,7 @@
               当前模版：<span class="name">春季模板</span>
               <span><i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
                <span class="setting-btn">
-                 <el-button class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
+                 <el-button v-if="$store.state.login.userInfo.type=== '门办'" class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
                </span>
               <el-dialog title="设置出班" :visible.sync="SettingVisible" size="tiny">
               <div>
@@ -30,7 +30,7 @@
               </el-dialog>
             </div>
       <div class="Att-list-body">
-        <div class="Att-row" v-for="item in attList">
+        <div class="Att-row" v-for="item in departmentList">
           <div class="Att-row-lable">
             {{item.name}}
           </div>
@@ -38,7 +38,7 @@
             <span v-for="(att,index) in item.children">
                <router-link to="/scheduling/clinic/worktable" exact tag="span">
                <el-popover  placement="bottom" width="200" trigger="hover">
-                 <div class="fixed-info">
+                 <div  v-if="$store.state.login.userInfo.type=== '门办'"  class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>
                   <p class="default"><i></i>普通（10）</p>
                   <p class="expert"><i></i>专家（2）</p>
@@ -46,7 +46,7 @@
                   <p class="union"><i></i>联合（4）</p>
                   <p class="VIP"><i></i>特需（5）</p>
                  </div>
-                  <el-button type="text" slot="reference">{{att.name}}</el-button>
+                  <el-button type="text" slot="reference">{{att.ksmc}}</el-button>
             </el-popover>
               </router-link>
             </span>
@@ -56,6 +56,7 @@
       </div>
 </template>
 <script>
+  import * as listArray from '../../../filters/array'
   export default {
     data() {
       return {
@@ -94,21 +95,36 @@
           }
         ],
         SettingVisible:false,
+        userType:this.$store.state.login.userInfo.type,
         form: {
           region: '',
           date1: '',
           date2: ''
-        }
+        },
+        departmentList:[],
+
       }
     },
     created(){
+      this.$nextTick(() => {
+        this.init();
 
-    }
-    ,
+    })
+    },
     computed: {
 
     },
     methods: {
+      init(){
+        //获取服务类型
+        this.getServiceType();
+      },
+      getServiceType(){
+        this.departmentList = this.$store.state.scheduling.departmentList;
+        console.log(this.departmentList)
+        let newArr = listArray.classifyArr( this.departmentList, 'sjksbm');
+        this.departmentList=newArr;
+      },
     }
   }
 </script>

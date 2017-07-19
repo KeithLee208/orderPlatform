@@ -297,7 +297,9 @@
                           </p>
                         </div>
                         <div class="fixed-footer">
+                           <router-link to="/scheduling/clinic/tpset">
                           <el-button @click="SettingVisible = true" type="text" size="small">查看详情</el-button>
+                             </router-link>
                         </div>
                       </div>
                       <div slot="reference" class="ordered disease">

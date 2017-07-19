@@ -1,24 +1,16 @@
 <template>
-  <div class="setting-wraaper">
-    <div class="setting-header">
-      <router-link to="/scheduling/clinic/worklist" class="pull-right">
-        <i class="el-icon-close"></i>
-      </router-link>
-      <span>XX排班模板设置/XX科室</span>
-      <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
-    </div>
     <div class="setting-body">
       <div class="setting-main">
         <div>
           <div class="page-head">
             <div class="type-filter">
               <span>服务类型</span>
-              <span><i class="el-icon-menu all"></i>全部</span>
-              <span><i class="default"></i>普通（10）</span>
-              <span><i class="expert"></i>专家（2）</span>
-              <span><i class="disease"></i>专病（3）</span>
-              <span><i class="union"></i>联合（4）</span>
-              <span><i class="VIP"></i>特需（5）</span>
+               <span v-for="(item,index) in Type.category">
+                <!--,{active:active==index}-->
+                <i @click="selection(index)"  :class="[item.type,{active:Type.active==index}]"></i>
+                {{item.text}}（{{item.num}}）
+              </span>
+
                <span class="pull-right">
                 <span class="icon-group">
                   <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
@@ -93,98 +85,57 @@
             <span>周六</span>
             <span>周日</span>
           </div>
-          <div v-for="item in addtable" class="AdTable">
+          <div v-for="item in templateData" class="AdTable">
             <div class="AdTableLeft">
               <div>
                 <i></i>
                 <p>
-                  <span class="name">主治医师</span>
-                  <span class="position">张文</span>
+                  <span class="name">{{item.ysmc}}</span>
+                  <span class="position">主治医师</span>
                 </p>
               </div>
             </div>
             <div class="AdTableRight">
               <div class="table-body">
-                <div class="border-top-1">
-                  <span>上午</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>下午</span>
-                  <span>
-                      <el-popover  placement="bottom" width="200" trigger="hover">
-                   <div class="fixed-info">
-                    <div class="fixed-body">
-                      <div class="fixed-title">出班信息</div>
-                      <p>
-                        <span class="fixed-label">出诊院区：</span>
-                        <span>黄埔院区</span>
-                      </p>
-                      <p>
-                        <span class="fixed-label">就诊科室：</span>
-                        <span>胸外科精品B</span>
-                      </p>
-                      <p>
-                        <span class="fixed-label">服务类型：</span>
-                        <span>特需</span>
-                      </p>
-                      <p>
-                        <span class="fixed-label">出诊时间：</span>
-                        <span>上午8:00-12:00</span>
-                      </p>
-                      <p>
-                        <span class="fixed-label">就诊地址：</span>
-                        <span>3号楼9楼胸外科（超过12个字换行）</span>
-                      </p>
-                      <p>
-                        <span class="fixed-label">号源数量：</span>
-                        <span>18</span>
-                      </p>
-                    </div>
-                     <div class="fixed-footer">
-                       <el-button class="fixed-footer-btn" @click="ShiftVisible = true" type="text" size="small" >出班调整</el-button>
-                       <el-button @click="RecordVisible = true" type="text" size="small">调整记录</el-button>
-
-                     </div>
-                   </div>
-                  <div slot="reference" class="ordered disease">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                  </el-popover>
-                </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span>
-                  <div class="ordered union">
-                    <p class="name">09:00-11:30</p>
-                    <p class="position">胸外科精品B</p>
-                  </div>
-                </span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>晚上</span>
-                  <span></span>
-                  <span>
-                  <div class="ordered VIP">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
+                <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
+                  <span>{{slot.sjdmc}}</span>
+                  <span v-for="week in slot.weekday">
+                    <el-popover v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
+                      <div class="fixed-info">
+                        <div class="fixed-body">
+                          <div class="fixed-title">出班信息</div>
+                          <p>
+                            <span class="fixed-label">就诊科室：</span>
+                            <span>{{week.ksmc}}</span>
+                          </p>
+                          <p>
+                            <span class="fixed-label">服务类型：</span>
+                            <span>{{week.fwlxdm}}</span>
+                          </p>
+                          <p>
+                            <span class="fixed-label">出诊时间：</span>
+                            <span>{{slot.sjdmc}}{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</span>
+                          </p>
+                          <p>
+                            <span class="fixed-label">就诊地址：</span>
+                            <span>{{week.czdz}}</span>
+                          </p>
+                          <p>
+                            <span class="fixed-label">号源数量：</span>
+                            <span>{{week.hxzs}}</span>
+                          </p>
+                        </div>
+                        <div class="fixed-footer">
+                          <el-button @click="ShiftVisible = true" type="text" size="small" class="el-button ">出班调整</el-button>
+                          <el-button @click="RecordVisible=true" type="text" size="small" class="el-button pull-right">调整记录</el-button>
+                        </div>
+                      </div>
+                      <div slot="reference" class="ordered disease">
+                        <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
+                        <p>{{week.ksmc}}</p>
+                      </div>
+                    </el-popover>
                   </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
                 </div>
               </div>
             </div>
@@ -340,10 +291,11 @@
         </div>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
+  import * as arr from 'filters/array.js'
   export default {
     data() {
       return {
@@ -462,8 +414,48 @@
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
           }
-        }
+        },
+        Type: {
+          active: 0,
+          category: [
+            {
+              type: 'all el-icon-menu ',
+              text: '全部',
+              num: 10,},
+            {
+              type: 'default',
+              text: '普通',
+              num: 10,
+            },
+            {
+              type: 'expert',
+              text: '专家',
+              num: 2
+            },
+            {
+              type: 'disease',
+              text: '专病',
+              num: 3
+            },
+            {
+              type: 'union',
+              text: '联合',
+              num: 4
+            },
+            {
+              type: 'VIP',
+              text: '特需',
+              num: 5
+            }
+          ]
+        },
+        templateData:[]
       };
+    },
+    created(){
+      this.$nextTick(() => {
+        this.init();
+    })
     },
     methods: {
       MsgSuccess() {
@@ -495,47 +487,90 @@
           this.stop=false;
           this.change=true;
         }
-      }
+      },
+      init(){
+        //获取服务类型
+        this.getServiceType();
+        //获取时间段
+        this.getTimeSlot();
+        this.dataInit();
+      },
+      //获取服务类型
+      getServiceType(){
+        this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+        console.log(this.serviceTypeList);
+      },
+      //获取时间段列表
+      getTimeSlot(){
+        this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //数据初始化
+      dataInit(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'' }).then(data => {
+          this.TpCard = data;
+        this.formatData(arr.classifyArr(data, 'ysdm'));
+      }).catch(err => {
+          console.log(err);
+      });
+      },
+      formatData(list){
+        //医生→时间段→日期
+        let newArr = [];
+        list.map((item,index) => {
+          newArr[index] = {"ysdm":item.name,"slot":[]};
+        this.timeSlot.map(slot => {console.log(slot);
+        slot.weekday = [{},{},{},{},{},{},{}];
+        item.children.map(week => {
+          newArr[index].ysmc = week.ysmc;
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
+          slot.weekday[0] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
+          slot.weekday[1] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
+          slot.weekday[2] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
+          slot.weekday[3] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
+          slot.weekday[4] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
+          slot.weekday[5] = week;
+        }
+        if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
+          slot.weekday[6] = week;
+        }
+      })
+        newArr[index].slot.push(slot);
+      });
+      });
+        this.templateData = newArr;
+      },
+      //服务类型筛选表单
+      selection(index) {
+        this.Type.active = index;
+      },
+    },
+    filters: {
+      timeFormat: function (time) {
+        if(!time)return;
+        return time.split(' ')[1]
+      },
     }
   };
 </script>
 
 <style scoped>
-  .setting-header {
-    height: 60px;
-    width: 100%;
-    display: inline-block;
-    line-height: 60px;
-    padding: 0 30px 0 30px;
-    background: #3f51b5;
-    color: #fff;
-    border-bottom: 1px solid #e0e0e0;
-    cursor: default;
-    box-sizing: border-box;
-  }
-
-  .setting-header > a > i {
-    color: #fff;
-  }
-
-  .setting-header > span {
-    font-size: 16px;
-  }
-
-  .setting-header > .used-time {
-    font-size: 14px;
-    color: #bbb;
-    margin-left: 15px;
-    color: rgba(255,255,255,.5);
-  }
-  .setting-header > .used-time>i{
-    margin-right: 5px;
-  }
   .setting-body {
+    margin-top: 20px;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
     display: inline-block;
+    background: #fff;
   }
 
   .setting-main {
@@ -736,9 +771,16 @@
     color: #e0e0e0;
     font-size: 16px;
   }
-
+  .type-filter > span > .all.active{
+    color: #a0a0a0;
+  }
   .type-filter > span > .default {
+    border: 1px solid #e0e0e0;
     background: #fff;
+  }
+
+  .type-filter > span > .default.active {
+    background: #e0e0e0;
   }
 
   .type-filter > span > .expert {
@@ -746,9 +788,17 @@
     background: rgb(233, 246, 255);
   }
 
+  .type-filter > span > .expert.active {
+    background: rgb(192, 229, 255);
+  }
+
   .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
+  }
+
+  .type-filter > span > .disease.active {
+    background: rgb(188, 241, 212);
   }
 
   .type-filter > span > .union {
@@ -756,9 +806,17 @@
     background: rgb(255, 248, 234);
   }
 
+  .type-filter > span > .union.active {
+    background: rgb(254, 235, 195);
+  }
+
   .type-filter > span > .VIP {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
+  }
+
+  .type-filter > span > .VIP.active {
+    background: rgb(255, 204, 204);
   }
 
   .type-filter > span > i {

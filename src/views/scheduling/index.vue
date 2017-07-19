@@ -6,7 +6,7 @@
         <!--<router-link to="/scheduling/department/templatesetting" tag="span">科室排班模板</router-link>-->
         <!--<router-link to="/scheduling/medical/wordtable" exact tag="span">医务科出班表</router-link>-->
         <!--<router-link to="/scheduling/medical/template" tag="span">医务科排班模板</router-link>-->
-        <router-link to="/scheduling/clinic/worklist" exact tag="span">出班表</router-link>
+        <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/worktable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
         <router-link to="/scheduling/clinic/tpcard" tag="span">出班模板</router-link>
       </div>
     </div>
@@ -36,7 +36,7 @@
         },
         //获取医院所有预约科室
         getDepartmentList(){
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {}).then(data => {
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
             console.log(err);

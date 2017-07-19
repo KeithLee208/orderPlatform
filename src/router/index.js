@@ -12,6 +12,8 @@ import RegistrationClassification from '../views/count/registrationclassificatio
 import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
 import worktable from '../views/scheduling/Department/wordtable'
+import tpset from '../views/scheduling/clinic/tpset'
+import sortset from '../views/scheduling/clinic/sortset'
 
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 // const attendacnce = r => require.ensure([], () => r(require('../views/scheduling/department/attendance')), 'scheduling');
@@ -45,7 +47,9 @@ export default new Router({
         { path: '/scheduling/clinic/worktable', component: cworktable},
         { path: '/scheduling/clinic/tpcard', component: ccard},
         { path: '/scheduling/clinic/tptable', component: ctptable},
-        { path: '/scheduling/clinic/tplist', component: ctplist}
+        { path: '/scheduling/clinic/tplist', component: ctplist},
+        { path: '/scheduling/clinic/tpset', component: tpset},
+        { path: '/scheduling/clinic/sortset', component: sortset},
       ]
     },
     {

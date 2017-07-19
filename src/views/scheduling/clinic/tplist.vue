@@ -14,8 +14,10 @@
             <span><i class="el-icon-menu all"></i>全部</span>
             <span class="submit"><i></i>已提交（10）</span>
             <span class="unsubmit"><i></i>待提交（2）</span>
-                        <span class="pull-right">
-                <el-button class="btn-blue" @click="SettingVisible=true" type="primary">设置费用及号序 </el-button>
+            <span class="pull-right">
+              <router-link tag="span" to="/scheduling/clinic/sortset">
+                <el-button class="btn-blue"  type="primary">设置费用及号序</el-button>
+                </router-link>
               </span>
           </div>
         </div>
@@ -666,15 +668,7 @@
     line-height: 50px;
   }
 
-  .cost {
-    width: 100px;
-    margin: 0 10px 0 40px;
-  }
 
-  .cost-input {
-    width: 100px;
-    margin: 0 10px 0 0px;
-  }
 
   .btn-blue {
     background: #fff;
@@ -692,68 +686,6 @@
     color: #1d90e6;
   }
 
-  .source,
-  .unsource {
-    margin-left: 80px;
-    width: 100%;
-    display: inline-block;
-  }
-
-  .source-card {
-    width: 300px;
-    height: 155px;
-    border: 1px solid #E7ECF4;
-    border-radius: 2px;
-    box-sizing: border-box;
-    padding: 25px 25px 25px 10px;
-    transition: all .2s;
-    display: inline-block;
-    margin-right: 20px;
-    float: left;
-    position: relative;
-  }
-
-  .source-plus {
-    width: 155px;
-    height: 155px;
-    border: 1px dashed #E7ECF4;
-    border-radius: 2px;
-    box-sizing: border-box;
-    padding: 65px 25px 25px 60px;
-    transition: all .2s;
-    display: inline-block;
-    margin-right: 20px;
-    float: left;
-    cursor: pointer;
-  }
-
-  .source-plus>i {
-    color: #e0e0e0;
-    font-size: 25px;
-  }
-
-  .source-card:hover {
-    border: 1px solid rgba(132, 166, 181, .6);
-    box-shadow: 0 0 15px rgba(63, 81, 181, 0.3);
-  }
-
-  .source-plus:hover {
-    border: 1px dashed rgba(132, 166, 181, .6);
-    box-shadow: 0 0 15px rgba(63, 81, 181, 0.3);
-  }
-
-  .card-close {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    font-size: 12px;
-    color: #e0e0e0;
-    cursor: pointer;
-  }
-
-  .card-close:hover {
-    color: #C5C5C5;
-  }
 
   .form-line {
     width: 100%;
@@ -763,21 +695,4 @@
     border-bottom: 1px dashed #e0e0e0;
   }
 
-  .num-info {
-    color: rgb(63, 169, 255);
-  }
-
-  .production {
-    width: 100%;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-
-  .Channel {
-    margin-left: 80px;
-  }
-
-  .UnChannel {
-    margin-top: 20px;
-  }
 </style>
