@@ -2,7 +2,7 @@
   <div>
     <div class="page-head">
       <span class="creat-btn">
-      <el-button class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
+      <el-button v-if="userType === '门办' || userType === '医务科'" class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
       </span>
     </div>
     <el-dialog title="模板名称" :visible.sync="CreatVisible" size="tiny">
@@ -33,13 +33,14 @@
         CreatVisible:false,
         form:{
           name:''
-        }
+        },
+        userType:this.$store.state.login.userInfo.type
       }
     },
     created() {
       this.$nextTick(() => {
         this.CardlistInit();
-    })
+      })
     },
     components: {
       tpcard
