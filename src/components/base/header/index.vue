@@ -16,15 +16,14 @@
         <sup style="background-color: #ff4949;height: 18px;"></sup>
       </i>
       <span style="margin-left: 20px;">胸外科</span>
-
       <el-popover
         placement="bottom"
-        width="250"
+        width="150"
         trigger="hover">
         <div class="block">
           <span class="wrapper">
             <el-button @click="setUserInfo('科室')" type="success">科室</el-button>
-            <el-button @click="setUserInfo('医务科')" type="danger">医务科</el-button>
+            <!--<el-button @click="setUserInfo('医务科')" type="danger">医务科</el-button>-->
             <el-button @click="setUserInfo('门办')" type="info">门办</el-button>
           </span>
         </div>

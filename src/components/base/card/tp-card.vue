@@ -1,76 +1,61 @@
 <template>
-  <router-link :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tptable':'/scheduling/clinic/tplist'"
-               exact tag="span">
     <transition name="el-zoom-in-top">
-  <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
-    <div class="tp-card-head">
-      <p v-if="$store.state.login.userInfo.type === '医务科'">
-         <span class="tp-card-title">{{card.mbmc}}</span>
-         <span v-if="card.shzt==='TG'" class="pull-right">
+      <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
+        <div class="tp-card-head">
+          <p v-if="$store.state.login.userInfo.type === '医务科'">
+            <span class="tp-card-title">{{card.mbmc}}</span>
+            <span v-if="card.shzt==='TG'" class="pull-right">
            <span class="start">审核通过</span>
          </span>
-        <span v-if="card.shzt==='BG'" class="pull-right">
+            <span v-if="card.shzt==='BG'" class="pull-right">
            <span class="unstart">不通过</span>
          </span>
-        <span v-if="card.shzt==='WS'" class="pull-right">
+            <span v-if="card.shzt==='WS'" class="pull-right">
            <span class="unstart">未审核</span>
          </span>
-        <span v-if="card.shzt==='SZ'" class="pull-right">
+            <span v-if="card.shzt==='SZ'" class="pull-right">
            <span class="unstart">审核中</span>
          </span>
-      </p>
-      <p v-if="$store.state.login.userInfo.type === '科室'">
-        <span class="tp-card-title">{{card.mbmc}}</span>
-        <span v-if="card.shzt==='TG'" class="pull-right">
+          </p>
+          <p v-if="$store.state.login.userInfo.type === '科室'">
+            <span class="tp-card-title">{{card.mbmc}}</span>
+            <span v-if="card.shzt==='TG'" class="pull-right">
            <span class="start">已提交</span>
          </span>
-        <span v-if="card.shzt==='BG'" class="pull-right">
+            <span v-if="card.shzt==='BG'" class="pull-right">
            <span class="unstart">待提交</span>
          </span>
-        <span v-if="card.shzt==='WS'" class="pull-right">
+            <span v-if="card.shzt==='WS'" class="pull-right">
            <span class="unstart">数据有更新，待提交</span>
          </span>
-      </p>
-      <p v-if="$store.state.login.userInfo.type === '门办'">
-        <span class="tp-card-title">{{card.mbmc}}</span>
-      </p>
-      <p class="used-time">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
+          </p>
+          <p v-if="$store.state.login.userInfo.type === '门办'">
+            <span class="tp-card-title">{{card.mbmc}}</span>
+          </p>
+          <p class="used-time">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
 
-    </div>
-    <div class="tp-card-body">
-    <p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">
-      <span >科室数量：</span>
-      <span>{{card.DepartmentNum}}</span>
-    </p>
-    <p>
-      <span>普通门诊：</span>
-      <span class="tp-num pull-right">{{card.DefaultClinic}}</span>
-    </p>
-    <p>
-      <span>专家门诊：</span>
-      <span class="tp-num pull-right">{{card.SpecialistClinic}}</span>
-    </p>
-    <p>
-      <span>联合门诊：</span>
-      <span class="tp-num pull-right">{{card.CombinedClinic}}</span>
-    </p>
-    <p>
-      <span>特需门诊：</span>
-      <span class="tp-num pull-right">{{card.VIPClinic}}</span>
-    </p>
-    <p class="submit" >
-       <span v-if="$store.state.login.userInfo.type === '科室'">提交至医务科</span>
-       <span v-else-if="$store.state.login.userInfo.type === '医务科'">提交至门办</span>
-    </p>
-    <transition name="el-fade-in-linear">
-      <div v-if="TimeShow==false" v-on:click.stop="DeleteCard()" class="tp-card-close">
-        <i class="el-icon-close"></i>
+        </div>
+        <div class="tp-card-body">
+          <p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">
+            <span>科室数量：</span>
+            <span>{{card.DepartmentNum}}</span>
+          </p>
+          <p v-for="template in card.fwlxtj">
+            <span>{{template.fwlxmc}}：</span>
+            <span class="tp-num pull-right">{{template.fwlxsl}}</span>
+          </p>
+          <p class="submit">
+            <span v-if="$store.state.login.userInfo.type === '科室'">提交至医务科</span>
+            <span v-else-if="$store.state.login.userInfo.type === '医务科'">提交至门办</span>
+          </p>
+          <transition name="el-fade-in-linear">
+            <div v-if="TimeShow==false" v-on:click.stop="deleteCard()" class="tp-card-close">
+              <i class="el-icon-close"></i>
+            </div>
+          </transition>
+        </div>
       </div>
     </transition>
-    </div>
-  </div>
-      </transition>
-  </router-link>
 </template>
 
 <script>
@@ -84,7 +69,7 @@
       }
     },
     methods:{
-      DeleteCard(){
+      deleteCard(){
         this.CardShow=false;
       },
       handleTpCardMouseOver(){
