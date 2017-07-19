@@ -3,7 +3,7 @@
     <div class="setting-header">
       <router-link tag="span" to="/scheduling/clinic/tpcard">
         <i class="el-icon-arrow-left"></i>
-        <span>XX出班模板</span>
+        <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       </router-link>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
@@ -183,6 +183,7 @@
   export default {
     data() {
       return {
+        crumbs:[],//面包屑数据
         SettingVisible: false,
         attList: [],
         form: {
@@ -247,22 +248,28 @@
           UnSource: false,
           CloseShow: false,
           Channel: false,
-          UnChannel: false
+          UnChannel: false,
+
         }
       }
     },
     created() {
       this.$nextTick(() => {
+        this.getCrumbs();//获取面包屑数据
         this.TpListInit(); //科室列表
-      this.DiseaseInit(); //专病病种
-      this.OutTimeInit(); //出诊时间
+        this.DiseaseInit(); //专病病种
+        this.OutTimeInit(); //出诊时间
     })
     },
     methods: {
+      //获取面包屑数据
+      getCrumbs(){
+        this.crumbs = this.$store.state.scheduling.crumbs.tplist;
+      },
       MsgSuccess() {
         this.SubmitVisible = false;
         this.$message({
-          message: '噢啦啦啦啦啦啦提交成功！',
+          message: '提交成功！',
           type: 'success'
         });
       }, //提交消息提示

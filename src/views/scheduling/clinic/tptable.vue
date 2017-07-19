@@ -5,7 +5,7 @@
         :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tpcard':'/scheduling/clinic/tplist'" class="pull-right">
         <i class="el-icon-close"></i>
       </router-link>
-      <span>XX排班模板设置/XX科室</span>
+      <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
@@ -23,10 +23,10 @@
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
-                  <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
+                  <el-tooltip class="item" effect="dark" content="设置出班模板" placement="bottom">
                      <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
                   </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
+                  <el-tooltip class="item" effect="dark" content="提交至门办" placement="bottom">
                     <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
                   </el-tooltip>
                 </span>
@@ -344,6 +344,7 @@
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
+        crumbs:[],//面包屑数据
         serviceTypeList:[],//服务类型列表
         timeSlot:[],//时间段列表
         templateData:[],//排版模板数据
@@ -356,16 +357,21 @@
     },
     methods: {
       init(){
+        //获取面包屑
+        this.getCrumbs();
         //获取服务类型
         this.getServiceType();
         //获取时间段
         this.getTimeSlot();
         this.dataInit();
       },
+      //获取面包屑
+      getCrumbs(){
+        this.crumbs = this.$store.state.scheduling.crumbs.tptable;
+      },
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
-        console.log(this.serviceTypeList);
       },
       //获取时间段列表
       getTimeSlot(){
@@ -385,7 +391,7 @@
         let newArr = [];
         list.map((item,index) => {
             newArr[index] = {"ysdm":item.name,"slot":[]};
-            this.timeSlot.map(slot => {console.log(slot);
+            this.timeSlot.map(slot => {
               slot.weekday = [{},{},{},{},{},{},{}];
                   item.children.map(week => {
                     newArr[index].ysmc = week.ysmc;

@@ -13,12 +13,16 @@
             </div>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="CreatVisible = false">取 消</el-button>
-                <el-button type="primary" @click="MsgSuccess">创 建</el-button>
+                <el-button type="primary" @click="msgSuccess">创 建</el-button>
               </span>
     </el-dialog>
     <div class="page-main">
-        <tpcard v-for="num in TpCard" :card="num">
+      <router-link  :to="{path:$store.state.login.userInfo.type === '科室'?
+                '/scheduling/clinic/tptable':'/scheduling/clinic/tplist'}"
+                    exact tag="span">
+        <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
         </tpcard>
+      </router-link>
     </div>
   </div>
 </template>
@@ -39,16 +43,30 @@
     },
     created() {
       this.$nextTick(() => {
-        this.CardlistInit();
+        this.cardlistInit();
       })
     },
     components: {
       tpcard
     },
     methods: {
-      CardlistInit() {
+      handleLinkTo(card){
+        if(this.$store.state.login.userInfo.type === '科室'){
+          this.$store.commit('scheduling/SET_CRUMBS',{
+            key:'tptable',
+            val:[card.mbmc,'科室']
+          })
+        }else if(this.$store.state.login.userInfo.type === '门办'){
+          this.$store.commit('scheduling/SET_CRUMBS',{
+            key:'tplist',
+            val:[card.mbmc]
+          })
+        }
+      },
+      cardlistInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '20000000.1.1.0320' }).then(data => {
           this.TpCard = data;
+          console.log(data);
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
@@ -56,7 +74,7 @@
           //2. 网络错误，本地网络断开、超时等
         });
       },
-      MsgSuccess(){
+      msgSuccess(){
         this.CreatVisible=false;
         this.$message({
           message: '创建成功！',

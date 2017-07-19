@@ -6,7 +6,10 @@ const state = {
   departmentList:[],//医院所有预约科室
   serviceTypeList:[],//服务类型
   timeSlotList:[],//时间段列表
-  specDiseaseList:[]//专病列表
+  specDiseaseList:[],//专病列表
+  crumbs:{
+    tptable:[]
+  }
 };
 
 // state 中派生出一些状态
@@ -31,6 +34,13 @@ const mutations = {
   //更新专病列表
   SET_SPECDISEASELIST (state, specDiseaseList) {
     state.specDiseaseList = specDiseaseList;
+  },
+  //更新面包屑
+  SET_CRUMBS(state, payload) {
+    state.crumbs[payload.key] = [];
+    payload.val.map(item => {
+      state.crumbs[payload.key].push(item)
+    });
   }
 };
 
