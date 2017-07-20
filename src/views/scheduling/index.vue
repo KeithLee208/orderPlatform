@@ -30,6 +30,7 @@
     methods:{
         init(){
           this.getDepartmentList();
+          this.getDocList();
           this.getServiceTypeList();
           this.getTimeSlotList();
           this.getSpecDiseaseList();

@@ -60,8 +60,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form.DocValue" :placeholder='form.Doctext'>
-          <el-option v-for="item in form.DocOptions" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
+        <el-select v-model="form1.doctor.val" :placeholder='form.Doctext'>
+          <el-option v-for="item in form1.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择病种">
@@ -72,7 +72,7 @@
       </el-form-item>
       <el-form-item label="就诊时间">
         <el-checkbox-group v-model="form1.visitTime.val">
-          <el-checkbox v-for="item in form1.visitTime.list" :label="item.name" :value="item.name" name="time"></el-checkbox>
+          <el-checkbox v-for="item in form1.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="出诊时间">
@@ -147,7 +147,14 @@
             isShow:true,
             isEdit:true,
             val:[],
-            list:[{name:"周一"},{name:"周二"},{name:"周三"},{name:"周四"},{name:"周五"},{name:"周六"},{name:"周日"}]
+            list:[
+                {name:"周一",val:"星期一"},
+                {name:"周二",val:"星期二"},
+                {name:"周三",val:"星期三"},
+                {name:"周四",val:"星期四"},
+                {name:"周五",val:"星期五"},
+                {name:"周六",val:"星期六"},
+                {name:"周日",val:"星期日"}]
           },
           time:{
             isShow:true,
@@ -250,6 +257,7 @@
       //获取时间段列表
       getDicData(){
           this.form1.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+          this.form1.doctor.list = this.$store.state.scheduling.doctorList;
           this.form1.department.list = this.$store.state.scheduling.departmentList;
           this.form1.disease.list = this.$store.state.scheduling.specDiseaseList;
           this.form1.slot.list = this.$store.state.scheduling.timeSlotList;
@@ -263,15 +271,22 @@
       //获取单次出班信息
       getSingleSchedule(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q03", { mxxh: '0001'}).then(data => {
-          console.log(data);
+            this.setForm(data);
         }).catch(err => {
           console.log(err);
         });
       },
+      //表单填充策略
+      setForm(data){
+        this.form1.department.val.push(data.ksmc);
+        this.form1.doctor.val = data.ysmc;
+        this.form1.visitTime.val.push(data.cbrqlx);
+        this.form1.address = data.czdz;
+      },
       MsgSuccess() {
         this.SubmitVisible = false;
         this.$message({
-          message: '噢啦啦啦啦啦啦提交成功！',
+          message: '提交成功！',
           type: 'success'
         });
       }, //提交消息提示
