@@ -36,12 +36,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="选择院区">-->
-        <!--<el-radio-group v-model="form.radio">-->
-        <!--<el-radio :label="1">徐汇院区</el-radio>-->
-        <!--<el-radio :label="2">黄埔院区</el-radio>-->
-        <!--</el-radio-group>-->
-        <!--</el-form-item>-->
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.VisitTime">
             <el-checkbox label="周一" value="周一" name="time"></el-checkbox>
@@ -207,16 +201,19 @@
     },
     created() {
       this.$nextTick(() => {
-      this.DiseaseInit(); //专病病种
-      this.OutTimeInit(); //出诊时间
-      this.TpListInit();
-    })
+        this.init();
+      })
     },
     methods: {
+      init(){
+        this.DiseaseInit(); //专病病种
+        this.OutTimeInit(); //出诊时间
+        this.TpListInit();
+      },
       MsgSuccess() {
         this.SubmitVisible = false;
         this.$message({
-          message: '噢啦啦啦啦啦啦提交成功！',
+          message: '提交成功！',
           type: 'success'
         });
       }, //提交消息提示

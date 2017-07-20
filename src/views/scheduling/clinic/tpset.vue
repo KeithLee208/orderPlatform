@@ -25,56 +25,20 @@
             <i></i>
             <p>
               <span class="name">主治医师</span>
-              <span class="position">张文</span>
+              <span class="position">{{currentDocSchedule.ysmc}}</span>
             </p>
           </div>
         </div>
         <div class="AdTableRight">
           <div class="table-body">
-            <div class="border-top-1">
-              <span>上午</span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div>
-              <span>下午</span>
-                  <span>
-                  <div class="ordered disease">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                </span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-                  <span>
-                  <div class="ordered union">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                </span>
-              <span></span>
-            </div>
-            <div>
-              <span>晚上</span>
-              <span></span>
-                  <span>
-                  <div class="ordered VIP">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                  </span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+            <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
+              <span>{{slot.sjdmc}}</span>
+              <span v-for="week in slot.weekday">
+                    <div v-if="week.cbrqlx" class="ordered disease" @click="getSingleSchedule()">
+                      <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
+                      <p>{{week.ksmc}}</p>
+                    </div>
+              </span>
             </div>
           </div>
         </div>
@@ -82,51 +46,39 @@
       <el-form-item label="服务类型">
         <div class="type-filter in-model">
           <span><i class="el-icon-menu all"></i>全部</span>
-              <span v-for="(item,index) in form.Type.category">
+              <span v-for="(item,index) in form1.serviceType.list">
                 <!--,{active:active==index}-->
-                <i @click="selection(index)"  :class="[item.type,{active:form.Type.active==index}]"></i>
-                {{item.text}}（{{item.num}}）
+                <i @click="selection(index)"  :class="[item.fwlxdm,{active:form1.serviceType.activeIndex==index}]"></i>
+                {{item.fwlxmc}}
               </span>
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select style="width: 30%" @change="SelectInit" v-model="form.DepartmentValue" multiple filterable placeholder="请选择">
-          <el-option v-for="item in form.DepartOptions" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
+        <el-select style="width: 30%" @change="SelectInit" v-model="form1.department.val" multiple filterable placeholder="请选择">
+          <el-option v-for="item in form1.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.DocShow" label="选择医生">
-        <el-select v-model="form.DocValue" :disabled="form.DocDisabled" :placeholder='form.Doctext'>
+      <el-form-item label="选择医生">
+        <el-select v-model="form.DocValue" :placeholder='form.Doctext'>
           <el-option v-for="item in form.DocOptions" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="form.DiseaseShow" label="选择病种">
-        <el-select v-model="form.DiseaseValue" placeholder="请选择病种">
-          <el-option v-for="item in form.Disease" :key="item.zydm" :label="item.zymc" :value="item.zydm">
+      <el-form-item label="选择病种">
+        <el-select v-model="form1.disease.val" placeholder="请选择病种">
+          <el-option v-for="item in form1.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
           </el-option>
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="选择院区">-->
-      <!--<el-radio-group v-model="form.radio">-->
-      <!--<el-radio :label="1">徐汇院区</el-radio>-->
-      <!--<el-radio :label="2">黄埔院区</el-radio>-->
-      <!--</el-radio-group>-->
-      <!--</el-form-item>-->
       <el-form-item label="就诊时间">
-        <el-checkbox-group v-model="form.VisitTime">
-          <el-checkbox label="周一" value="周一" name="time"></el-checkbox>
-          <el-checkbox label="周二" value="周二" name="time"></el-checkbox>
-          <el-checkbox label="周三" value="周三" name="time"></el-checkbox>
-          <el-checkbox label="周四" value="周四" name="time"></el-checkbox>
-          <el-checkbox label="周五" value="周五" name="time"></el-checkbox>
-          <el-checkbox label="周六" value="周六" name="time"></el-checkbox>
-          <el-checkbox label="周日" value="周日" name="time"></el-checkbox>
+        <el-checkbox-group v-model="form1.visitTime.val">
+          <el-checkbox v-for="item in form1.visitTime.list" :label="item.name" :value="item.name" name="time"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="出诊时间">
-        <el-col :span="14">
-          <el-radio-group v-model="form.OutTimeValue">
-            <el-radio v-for="item in form.OutTime" :label="item.sjdmc+item.kssj+'-'+item.jssj" :value="item.sjddm"></el-radio>
+        <el-col :span="8">
+          <el-radio-group v-model="form1.slot.val">
+            <el-radio v-for="item in form1.slot.list" :label="item.sjdmc+item.kssj+'-'+item.jssj" :value="item.sjddm"></el-radio>
           </el-radio-group>
         </el-col>
         <el-col :span="10">
@@ -137,16 +89,14 @@
         </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
-        <el-input type="input" v-model="form.address"></el-input>
+        <el-input type="input" v-model="form1.address"></el-input>
       </el-form-item>
       <el-form-item label="备注信息">
-        <el-input type="input" v-model="form.info"></el-input>
+        <el-input type="input" v-model="form1.note"></el-input>
       </el-form-item>
       <el-form-item >
         <el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>
       </el-form-item>
-
-
     </el-form>
     <div slot="footer"  class="dialog-footer">
       <el-button>取消</el-button>
@@ -162,8 +112,60 @@
   export default{
     data() {
       return {
+        form1:{
+          serviceType:{
+            isShow:true,
+            val:'',
+            list:[],
+            activeIndex:0
+          },
+          doctor:{
+            isShow:true,
+            isEdit:true,
+            val:'',
+            list:[]
+          },
+          disease:{
+            isShow:true,
+            isEdit:true,
+            val:'',
+            list:[]
+          },
+          department:{
+            isShow:true,
+            isEdit:true,
+            val:[],
+            list:[]
+          },
+          week:{
+            isShow:true,
+            isEdit:true,
+            val:'',
+            list:[]
+          },
+          visitTime:{
+            isShow:true,
+            isEdit:true,
+            val:[],
+            list:[{name:"周一"},{name:"周二"},{name:"周三"},{name:"周四"},{name:"周五"},{name:"周六"},{name:"周日"}]
+          },
+          time:{
+            isShow:true,
+            isEdit:true,
+            val:'',
+            list:[]
+          },
+          slot:{
+            isShow:true,
+            isEdit:true,
+            val:'',
+            list:[]
+          },
+          address:'',
+          note:''
+        },
         form: {
-          //        服务类型
+          //服务类型
           Type: {
             active: 0,
             category: [
@@ -194,28 +196,28 @@
               }
             ]
           },
-          //        科室
+          //科室
           DepartOptions: [],
           DepartmentValue: '',
-          //        医生
+          //医生
           DocOptions: '',
           DocDisabled: true,
           Doctext: '请先选择科室',
           DocShow: false,
           DocValue: '',
-          //        专病
+          //专病
           Disease: [],
           DiseaseValue: '',
           DiseaseShow: false,
-          //        出诊时间
+          //出诊时间
           radio: '1',
           radio2: '1',
-          //        出诊时间
+          //出诊时间
           OutTimeValue: '',
           OutTime: [],
-          //        出诊时间
+          //出诊时间
           VisitTime: [],
-          //        时间段
+          //时间段
           Times: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
           address: '',
           info: '',
@@ -226,18 +228,46 @@
           Channel: false,
           UnChannel: false
         },
-        timeSlot:[],//时间段列表
+        currentDocSchedule:{},//当前所选医生出班时间表
+        timeSlotList:[],//时间段列表
         templateData:[],//排版模板数据
       };
     },
     created() {
       this.$nextTick(() => {
-        this.DiseaseInit(); //专病病种
-      this.OutTimeInit(); //出诊时间
-      this.TpListInit();
-    })
+        this.init();
+      })
     },
     methods: {
+      init(){
+        this.DiseaseInit(); //专病病种
+        this.OutTimeInit(); //出诊时间
+        this.TpListInit();
+
+        this.getDicData();//获取字典数据
+        this.getDocScheduleInfo();//获取具体出班信息
+      },
+      //获取时间段列表
+      getDicData(){
+          this.form1.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+          this.form1.department.list = this.$store.state.scheduling.departmentList;
+          this.form1.disease.list = this.$store.state.scheduling.specDiseaseList;
+          this.form1.slot.list = this.$store.state.scheduling.timeSlotList;
+      },
+      //获取当前所选医生出班信息
+      getDocScheduleInfo(){
+        setTimeout( _ => {
+          this.currentDocSchedule = this.$store.state.scheduling.currentDocSchedule;
+        },0)
+      },
+      //获取单次出班信息
+      getSingleSchedule(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q03", { mxxh: '0001'}).then(data => {
+          console.log(data);
+        }).catch(err => {
+          console.log(err);
+        });
+      },
       MsgSuccess() {
         this.SubmitVisible = false;
         this.$message({
@@ -252,7 +282,7 @@
         });
       }, //保存消息提示
       selection(index) {
-        this.form.Type.active = index;
+        this.form1.serviceType.activeIndex = index;
         this.form.DocShow = false;
         this.form.DiseaseShow = false;
         if (this.form.Type.category[index].text !== '普通') {
@@ -289,7 +319,6 @@
           let newArr = listArray.classifyArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
-        console.log(this.attList);
         for (var i = 0; i < data.length; i++) {
           selcetArr.push({
             ksbm: data[i].ksbm,
@@ -330,7 +359,6 @@
           kstybm: '20000000.1.1.0320'
         }).then(data => {
           this.form.OutTime = data;
-        console.log(this.form.OutTime);
       }).catch(err => {
           console.log(err);
         //这里错误有2种错误
@@ -338,7 +366,13 @@
         //2. 网络错误，本地网络断开、超时等
       });
       } //出诊时间
-    }
+    },
+    filters: {
+      timeFormat: function (time) {
+        if(!time)return;
+        return time.split(' ')[1]
+      },
+    },
   }
 </script>
 
@@ -387,21 +421,21 @@
   .type-filter > span > .all.active{
     color: #a0a0a0;
   }
-  .type-filter > span > .default {
+  .type-filter > span > .PT {
     border: 1px solid #e0e0e0;
     background: #fff;
   }
 
-  .type-filter > span > .default.active {
+  .type-filter > span > .PT.active {
     background: #e0e0e0;
   }
 
-  .type-filter > span > .expert {
+  .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
 
-  .type-filter > span > .expert.active {
+  .type-filter > span > .ZJ.active {
     background: rgb(192, 229, 255);
   }
 
@@ -414,21 +448,21 @@
     background: rgb(188, 241, 212);
   }
 
-  .type-filter > span > .union {
+  .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
 
-  .type-filter > span > .union.active {
+  .type-filter > span > .LH.active {
     background: rgb(254, 235, 195);
   }
 
-  .type-filter > span > .VIP {
+  .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
   }
 
-  .type-filter > span > .VIP.active {
+  .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
   }
 

@@ -42,6 +42,14 @@
             console.log(err);
           });
         },
+        //获取医生列表
+      getDocList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {}).then(data => {
+          this.$store.commit('scheduling/SET_DOCTORLIST',data)
+        }).catch(err => {
+          console.log(err);
+        });
+      },
         //获取服务类型
       getServiceTypeList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {}).then(data => {
