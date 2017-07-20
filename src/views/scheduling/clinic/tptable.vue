@@ -289,8 +289,8 @@
                           </p>
                         </div>
                         <div class="fixed-footer">
-                           <router-link to="/scheduling/clinic/tpset">
-                          <el-button @click="SettingVisible = true" type="text" size="small">查看详情</el-button>
+                           <router-link @click.native="selectDoc(item)" to="/scheduling/clinic/tpset">
+                                <el-button  type="text" size="small">查看详情</el-button>
                              </router-link>
                         </div>
                       </div>
@@ -382,6 +382,7 @@
           console.log(err);
         });
       },
+      //数据处理
       formatData(list){
         //医生→时间段→日期
         let newArr = [];
@@ -417,6 +418,10 @@
             });
         });
         this.templateData = newArr;
+      },
+      //选择医生进入排班设置页
+      selectDoc(item){
+        this.$store.commit('scheduling/SET_CURRENTDOCSCHEDULE',item)
       },
       MsgSuccess() {
         this.SettingVisible=false;
