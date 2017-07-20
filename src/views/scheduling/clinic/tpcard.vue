@@ -2,7 +2,7 @@
   <div>
     <div class="page-head">
       <span class="creat-btn">
-      <el-button v-if="userType === '门办' || userType === '医务科'" class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
+      <el-button v-if="$store.state.login.userInfo.type === '门办'" class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
       </span>
     </div>
     <el-dialog title="模板名称" :visible.sync="CreatVisible" size="tiny">
@@ -17,12 +17,8 @@
               </span>
     </el-dialog>
     <div class="page-main">
-      <router-link  :to="{path:$store.state.login.userInfo.type === '科室'?
-                '/scheduling/clinic/tptable':'/scheduling/clinic/tplist'}"
-                    exact tag="span">
         <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
         </tpcard>
-      </router-link>
     </div>
   </div>
 </template>

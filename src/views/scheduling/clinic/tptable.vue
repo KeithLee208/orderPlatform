@@ -1,10 +1,16 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link
-        :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tpcard':'/scheduling/clinic/tplist'" class="pull-right">
-        <i class="el-icon-close"></i>
-      </router-link>
+      <div class="pull-right">
+        <div class="top-search pull-left">
+          <input class="top-searchinput pull-left" placeholder="搜索院区／科室／医生">
+          <i class="iconfont icon-sousuo"></i>
+        </div>
+        <router-link
+          :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tpcard':'/scheduling/clinic/tplist'" >
+          <i class="el-icon-close"></i>
+        </router-link>
+      </div>
       <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
@@ -23,201 +29,186 @@
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
-                  <el-tooltip class="item" effect="dark" content="设置出班模板" placement="bottom">
-                     <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
+                  <el-tooltip  v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark" content="设置出班模板" placement="bottom">
+                     <router-link tag="span" to="/scheduling/clinic/tpset">
+                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
+                     </router-link>
                   </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="提交至门办" placement="bottom">
-                    <i @click="PrintVisible = true" class="icon iconfont icon-dayin"></i>
+                  <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark" content="提交至门办" placement="bottom">
+                    <i @click="SubmitVisible = true" class="icon iconfont icon-tijiao"></i>
                   </el-tooltip>
                 </span>
                  <!--设置-->
-              <el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">
-             <!--<div class="Adjustment" style="">-->
-               <!--<a>调整记录</a>-->
-             <!--</div>-->
-            <div>
-              <el-form  ref="form" :model="form" label-width="80px">
-                  <el-form-item label="服务类型">
-                       <div class="type-filter in-model">
-                        <span ><i class="el-icon-menu all"></i>全部</span>
-                        <span><i class="default"></i>普通（10）</span>
-                        <span><i class="expert"></i>专家（2）</span>
-                        <span><i class="disease"></i>专病（3）</span>
-                        <span><i class="union"></i>联合（4）</span>
-                        <span><i class="VIP"></i>特需（5）</span>
-                        </div>
-                  </el-form-item>
-                 <el-form-item label="选择医生">
-                      <el-col :span="14">
-                        <el-select v-model="form.region" placeholder="请选择医生">
-                          <el-option label="赵大宝" value="赵大宝"></el-option>
-                          <el-option label="秦明" value="秦明"></el-option>
-                        </el-select>
-                      </el-col>
-                      <el-col :span="10">
-                          <el-form-item label="选择病种">
-                              <el-select v-model="form.region" placeholder="请选择病种">
-                                  <el-option label="赵大宝" value="赵大宝"></el-option>
-                                  <el-option label="秦明" value="秦明"></el-option>
-                              </el-select>
-                          </el-form-item>
-                      </el-col>
-                   </el-form-item>
-                  <el-form-item label="选择院区">
-                    <el-radio-group v-model="form.radio">
-                      <el-radio :label="1">徐汇院区</el-radio>
-                      <el-radio :label="2">黄埔院区</el-radio>
-                    </el-radio-group>
-                  </el-form-item>
-                   <el-form-item label="就诊科室">
-                    <el-radio-group v-model="form.radio2">
-                      <el-radio :label="4">胸外科精品A</el-radio>
-                      <el-radio :label="5">胸外科精品B</el-radio>
-                    </el-radio-group>
-                  </el-form-item>
-                  <el-form-item label="就诊时间">
-                      <el-checkbox-group v-model="form.type">
-                          <el-checkbox label="周一" name="type"></el-checkbox>
-                          <el-checkbox label="周二" name="type"></el-checkbox>
-                          <el-checkbox label="周三" name="type"></el-checkbox>
-                          <el-checkbox label="周四" name="type"></el-checkbox>
-                          <el-checkbox label="周五" name="type"></el-checkbox>
-                          <el-checkbox label="周六" name="type"></el-checkbox>
-                          <el-checkbox label="周七" name="type"></el-checkbox>
-                      </el-checkbox-group>
-                  </el-form-item>
-                 <el-form-item label="出诊时间">
-                  <el-col :span="14">
-                      <el-radio-group v-model="form.resource">
-                          <el-radio label="上午 8:00-12:00"></el-radio>
-                          <el-radio label="下午 13:00-17:00"></el-radio>
-                          <el-radio label="晚上 17:00-22:00"></el-radio>
-                      </el-radio-group>
-                  </el-col>
-                  <el-col :span="10">
-                    <el-form-item label="时间段">
-                     <el-time-picker
-                       is-range
-                       v-model="form.value3"
-                       placeholder="选择时间范围">
-                    </el-time-picker>
-                      </el-form-item>
-                  </el-col>
-                    </el-form-item>
-                  <el-form-item label="就诊地址">
-                      <el-input type="input" v-model="form.desc"></el-input>
-                  </el-form-item>
-                <el-form-item label="备注信息">
-                      <el-input type="input" v-model="form.desc"></el-input>
-                  </el-form-item>
-                <el-form-item >
-                      <el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>
-                  </el-form-item>
-                   <div class="table-time">
-            <span></span>
-            <span>周一</span>
-            <span>周二</span>
-            <span>周三</span>
-            <span>周四</span>
-            <span>周五</span>
-            <span>周六</span>
-            <span>周日</span>
-          </div>
-         <div class="AdTable">
-            <div class="AdTableLeft">
-              <div>
-                <i></i>
-                <p>
-                  <span class="name">主治医师</span>
-                  <span class="position">张文</span>
-                </p>
-              </div>
-            </div>
-            <div class="AdTableRight">
-              <div class="table-body">
-                <div class="border-top-1">
-                  <span>上午</span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>下午</span>
-                  <span>
-                  <div @click="dialogVisible = true" class="ordered disease">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span>
-                  <div class="ordered union">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                </span>
-                  <span></span>
-                </div>
-                <div>
-                  <span>晚上</span>
-                  <span></span>
-                  <span>
-                  <div class="ordered VIP">
-                    <p>09:00-11:30</p>
-                    <p>胸外科精品B</p>
-                  </div>
-                  </span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            </div>
-          </div>
-              </el-form>
-              </div>
-             <div slot="footer" class="dialog-footer">
-                <el-button  @click="SettingVisible = false" >取消</el-button>
-                 <el-button @click="MsgSuccess" type="primary">保存</el-button>
-                  <el-button type="success" >保存并设置下一位</el-button>
-              </div>
-              </el-dialog>
+              <!--<el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">-->
+             <!--&lt;!&ndash;<div class="Adjustment" style="">&ndash;&gt;-->
+               <!--&lt;!&ndash;<a>调整记录</a>&ndash;&gt;-->
+             <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--<div>-->
+              <!--<el-form  ref="form" :model="form" label-width="80px">-->
+                  <!--<el-form-item label="服务类型">-->
+                       <!--<div class="type-filter in-model">-->
+                        <!--<span ><i class="el-icon-menu all"></i>全部</span>-->
+                        <!--<span><i class="default"></i>普通（10）</span>-->
+                        <!--<span><i class="expert"></i>专家（2）</span>-->
+                        <!--<span><i class="disease"></i>专病（3）</span>-->
+                        <!--<span><i class="union"></i>联合（4）</span>-->
+                        <!--<span><i class="VIP"></i>特需（5）</span>-->
+                        <!--</div>-->
+                  <!--</el-form-item>-->
+                 <!--<el-form-item label="选择医生">-->
+                      <!--<el-col :span="14">-->
+                        <!--<el-select v-model="form.region" placeholder="请选择医生">-->
+                          <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
+                          <!--<el-option label="秦明" value="秦明"></el-option>-->
+                        <!--</el-select>-->
+                      <!--</el-col>-->
+                      <!--<el-col :span="10">-->
+                          <!--<el-form-item label="选择病种">-->
+                              <!--<el-select v-model="form.region" placeholder="请选择病种">-->
+                                  <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
+                                  <!--<el-option label="秦明" value="秦明"></el-option>-->
+                              <!--</el-select>-->
+                          <!--</el-form-item>-->
+                      <!--</el-col>-->
+                   <!--</el-form-item>-->
+                  <!--<el-form-item label="选择院区">-->
+                    <!--<el-radio-group v-model="form.radio">-->
+                      <!--<el-radio :label="1">徐汇院区</el-radio>-->
+                      <!--<el-radio :label="2">黄埔院区</el-radio>-->
+                    <!--</el-radio-group>-->
+                  <!--</el-form-item>-->
+                   <!--<el-form-item label="就诊科室">-->
+                    <!--<el-radio-group v-model="form.radio2">-->
+                      <!--<el-radio :label="4">胸外科精品A</el-radio>-->
+                      <!--<el-radio :label="5">胸外科精品B</el-radio>-->
+                    <!--</el-radio-group>-->
+                  <!--</el-form-item>-->
+                  <!--<el-form-item label="就诊时间">-->
+                      <!--<el-checkbox-group v-model="form.type">-->
+                          <!--<el-checkbox label="周一" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周二" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周三" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周四" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周五" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周六" name="type"></el-checkbox>-->
+                          <!--<el-checkbox label="周七" name="type"></el-checkbox>-->
+                      <!--</el-checkbox-group>-->
+                  <!--</el-form-item>-->
+                 <!--<el-form-item label="出诊时间">-->
+                  <!--<el-col :span="14">-->
+                      <!--<el-radio-group v-model="form.resource">-->
+                          <!--<el-radio label="上午 8:00-12:00"></el-radio>-->
+                          <!--<el-radio label="下午 13:00-17:00"></el-radio>-->
+                          <!--<el-radio label="晚上 17:00-22:00"></el-radio>-->
+                      <!--</el-radio-group>-->
+                  <!--</el-col>-->
+                  <!--<el-col :span="10">-->
+                    <!--<el-form-item label="时间段">-->
+                     <!--<el-time-picker-->
+                       <!--is-range-->
+                       <!--v-model="form.value3"-->
+                       <!--placeholder="选择时间范围">-->
+                    <!--</el-time-picker>-->
+                      <!--</el-form-item>-->
+                  <!--</el-col>-->
+                    <!--</el-form-item>-->
+                  <!--<el-form-item label="就诊地址">-->
+                      <!--<el-input type="input" v-model="form.desc"></el-input>-->
+                  <!--</el-form-item>-->
+                <!--<el-form-item label="备注信息">-->
+                      <!--<el-input type="input" v-model="form.desc"></el-input>-->
+                  <!--</el-form-item>-->
+                <!--<el-form-item >-->
+                      <!--<el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>-->
+                  <!--</el-form-item>-->
+                   <!--<div class="table-time">-->
+            <!--<span></span>-->
+            <!--<span>周一</span>-->
+            <!--<span>周二</span>-->
+            <!--<span>周三</span>-->
+            <!--<span>周四</span>-->
+            <!--<span>周五</span>-->
+            <!--<span>周六</span>-->
+            <!--<span>周日</span>-->
+          <!--</div>-->
+         <!--<div class="AdTable">-->
+            <!--<div class="AdTableLeft">-->
+              <!--<div>-->
+                <!--<i></i>-->
+                <!--<p>-->
+                  <!--<span class="name">主治医师</span>-->
+                  <!--<span class="position">张文</span>-->
+                <!--</p>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<div class="AdTableRight">-->
+              <!--<div class="table-body">-->
+                <!--<div class="border-top-1">-->
+                  <!--<span>上午</span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                <!--</div>-->
+                <!--<div>-->
+                  <!--<span>下午</span>-->
+                  <!--<span>-->
+                  <!--<div @click="dialogVisible = true" class="ordered disease">-->
+                    <!--<p>09:00-11:30</p>-->
+                    <!--<p>胸外科精品B</p>-->
+                  <!--</div>-->
+                <!--</span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span>-->
+                  <!--<div class="ordered union">-->
+                    <!--<p>09:00-11:30</p>-->
+                    <!--<p>胸外科精品B</p>-->
+                  <!--</div>-->
+                <!--</span>-->
+                  <!--<span></span>-->
+                <!--</div>-->
+                <!--<div>-->
+                  <!--<span>晚上</span>-->
+                  <!--<span></span>-->
+                  <!--<span>-->
+                  <!--<div class="ordered VIP">-->
+                    <!--<p>09:00-11:30</p>-->
+                    <!--<p>胸外科精品B</p>-->
+                  <!--</div>-->
+                  <!--</span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+              <!--</el-form>-->
+              <!--</div>-->
+             <!--<div slot="footer" class="dialog-footer">-->
+                <!--<el-button  @click="SettingVisible = false" >取消</el-button>-->
+                 <!--<el-button @click="MsgSuccess" type="primary">保存</el-button>-->
+                  <!--<el-button type="success" >保存并设置下一位</el-button>-->
+              <!--</div>-->
+              <!--</el-dialog>-->
                  <!--打印-->
-              <el-dialog title="打印出班表" :visible.sync="PrintVisible" size="tiny">
-              <span>
-              <p>起始时间：
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  size="small"
-                  :picker-options="pickerOptions0"
-                  v-model="value1"
-                >
-              </el-date-picker>
-              </p>
-              <p>截止日期：
-              <el-date-picker
-                type="date"
-                placeholder="选择日期"
-                size="small"
-              >
-              </el-date-picker>
-              </p>
-            </span>
-                <span slot="footer" class="dialog-footer">
-                <el-button @click="PrintVisible = false">取 消</el-button>
-                <el-button type="primary" @click="PrintVisible = false">打 印</el-button>
-              </span>
-            </el-dialog>
+               <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
+                <div class="infolist">
+                  提交至门办（接口）
+                </div>
+                            <span slot="footer" class="dialog-footer">
+                            <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
+                            <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
+                          </span>
+              </el-dialog>
                  <!--导出-->
               <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" >
               <span>
@@ -325,7 +316,7 @@
     data() {
       return {
         SettingVisible: false,
-        PrintVisible: false,
+        SubmitVisible: false,
         ExportVisible: false,
         value1: '',
         form: {
@@ -464,7 +455,8 @@
     box-sizing: border-box;
   }
 
-  .setting-header > a > i {
+  .setting-header > div>a > i {
+    font-size: 14px;
     color: #fff;
   }
 
@@ -798,5 +790,52 @@
   }
   .icon-group>i:hover{
     color: rgb(89,100,185);
+  }
+  .top-search {
+    margin: 10px 15px 0 0 ;
+    position: relative;
+  }
+  .top-searchinput {
+    width: 184px;
+    height: 34px;
+    background: rgb(84, 106, 199);
+    margin: 3px 10px 0 0;
+    border-radius: 2px;
+    border: none;
+    line-height: 34px;
+    padding: 0 35px 0 10px;
+    color: #fff;
+    transition: box-shadow ease-in-out .25s;
+  }
+  .top-searchinput:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    outline: 0;
+  }
+  .top-searchinput::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput:-moz-placeholder{  /* Mozilla Firefox 4 to 18 */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-search > i {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background: rgb(84, 106, 199);
+    cursor: pointer;
+
   }
 </style>

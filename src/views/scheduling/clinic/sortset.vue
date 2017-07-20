@@ -8,6 +8,7 @@
       <span>设置费用及号序</span>
     </div>
     <div class="set-body">
+      <div class="info-detail">查看设置详情</div>
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="服务类型">
           <div class="type-filter in-model">
@@ -371,6 +372,7 @@
   }
   .set-body{
     padding: 20px;
+    position: relative;
   }
   .setting-header>span{
     font-size: 16px;
@@ -536,6 +538,14 @@
 
   .UnChannel {
     margin-top: 20px;
+  }
+  .info-detail{
+    position: absolute;
+    right: 20px;
+    font-size: 14px;
+    color: rgb(63, 169, 255);
+    cursor: pointer;
+    z-index: 9;
   }
 </style>
 

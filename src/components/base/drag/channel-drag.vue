@@ -267,7 +267,9 @@
     border-radius: 50%;
     border: 1px solid #e0e0e0;
     font-size: 18px;
+
   }
+
   .ball-row>div>div>span>i.hospital{
     border: 1px solid #c0e5ff;
     background: #e9f6ff;

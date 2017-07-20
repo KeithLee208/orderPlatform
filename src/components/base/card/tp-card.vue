@@ -1,6 +1,10 @@
 <template>
+  <div>
     <transition name="el-zoom-in-top">
-      <div v-if="CardShow" class="tp-card" @mouseenter="handleTpCardMouseOver()" @mouseleave="handleTpCardMouseLeave()">
+      <router-link   :to="{path:$store.state.login.userInfo.type === '科室'?
+                '/scheduling/clinic/tptable':'/scheduling/clinic/tplist'}"
+                     exact tag="span">
+      <div v-if="CardShow" class="tp-card">
         <div class="tp-card-head">
           <p v-if="$store.state.login.userInfo.type === '医务科'">
             <span class="tp-card-title">{{card.mbmc}}</span>
@@ -32,7 +36,7 @@
           <p v-if="$store.state.login.userInfo.type === '门办'">
             <span class="tp-card-title">{{card.mbmc}}</span>
           </p>
-          <p class="used-time">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
+          <p :class="['used-time',{'collapse':$store.state.login.userInfo.type === '科室'}]">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
 
         </div>
         <div class="tp-card-body">
@@ -44,18 +48,31 @@
             <span>{{template.fwlxmc}}：</span>
             <span class="tp-num pull-right">{{template.fwlxsl}}</span>
           </p>
-          <p class="submit">
-            <span v-if="$store.state.login.userInfo.type === '科室'">提交至医务科</span>
-            <span v-else-if="$store.state.login.userInfo.type === '医务科'">提交至门办</span>
-          </p>
           <transition name="el-fade-in-linear">
-            <div v-if="TimeShow==false" v-on:click.stop="deleteCard()" class="tp-card-close">
+            <div v-on:click.stop="deleteCard()" class="tp-card-close">
               <i class="el-icon-close"></i>
             </div>
           </transition>
         </div>
+        <div v-if="$store.state.login.userInfo.type === '科室'" v-on:click.stop="SubmitVisible = true" class="tp-card-footer">
+          提交至门办
+        </div>
       </div>
+      </router-link>
     </transition>
+  <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
+    <div class="infolist">
+      <p v-for="template in card.fwlxtj">
+        <span>{{template.fwlxmc}}：</span>
+        <span class="tp-num pull-right">{{template.fwlxsl}}</span>
+      </p>
+    </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
+                <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
+              </span>
+  </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -64,19 +81,20 @@
     props: ['card'],
     data(){
       return{
-      TimeShow:true,
-      CardShow:true
+      CardShow:true,
+        SubmitVisible:false
       }
     },
     methods:{
       deleteCard(){
         this.CardShow=false;
       },
-      handleTpCardMouseOver(){
-        this.TimeShow=false;
-      },
-      handleTpCardMouseLeave(){
-        this.TimeShow=true;
+      SubMsg() {
+        this.SubmitVisible=false;
+        this.$message({
+          message: '噢啦啦啦啦啦啦提交成功！',
+          type: 'success'
+        });
       }
     }
     }
@@ -111,6 +129,11 @@
       width: 19%;
     }
   }
+  @media screen and (min-width: 1921px) {
+    .tp-card{
+      width: 19%;
+    }
+  }
   @media screen and (max-width: 1366px) {
     .tp-card{
       min-width: 310px;
@@ -128,20 +151,41 @@
     border: 1px solid rgba(132, 166, 181,.6);
     box-shadow: 0 0 15px rgba(63,81,181, 0.3);
   }
-  .tp-card:hover .submit{
+  .tp-card:hover .tp-card-footer{
+    height: 45px;
+  }
+  .tp-card:hover .collapse{
+    height:0;
+  }
+  .tp-card:hover .tp-card-close{
     display: block;
+
+  }
+  .tp-card-footer{
+    color: #FFF;
+    background: rgb(62,156,255);
+    display: block;
+    position: absolute;
+    height: 0px;
+    line-height: 45px;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    bottom: 0px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    cursor: pointer;
+    transition:all .2s;
+    overflow: hidden;
+  }
+  .tp-card-footer:hover{
+    background: rgb(67, 170, 255);
   }
   .tp-card p{
     height: 35px;
     line-height: 35px;
   }
-  .submit {
-    color: #3F51B5 !important;
-    display: none;
-    position: absolute;
-    right: 25px;
-    bottom: 5px;
-  }
+
 .tp-card-head{
   padding: 25px 25px 10px 25px;
   border-bottom: 1px dashed #e0e0e0;
@@ -170,18 +214,21 @@
   }
   .tp-card-body>p,.used-time{
   color: #999;
+    transition:all .2s;
+    overflow: hidden;
   }
   .tp-card-ksnum>span{
     font-size: 14px;
     color: #6FA6E1;
   }
   .tp-card-close{
-   position: absolute;
+    position: absolute;
     top: 6px;
     right: 10px;
-    color:#999;
+    color: #cacaca;
     cursor: pointer;
-
+    display: none;
+    transition:all .2s;
    }
   .tp-card-close>i{
     font-size: 12px;
@@ -190,5 +237,18 @@
     font-size: 13px;
     font-weight: bold;
     color: #333;
+  }
+  .infolist{
+    padding: 0 80px 0 40px;
+  }
+  .infolist>p{
+    height: 30px;
+    line-height: 30px;
+  }
+  .infolist>p>.lable{
+    float: left;
+  }
+  .infolist>p>.num{
+    float: right;
   }
 </style>
