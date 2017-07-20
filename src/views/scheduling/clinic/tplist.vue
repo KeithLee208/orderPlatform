@@ -1,6 +1,16 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
+      <div class="pull-right">
+        <div class="top-search pull-left">
+          <input class="top-searchinput pull-left" placeholder="搜索院区／科室／医生">
+          <i class="iconfont icon-sousuo"></i>
+        </div>
+        <router-link
+          :to="'/scheduling/clinic/tpcard'" >
+          <i class="el-icon-close"></i>
+        </router-link>
+      </div>
       <router-link tag="span" to="/scheduling/clinic/tpcard">
         <i class="el-icon-arrow-left"></i>
         <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
@@ -419,7 +429,8 @@
     box-sizing: border-box;
   }
 
-  .setting-header > a > i {
+  .setting-header >div> a > i {
+    font-size: 14px;
     color: #fff;
   }
 
@@ -701,5 +712,51 @@
     display: inline-block;
     border-bottom: 1px dashed #e0e0e0;
   }
+  .top-search {
+    margin: 10px 15px 0 0 ;
+    position: relative;
+  }
+  .top-searchinput {
+    width: 184px;
+    height: 34px;
+    background: rgb(84, 106, 199);
+    margin: 3px 10px 0 0;
+    border-radius: 2px;
+    border: none;
+    line-height: 34px;
+    padding: 0 35px 0 10px;
+    color: #fff;
+    transition: box-shadow ease-in-out .25s;
+  }
+  .top-searchinput:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    outline: 0;
+  }
+  .top-searchinput::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput:-moz-placeholder{  /* Mozilla Firefox 4 to 18 */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-searchinput:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #FFF;
+    opacity: .5;
+  }
+  .top-search > i {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background: rgb(84, 106, 199);
+    cursor: pointer;
 
+  }
 </style>
