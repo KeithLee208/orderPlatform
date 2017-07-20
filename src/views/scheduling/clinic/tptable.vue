@@ -15,7 +15,7 @@
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
-      <div class="setting-main">
+      <div  class="setting-main">
         <div>
           <div class="page-head">
             <div class="type-filter">
@@ -237,6 +237,7 @@
               </span>
             </div>
           </div>
+          <div class="page-body" v-loading="loading" element-loading-text="拼命加载中">
           <div class="table-time">
             <span></span>
             <span>周一</span>
@@ -303,6 +304,7 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
       </div>
     </div>
@@ -335,6 +337,7 @@
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
+        loading:true,
         crumbs:[],//面包屑数据
         serviceTypeList:[],//服务类型列表
         timeSlot:[],//时间段列表
@@ -367,12 +370,14 @@
       //获取时间段列表
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
+
       },
       //数据初始化
       dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'' }).then(data => {
           this.TpCard = data;
           this.formatData(arr.classifyArr(data, 'ysdm'));
+        this.loading=false;
         }).catch(err => {
           console.log(err);
         });
@@ -476,7 +481,7 @@
 
   .setting-main {
     width: 100%;
-    height: 790px;
+    min-height: 790px;
     display: inline-block;
     background: #fff;
     box-sizing: border-box;
@@ -714,7 +719,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 980px;
+    min-height: 885px;
     background: #fff;
   }
 
@@ -832,5 +837,8 @@
     background: rgb(84, 106, 199);
     cursor: pointer;
 
+  }
+  .page-body{
+    height: calc(90vh - 300px);
   }
 </style>

@@ -18,7 +18,7 @@
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
-      <div class="setting-main">
+      <div class="setting-main" v-loading="loading" element-loading-text="拼命加载中">
         <div class="page-head">
           <div class="type-filter">
             <span><i class="el-icon-menu all"></i>全部</span>
@@ -195,6 +195,7 @@
       return {
         crumbs:[],//面包屑数据
         SettingVisible: false,
+        loading:true,
         attList: [],
         form: {
           //        服务类型
@@ -359,7 +360,7 @@
           let newArr = listArray.classifyArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
-        console.log(this.attList);
+        this.loading=false;
         for (var i = 0; i < data.length; i++) {
           selcetArr.push({
             ksbm: data[i].ksbm,
@@ -459,7 +460,7 @@
 
   .setting-main {
     width: 100%;
-    height: 790px;
+    min-height: 790px;
     display: inline-block;
     background: #fff;
     box-sizing: border-box;

@@ -16,7 +16,7 @@
                 <el-button type="primary" @click="msgSuccess">创 建</el-button>
               </span>
     </el-dialog>
-    <div class="page-main">
+    <div v-loading="loading" element-loading-text="拼命加载中" class="page-main">
         <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
         </tpcard>
     </div>
@@ -31,6 +31,7 @@
       return {
         TpCard: [],
         CreatVisible:false,
+        loading:true,
         form:{
           name:''
         },
@@ -62,7 +63,7 @@
       cardlistInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '20000000.1.1.0320' }).then(data => {
           this.TpCard = data;
-          console.log(data);
+          this.loading=false;
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
@@ -87,7 +88,9 @@
     display: inline-block;
     width: 100%;
   }
-
+  .page-main{
+    height: calc(100vh - 250px);
+  }
   .page-head {
     box-sizing: border-box;
     position: relative;
@@ -95,9 +98,11 @@
 
   .pagebody {
     background: none;
+
   }
   .creat-btn{
     position: absolute;right: 20px;top: -45px;
+
   }
   .btn-blue {
     background: #fff;
