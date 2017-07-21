@@ -55,7 +55,7 @@
   .color-333{
     color: #333;
   }
-  @media screen and (max-width: 1024px){
+  @media screen and (max-width: 1225px){
     .header > .logo>span{
       display: none !important;
     }

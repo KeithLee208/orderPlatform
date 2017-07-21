@@ -1,6 +1,6 @@
 <template>
     <div class="setting-body">
-      <div class="setting-main">
+      <div  class="setting-main">
         <div>
           <div class="page-head">
             <div class="type-filter">
@@ -75,6 +75,7 @@
               </span>
             </div>
           </div>
+          <div class="page-body" v-loading="loading" element-loading-text="拼命加载中">
           <div class="table-time">
             <span></span>
             <span>周一</span>
@@ -163,7 +164,7 @@
                   </el-form-item>
                   <div class="line"></div>
                   <el-form-item label="替诊医生">
-                    <el-select v-model="form1.data1" filterable placeholder="请选择">
+                    <el-select class="width-300" v-model="form1.data1" filterable placeholder="请选择">
                       <el-option
                         v-for="item in form1.region"
                         :key="item.value"
@@ -173,28 +174,29 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="替诊原因">
-                    <el-input type="textarea" v-model="form1.desc"></el-input>
+                    <el-input class="width-300" type="textarea" v-model="form1.desc"></el-input>
                   </el-form-item>
                 </el-form>
                 <!--停诊-->
                 <el-form v-if="stop" ref="form" :model="form2" label-width="110px">
                   <el-form-item label="停诊时间">
                     <el-date-picker
+                      class="width-300"
                       v-model="form2.date1"
                       type="datetime"
                       placeholder="选择日期时间">
                     </el-date-picker>
                   </el-form-item>
                   <el-form-item label="停诊原因">
-                    <el-input type="textarea" v-model="form2.desc"></el-input>
+                    <el-input class="width-300" type="textarea" v-model="form2.desc"></el-input>
                   </el-form-item>
                 </el-form>
                 <!--调班-->
                 <el-form v-if="change" ref="form" :model="form3" label-width="110px">
-                  <el-form-item label="当前医生/科室">
+                  <el-form-item label="医生/科室">
                     <span>张文/黄埔院区胸外科1</span>
                   </el-form-item>
-                  <el-form-item label="当前预约时间">
+                  <el-form-item label="预约时间">
                     <span>2015/05/01</span>
                   </el-form-item>
                   <div class="change-icon">
@@ -202,6 +204,7 @@
                   </div>
                   <el-form-item label="调班医生">
                     <el-cascader
+                      class="width-300"
                       placeholder="可搜索"
                       :options="form3.options"
                       filterable
@@ -209,6 +212,7 @@
                   </el-form-item>
                   <el-form-item label="调班时间">
                     <el-date-picker
+                      class="width-300"
                       v-model="form3.date1"
                       type="datetime"
                       placeholder="选择日期时间">
@@ -216,7 +220,7 @@
                   </el-form-item>
                   <div class="line"></div>
                   <el-form-item label="调班原因">
-                    <el-input type="textarea" v-model="form3.desc"></el-input>
+                    <el-input class="width-300" type="textarea" v-model="form3.desc"></el-input>
                   </el-form-item>
                 </el-form>
 
@@ -288,6 +292,7 @@
               <el-button type="primary" @click="RecordVisible = false">确定</el-button>
             </span>
           </el-dialog>
+          </div>
         </div>
       </div>
     </div>
@@ -449,7 +454,8 @@
             }
           ]
         },
-        templateData:[]
+        templateData:[],
+        loading:true
       };
     },
     created(){
@@ -509,6 +515,7 @@
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'' }).then(data => {
           this.TpCard = data;
         this.formatData(arr.classifyArr(data, 'ysdm'));
+        this.loading=false;
       }).catch(err => {
           console.log(err);
       });
@@ -575,7 +582,6 @@
 
   .setting-main {
     width: 100%;
-    height: 790px;
     display: inline-block;
     background: #fff;
     box-sizing: border-box;
@@ -977,5 +983,11 @@
   .fixed-footer-btn{
     border-right: 1px solid #e0e0e0;
     padding-right: 15px;
+  }
+  .page-body{
+    height: calc(90vh - 300px);
+  }
+  .width-300{
+    width: 300px;
   }
 </style>
