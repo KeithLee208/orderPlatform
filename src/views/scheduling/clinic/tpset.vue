@@ -34,7 +34,7 @@
             <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="week in slot.weekday">
-                    <div v-if="week.cbrqlx" class="ordered disease" @click="getSingleSchedule()">
+                    <div v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule()">
                       <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
                       <p>{{week.ksmc}}</p>
                     </div>
@@ -54,7 +54,7 @@
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select style="width: 30%" @change="SelectInit" v-model="form1.department.val" multiple filterable placeholder="请选择">
+        <el-select @change="SelectInit" v-model="form1.department.val"  placeholder="请选择">
           <el-option v-for="item in form1.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
           </el-option>
         </el-select>
@@ -71,14 +71,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="就诊时间">
-        <el-checkbox-group v-model="form1.visitTime.val">
-          <el-checkbox v-for="item in form1.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
-        </el-checkbox-group>
+        <el-radio-group v-model="form1.visitTime.val">
+          <el-radio v-for="item in form1.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="出诊时间">
         <el-col :span="8">
-          <el-radio-group v-model="form1.slot.val">
-            <el-radio v-for="item in form1.slot.list" :label="item.sjdmc+item.kssj+'-'+item.jssj" :value="item.sjddm"></el-radio>
+          <el-radio-group v-model="form1.slotTime.val">
+            <el-radio v-for="item in form1.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
           </el-radio-group>
         </el-col>
         <el-col :span="10">
@@ -94,14 +94,14 @@
       <el-form-item label="备注信息">
         <el-input type="input" v-model="form1.note"></el-input>
       </el-form-item>
-      <el-form-item >
-        <el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>
-      </el-form-item>
+      <!--<el-form-item >-->
+        <!--<el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>-->
+      <!--</el-form-item>-->
     </el-form>
     <div slot="footer"  class="dialog-footer">
       <el-button>取消</el-button>
-      <el-button type="primary">保存</el-button>
-      <el-button type="success" >保存并设置下一位</el-button>
+      <el-button type="primary">保存并继续</el-button>
+      <!--<el-button type="success" >保存并设置下一位</el-button>-->
     </div>
   </div>
 
@@ -146,7 +146,7 @@
           visitTime:{
             isShow:true,
             isEdit:true,
-            val:[],
+            val:'',
             list:[
                 {name:"周一",val:"星期一"},
                 {name:"周二",val:"星期二"},
@@ -162,7 +162,7 @@
             val:'',
             list:[]
           },
-          slot:{
+          slotTime:{
             isShow:true,
             isEdit:true,
             val:'',
@@ -235,7 +235,33 @@
           Channel: false,
           UnChannel: false
         },
-        currentDocSchedule:{},//当前所选医生出班时间表
+        currentDocSchedule:{
+          ysmc:"默认",
+          ysdm:"",
+          slot:[
+            {
+              jssj : "11:00",
+              kssj : "8:00",
+              sjddm : "SW",
+              sjdmc : "上午",
+              weekday:[{},{},{},{},{},{},{}]
+            },
+            {
+              jssj : "11:00",
+              kssj : "8:00",
+              sjddm : "XW",
+              sjdmc : "下午",
+              weekday:[{},{},{},{},{},{},{}]
+            },
+            {
+              jssj : "11:00",
+              kssj : "8:00",
+              sjddm : "WS",
+              sjdmc : "晚上",
+              weekday:[{},{},{},{},{},{},{}]
+            }
+          ]
+        },//当前所选医生出班时间表
         timeSlotList:[],//时间段列表
         templateData:[],//排版模板数据
       };
@@ -250,7 +276,6 @@
         this.DiseaseInit(); //专病病种
         this.OutTimeInit(); //出诊时间
         this.TpListInit();
-
         this.getDicData();//获取字典数据
         this.getDocScheduleInfo();//获取具体出班信息
       },
@@ -260,12 +285,14 @@
           this.form1.doctor.list = this.$store.state.scheduling.doctorList;
           this.form1.department.list = this.$store.state.scheduling.departmentList;
           this.form1.disease.list = this.$store.state.scheduling.specDiseaseList;
-          this.form1.slot.list = this.$store.state.scheduling.timeSlotList;
+          this.form1.slotTime.list = this.$store.state.scheduling.timeSlotList;
       },
       //获取当前所选医生出班信息
       getDocScheduleInfo(){
         setTimeout( _ => {
-          this.currentDocSchedule = this.$store.state.scheduling.currentDocSchedule;
+          if(this.$store.state.scheduling.currentDocSchedule.ysmc) {
+            this.currentDocSchedule = this.$store.state.scheduling.currentDocSchedule;
+          }
         },0)
       },
       //获取单次出班信息
@@ -278,9 +305,10 @@
       },
       //表单填充策略
       setForm(data){
-        this.form1.department.val.push(data.ksmc);
+        this.form1.department.val = data.ksmc;
         this.form1.doctor.val = data.ysmc;
-        this.form1.visitTime.val.push(data.cbrqlx);
+        this.form1.visitTime.val = data.cbrqlx;
+        this.form1.slotTime.val = data.sjddm;
         this.form1.address = data.czdz;
       },
       MsgSuccess() {
@@ -621,20 +649,20 @@
   }
   /*default,expert,disease,union,VIP*/
 
-  .ordered.default,
-  .ordered.expert,
+  .ordered.PT,
+  .ordered.ZJ,
   .ordered.disease,
-  .ordered.union,
-  .ordered.VIP {
+  .ordered.LH,
+  .ordered.TX {
     cursor: pointer;
   }
 
-  .ordered.default {
+  .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
 
-  .ordered.expert {
+  .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
@@ -644,12 +672,12 @@
     background: rgb(231, 250, 240);
   }
 
-  .ordered.union {
+  .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
 
-  .ordered.VIP {
+  .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }

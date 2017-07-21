@@ -30,7 +30,7 @@
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
                   <el-tooltip  v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark" content="设置出班模板" placement="bottom">
-                     <router-link tag="span" to="/scheduling/clinic/tpset">
+                     <router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
                      </router-link>
                   </el-tooltip>
@@ -294,7 +294,7 @@
                              </router-link>
                         </div>
                       </div>
-                      <div slot="reference" class="ordered disease">
+                      <div slot="reference" class="ordered" :class="[week.fwlxdm]">
                         <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
                         <p>{{week.ksmc}}</p>
                       </div>
@@ -435,6 +435,10 @@
           message: '成功！',
           type: 'success'
         });
+      },
+      //门办设置出班模板，清空vuex的医生模板信息
+      clearCurrentDocSchedule(){
+        this.$store.state.scheduling.currentDocSchedule = {};
       }
     },
     filters: {
@@ -632,20 +636,20 @@
   }
   /*default,expert,disease,union,VIP*/
 
-  .ordered.default,
-  .ordered.expert,
+  .ordered.PT,
+  .ordered.ZJ,
   .ordered.disease,
-  .ordered.union,
-  .ordered.VIP {
+  .ordered.LH,
+  .ordered.TX {
     cursor: pointer;
   }
 
-  .ordered.default {
+  .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
 
-  .ordered.expert {
+  .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
@@ -655,12 +659,12 @@
     background: rgb(231, 250, 240);
   }
 
-  .ordered.union {
+  .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
 
-  .ordered.VIP {
+  .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }

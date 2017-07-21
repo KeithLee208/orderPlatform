@@ -119,8 +119,8 @@
       </el-form>
       <div slot="footer"  class="dialog-footer">
         <el-button>取消</el-button>
-        <el-button type="primary">保存</el-button>
-        <el-button type="success" >保存并设置下一位</el-button>
+        <el-button type="primary">保存并继续</el-button>
+        <!--<el-button type="success" >保存并设置下一位</el-button>-->
       </div>
     </div>
 
