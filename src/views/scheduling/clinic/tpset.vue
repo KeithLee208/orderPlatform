@@ -8,7 +8,7 @@
     <span>设置出班信息</span>
   </div>
   <div class="set-body">
-    <el-form  ref="form" :model="form" label-width="80px">
+    <el-form  ref="form1" :model="form1" label-width="80px">
       <div class="table-time">
         <span></span>
         <span>周一</span>
@@ -38,6 +38,9 @@
                       <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
                       <p>{{week.ksmc}}</p>
                     </div>
+                    <div v-else class="ordered" @click="setNewSchedule()">
+
+                    </div>
               </span>
             </div>
           </div>
@@ -54,13 +57,13 @@
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select @change="SelectInit" v-model="form1.department.val"  placeholder="请选择">
+        <el-select v-model="form1.department.val"  placeholder="请选择">
           <el-option v-for="item in form1.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form1.doctor.val" :placeholder='form.Doctext'>
+        <el-select v-model="form1.doctor.val" :placeholder='form1.doctor.val'>
           <el-option v-for="item in form1.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
         </el-select>
       </el-form-item>
@@ -83,7 +86,7 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="时间段">
-            <el-time-picker is-range v-model="form.Times" placeholder="选择时间范围">
+            <el-time-picker is-range v-model="form1.time.val" placeholder="选择时间范围">
             </el-time-picker>
           </el-form-item>
         </el-col>
@@ -94,14 +97,10 @@
       <el-form-item label="备注信息">
         <el-input type="input" v-model="form1.note"></el-input>
       </el-form-item>
-      <!--<el-form-item >-->
-        <!--<el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>-->
-      <!--</el-form-item>-->
     </el-form>
     <div slot="footer"  class="dialog-footer">
       <el-button>取消</el-button>
-      <el-button type="primary">保存并继续</el-button>
-      <!--<el-button type="success" >保存并设置下一位</el-button>-->
+      <el-button type="primary" @click="save()">保存并继续</el-button>
     </div>
   </div>
 
@@ -171,70 +170,6 @@
           address:'',
           note:''
         },
-        form: {
-          //服务类型
-          Type: {
-            active: 0,
-            category: [
-              {
-                type: 'default',
-                text: '普通',
-                num: 10,
-              },
-              {
-                type: 'expert',
-                text: '专家',
-                num: 2
-              },
-              {
-                type: 'disease',
-                text: '专病',
-                num: 3
-              },
-              {
-                type: 'union',
-                text: '联合',
-                num: 4
-              },
-              {
-                type: 'VIP',
-                text: '特需',
-                num: 5
-              }
-            ]
-          },
-          //科室
-          DepartOptions: [],
-          DepartmentValue: '',
-          //医生
-          DocOptions: '',
-          DocDisabled: true,
-          Doctext: '请先选择科室',
-          DocShow: false,
-          DocValue: '',
-          //专病
-          Disease: [],
-          DiseaseValue: '',
-          DiseaseShow: false,
-          //出诊时间
-          radio: '1',
-          radio2: '1',
-          //出诊时间
-          OutTimeValue: '',
-          OutTime: [],
-          //出诊时间
-          VisitTime: [],
-          //时间段
-          Times: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
-          address: '',
-          info: '',
-          channel: '',
-          Source: false,
-          UnSource: false,
-          CloseShow: false,
-          Channel: false,
-          UnChannel: false
-        },
         currentDocSchedule:{
           ysmc:"默认",
           ysdm:"",
@@ -262,6 +197,7 @@
             }
           ]
         },//当前所选医生出班时间表
+        singleSchedule:{},
         timeSlotList:[],//时间段列表
         templateData:[],//排版模板数据
       };
@@ -273,9 +209,6 @@
     },
     methods: {
       init(){
-        this.DiseaseInit(); //专病病种
-        this.OutTimeInit(); //出诊时间
-        this.TpListInit();
         this.getDicData();//获取字典数据
         this.getDocScheduleInfo();//获取具体出班信息
       },
@@ -292,12 +225,14 @@
         setTimeout( _ => {
           if(this.$store.state.scheduling.currentDocSchedule.ysmc) {
             this.currentDocSchedule = this.$store.state.scheduling.currentDocSchedule;
+            this.getSingleSchedule();
           }
         },0)
       },
       //获取单次出班信息
       getSingleSchedule(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q03", { mxxh: '0001'}).then(data => {
+            this.singleSchedule = data;
             this.setForm(data);
         }).catch(err => {
           console.log(err);
@@ -311,104 +246,45 @@
         this.form1.slotTime.val = data.sjddm;
         this.form1.address = data.czdz;
       },
+      //设置新的排班信息
+      setNewSchedule(){
+        this.$message('设置新的出班信息');
+        let _data = {
+          ksmc: '',
+          ysmc: '',
+          cbrqlx: '',
+          sjddm: '',
+          czdz: '',
+        };
+        this.setForm(_data);
+      },
       MsgSuccess() {
         this.SubmitVisible = false;
         this.$message({
           message: '提交成功！',
           type: 'success'
         });
-      }, //提交消息提示
+      },
       TemSuccess() {
         this.$message({
           message: '成功！',
           type: 'success'
         });
-      }, //保存消息提示
+      },
       selection(index) {
         this.form1.serviceType.activeIndex = index;
-        this.form.DocShow = false;
-        this.form.DiseaseShow = false;
-        if (this.form.Type.category[index].text !== '普通') {
-          this.form.DocShow = true;
-        }
-        if (this.form.Type.category[index].text == '专病') {
-          this.form.DiseaseShow = true;
-        }
-      }, //服务类型筛选表单
-      DiseaseInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
-          kstybm: '20000000.1.1.0320'
-        }).then(data => {
-          this.form.Disease = data;
-        let newArr = [];
-        for (var i = 0; i < this.form.Disease.length; i++) {
-          newArr.push({
-            zydm: this.form.Disease[i].zydm,
-            zymc: this.form.Disease[i].zymc
-          });
-        }
-        this.form.Disease = newArr;
-      }).catch(err => {
-          console.log(err);
-        //这里错误有2种错误
-        //1. 服务端业务错误，错误码邮件中有
-        //2. 网络错误，本地网络断开、超时等
-      });
-      }, //专病病种
-      TpListInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {
-          kstybm: '20000000.1.1.0320'
-        }).then(data => {
-          let newArr = listArray.classifyArr(data, 'sjksbm');
-        let selcetArr = [];
-        this.attList = newArr;
-        for (var i = 0; i < data.length; i++) {
-          selcetArr.push({
-            ksbm: data[i].ksbm,
-            ksmc: data[i].ksmc
-          });
-        }
-        this.form.DepartOptions = selcetArr;
-      }).catch(err => {
-          console.log(err);
-        //这里错误有2种错误
-        //1. 服务端业务错误，错误码邮件中有
-        //2. 网络错误，本地网络断开、超时等
-      });
-      }, //科室列表
-      SelectInit() {
-        if (this.form.DepartmentValue != '') {
-          this.form.DocDisabled = false;
-          this.form.Doctext = '请选择对应科室的医生';
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-            kstybm: this.form.DepartmentValue
-          }).then(data => {
-            this.form.DocOptions = data;
+      },
+      //保存/新增接口
+      save(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { update: [this.singleSchedule]}).then(data => {
+          console.log(data);
         }).catch(err => {
-            console.log(err);
+          console.log(err);
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
         });
-        } else {
-          this.form.DocValue = '';
-          this.form.DocDisabled = true;
-          this.form.Doctext = '请先选择科室';
-        }
-
-      }, //选择科室根据所选筛选医生
-      OutTimeInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {
-          kstybm: '20000000.1.1.0320'
-        }).then(data => {
-          this.form.OutTime = data;
-      }).catch(err => {
-          console.log(err);
-        //这里错误有2种错误
-        //1. 服务端业务错误，错误码邮件中有
-        //2. 网络错误，本地网络断开、超时等
-      });
-      } //出诊时间
+      }
     },
     filters: {
       timeFormat: function (time) {
