@@ -40,13 +40,17 @@
     },
     created() {
       this.$nextTick(() => {
-        this.cardlistInit();
+          this.cardlistInit();
       })
     },
     components: {
       tpcard
     },
     methods: {
+      init(){
+
+      },
+
       handleLinkTo(card){
         if(this.$store.state.login.userInfo.type === '科室'){
           this.$store.commit('scheduling/SET_CRUMBS',{
@@ -61,7 +65,7 @@
         }
       },
       cardlistInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '20000000.1.1.0320' }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '' }).then(data => {
           this.TpCard = data;
           this.loading=false;
         }).catch(err => {

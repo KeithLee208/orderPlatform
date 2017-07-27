@@ -16,6 +16,7 @@
   </div>
 </template>
 <script>
+  import axios from "axios";
   export default{
     data(){
       return {
@@ -24,7 +25,9 @@
     },
     created(){
       this.$nextTick(() => {
-          this.init();
+//          this.login().then(() => {
+            this.init();
+//          });
       })
     },
     methods:{
@@ -35,9 +38,31 @@
           this.getTimeSlotList();
           this.getSpecDiseaseList();
         },
+      login(){
+        return new Promise((resolve, reject) => {
+          let target = 'http://172.16.0.131:8888/auth/login';
+          axios({
+            url: target,
+            method: 'get',
+            params:{
+              p:111111,
+              u:'00'
+            },
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type': 'application/json;charset=UTF-8'
+            }
+          }).then(res => {
+            sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
+            resolve();
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      },
         //获取医院所有预约科室
         getDepartmentList(){
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm: '20000000.1.1.0320'}).then(data => {
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
             console.log(err);
@@ -45,7 +70,7 @@
         },
         //获取医生列表
       getDocList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm: '20000000.1.1.0320' }).then(data => {
           this.$store.commit('scheduling/SET_DOCTORLIST',data)
         }).catch(err => {
           console.log(err);
@@ -54,6 +79,7 @@
         //获取服务类型
       getServiceTypeList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {}).then(data => {
+          alert(3);
           this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
         }).catch(err => {
           console.log(err);
@@ -62,6 +88,7 @@
       //获取时间段列表
       getTimeSlotList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {}).then(data => {
+          alert(4);
           this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
         }).catch(err => {
           console.log(err);
@@ -69,7 +96,7 @@
       },
       //获取专病信息
       getSpecDiseaseList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {kstybm: '20000000.1.1.0320'}).then(data => {
           this.$store.commit('scheduling/SET_SPECDISEASELIST',data)
         }).catch(err => {
           console.log(err);

@@ -4,8 +4,9 @@
 import axios from "axios";
 import mockjs from "mockjs";
 const baseConfig = {
-  baseUrl: 'http://172.16.0.131:8888/api',
-  rap_baseUrl: 'http://rapapi.org/mockjsdata/20337/' //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
+  baseUrl: 'http://172.16.0.131:8888/api/',
+  rap_taobao_baseUrl: 'http://rapapi.org/mockjsdata/20337/', //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
+  rap_baseUrl: 'http://172.16.0.131:18080/mockjs/1/' //建议读取mock规则，部分数据使用了 @cword(20)这种mock方法，但是rapapi官网并不识别，建议引入最新的npm mock包本地处理
 };
 /**
  * options:{
@@ -27,22 +28,29 @@ export default {
               MessageId: 'e6df7ee3-7d2d-4310-87fa-18d8a009bb66', //建议找个插件可以直接随机生成
               ContentType: "TEXT_JSON", //固定值
               TranCode: tranCode, //请求的方法对应的code
-              ServiceVersion: "1.0" //服务接口版本号
+              ServiceVersion: serviceVersion //服务接口版本号
             },
             Body: body //具体参数，采用json形式，例如{name:'tl',age:22}
           }
         };
         //请求web服务
         if (options.mode === "dev") {
-          axios.post(baseConfig.rap_baseUrl, request)
+          axios.post(baseConfig.baseUrl, request, {
+            headers: {"jwtToken":sessionStorage.getItem('jwtToken')}
+          })
             .then(response => {
-              let res = response.data.Body;
-              let resHead = response.data.Head;
+              let res = response.data.Response.Body;
+              let resHead = response.data.Response.Head;
               if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {
                 //成功
                 resolve(res);
               } else {
                 //失败
+                this.$message({
+                  message: resHead.AckDesc,
+                  type: 'error',
+                  duration: 5 * 1000
+                });
                 reject(response);
               }
             })
@@ -58,7 +66,7 @@ export default {
         } else if (options.mode === "mock") {
           axios.post(baseConfig.rap_baseUrl + tranCode, request)
             .then(response => {
-              var data = mockjs.mock(response.data);
+              let data =typeof(response.data) == 'object' ? mockjs.mock(response.data) : mockjs.mock(eval("("+response.data+")"));
               let res = data.Response.Body;
               let resHead = data.Response.Head;
               if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {

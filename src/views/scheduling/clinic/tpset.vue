@@ -250,11 +250,27 @@
       setNewSchedule(){
         this.$message('设置新的出班信息');
         let _data = {
-          ksmc: '',
-          ysmc: '',
           cbrqlx: '',
-          sjddm: '',
+          cbzt: '',
           czdz: '',
+          czry: '',
+          fscj: '',
+          fwlxdm:'',
+          ghfdm:'',
+          hxzs:'',
+          jssj:'',
+          ksdm:'',
+          ksmc:'',
+          kssj:'',
+          lrsj:'',
+          mbdm:'',
+          mxxh:'',
+          sjddm:'',
+          ysdm:'',
+          ysmc:'',
+          yxzt:'',
+          zbxh:'',
+          zlfdm:''
         };
         this.setForm(_data);
       },

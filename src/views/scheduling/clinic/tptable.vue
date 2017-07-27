@@ -362,19 +362,22 @@
       //获取面包屑
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tptable;
+        console.log(this.crumbs );
       },
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+        console.log(' %o', this.serviceTypeList)
       },
       //获取时间段列表
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
-
+        console.log(' %o', this.timeSlot)
       },
       //数据初始化
       dataInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'' }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '20000000.1.1.0320',mbdm:'45182452-4bad-43fa-a9ac-4e646c0c1c09' }).then(data => {
+          console.log(data);
           this.TpCard = data;
           this.formatData(arr.classifyArr(data, 'ysdm'));
         this.loading=false;
