@@ -8,6 +8,9 @@
     <span>设置出班信息</span>
   </div>
   <div class="set-body">
+    <div class="box-title">
+      <span>出班预览</span>
+    </div>
     <el-form  ref="form1" :model="form1" label-width="80px">
       <div class="table-time">
         <span></span>
@@ -24,8 +27,8 @@
           <div>
             <i></i>
             <p>
-              <span class="name">主治医师</span>
-              <span class="position">{{currentDocSchedule.ysmc}}</span>
+              <span class="name">{{currentDocSchedule.ysmc}}</span>
+              <span class="position">主治医师</span>
             </p>
           </div>
         </div>
@@ -34,17 +37,21 @@
             <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="week in slot.weekday">
-                    <div v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule()">
+                    <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule()">
                       <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
                       <p>{{week.ksmc}}</p>
-                    </div>
-                    <div v-else class="ordered" @click="setNewSchedule()">
+                      <i v-on:click.stop="delSchedule()" class="icon iconfont icon-shanchu"></i>
+                    </span>
+                    <span v-else :class="['ordered']" @click="setNewSchedule()">
 
-                    </div>
+                    </span>
               </span>
             </div>
           </div>
         </div>
+      </div>
+      <div class="box-title">
+        <span>编辑出班信息</span>
       </div>
       <el-form-item label="服务类型">
         <div class="type-filter in-model">
@@ -98,6 +105,7 @@
         <el-input type="input" v-model="form1.note"></el-input>
       </el-form-item>
     </el-form>
+
     <div slot="footer"  class="dialog-footer">
       <el-button>取消</el-button>
       <el-button type="primary" @click="save()">保存并继续</el-button>
@@ -175,25 +183,27 @@
           ysdm:"",
           slot:[
             {
-              jssj : "11:00",
+              jssj : "12:00",
               kssj : "8:00",
               sjddm : "SW",
               sjdmc : "上午",
-              weekday:[{},{},{},{},{},{},{}]
+              weekday:[{},{},{},{},{},{},{}],
             },
             {
-              jssj : "11:00",
-              kssj : "8:00",
+              jssj : "19:00",
+              kssj : "12:01",
               sjddm : "XW",
               sjdmc : "下午",
-              weekday:[{},{},{},{},{},{},{}]
+              weekday:[{},{},{},{},{},{},{}],
+
             },
             {
-              jssj : "11:00",
-              kssj : "8:00",
+              jssj : "23:59",
+              kssj : "19:01",
               sjddm : "WS",
               sjdmc : "晚上",
-              weekday:[{},{},{},{},{},{},{}]
+              weekday:[{},{},{},{},{},{},{}],
+
             }
           ]
         },//当前所选医生出班时间表
@@ -233,6 +243,7 @@
       getSingleSchedule(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q03", { mxxh: '0001'}).then(data => {
             this.singleSchedule = data;
+        console.log( this.singleSchedule);
             this.setForm(data);
         }).catch(err => {
           console.log(err);
@@ -300,7 +311,19 @@
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
         });
-      }
+      },
+      //删除
+      delSchedule(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [this.singleSchedule]}).then(data => {
+          this.$message('已删除');
+        console.log(data);
+      }).catch(err => {
+          console.log(err);
+        //这里错误有2种错误
+        //1. 服务端业务错误，错误码邮件中有
+        //2. 网络错误，本地网络断开、超时等
+      });
+      },
     },
     filters: {
       timeFormat: function (time) {
@@ -421,7 +444,6 @@
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
-    margin-top: 10px;
   }
 
   .table-time > span {
@@ -533,8 +555,23 @@
     font-size: 14px;
     padding: 10px 0 10px 0;
     box-sizing: border-box;
+    position: relative;
   }
-
+.ordered:hover{
+  background: #eef6ff;
+}
+  .ordered:hover>i{
+    display: inline-block;
+  }
+  .ordered>i{
+    position: absolute;
+    top:5px;
+    right: 5px;
+    font-size: 10px;
+    height: 12px;
+    line-height: 12px;
+    display: none;
+  }
   .ordered > p {
     height: 20px;
     line-height: 20px;
@@ -547,6 +584,9 @@
   .ordered.LH,
   .ordered.TX {
     cursor: pointer;
+  }
+  .ordered.active{
+    background: red;
   }
 
   .ordered.PT {
@@ -573,5 +613,18 @@
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }
+  .box-title{
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-block;
+    padding-left: 10px;
+    margin-left: 12px;
+    border-left: 6px solid #3f51b5;
+    margin-bottom: 10px;
+  }
+
 </style>
 
