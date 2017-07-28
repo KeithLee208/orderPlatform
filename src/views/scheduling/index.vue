@@ -79,7 +79,6 @@
         //获取服务类型
       getServiceTypeList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {}).then(data => {
-          alert(3);
           this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
         }).catch(err => {
           console.log(err);
@@ -88,7 +87,6 @@
       //获取时间段列表
       getTimeSlotList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {}).then(data => {
-          alert(4);
           this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
         }).catch(err => {
           console.log(err);
