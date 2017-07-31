@@ -14,6 +14,8 @@ import setting from '../views/setting/index'
 import timetable from '../views/scheduling/clinic/timetable'
 import tpset from '../views/scheduling/clinic/tpset'
 import sortset from '../views/scheduling/clinic/sortset'
+import orderdetail from '../views/order/orderdetail'
+import orderlist from '../views/order/orderlist'
 
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 // const attendacnce = r => require.ensure([], () => r(require('../views/scheduling/department/attendance')), 'scheduling');
@@ -31,9 +33,14 @@ export default new Router({
       component: order
     },
     {
-      path: '/order',
-      name: 'order',
-      component: order
+      path: '/order/orderdetail',
+      name: 'orderdetail',
+      component: orderdetail
+    },
+    {
+      path: '/order/orderlist',
+      name: 'orderlist',
+      component: orderlist
     },
     {
       path: '/scheduling',
