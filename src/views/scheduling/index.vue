@@ -6,7 +6,7 @@
         <!--<router-link to="/scheduling/department/templatesetting" tag="span">科室排班模板</router-link>-->
         <!--<router-link to="/scheduling/medical/wordtable" exact tag="span">医务科出班表</router-link>-->
         <!--<router-link to="/scheduling/medical/template" tag="span">医务科排班模板</router-link>-->
-        <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/worktable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
+        <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/timetable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
         <router-link to="/scheduling/clinic/tpcard" tag="span">出班模板</router-link>
       </div>
     </div>
@@ -71,6 +71,7 @@
         //获取医生列表
       getDocList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm: '20000000.1.1.0320' }).then(data => {
+          console.log('Q04 %o', data);
           this.$store.commit('scheduling/SET_DOCTORLIST',data)
         }).catch(err => {
           console.log(err);
@@ -79,7 +80,7 @@
         //获取服务类型
       getServiceTypeList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {}).then(data => {
-          alert(3);
+          console.log('Q05 %o', data);
           this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
         }).catch(err => {
           console.log(err);
@@ -88,7 +89,7 @@
       //获取时间段列表
       getTimeSlotList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {}).then(data => {
-          alert(4);
+          console.log('Q06 %o', data);
           this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
         }).catch(err => {
           console.log(err);
@@ -96,7 +97,8 @@
       },
       //获取专病信息
       getSpecDiseaseList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {kstybm: '20000000.1.1.0320'}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {yydm: ''}).then(data => {
+          console.log('Q07 %o', data);
           this.$store.commit('scheduling/SET_SPECDISEASELIST',data)
         }).catch(err => {
           console.log(err);

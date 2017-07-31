@@ -11,7 +11,7 @@ import count from '../views/count/index'
 import RegistrationClassification from '../views/count/registrationclassification'
 import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
-import worktable from '../views/scheduling/Department/wordtable'
+import timetable from '../views/scheduling/clinic/timetable'
 import tpset from '../views/scheduling/clinic/tpset'
 import sortset from '../views/scheduling/clinic/sortset'
 
@@ -40,11 +40,11 @@ export default new Router({
       name: 'scheduling',
       component: scheduling,
       children:[
-        { path: '/scheduling/department/worktable', component: worktable},
+        { path: '/scheduling/department/timetable', component: timetable},
         { path: '/scheduling/department/tpcard', component: dcard},
         { path: '/scheduling/attendacncelist', component: attendacncelist},
         { path: '/scheduling/clinic/worklist', component: cworklist},
-        { path: '/scheduling/clinic/worktable', component: cworktable},
+        { path: '/scheduling/clinic/timetable', component: timetable},
         { path: '/scheduling/clinic/tpcard', component: ccard},
         { path: '/scheduling/clinic/tptable', component: ctptable},
         { path: '/scheduling/clinic/tplist', component: ctplist},

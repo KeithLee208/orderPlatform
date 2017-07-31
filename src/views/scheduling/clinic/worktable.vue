@@ -11,7 +11,7 @@
                 {{item.text}}（{{item.num}}）
               </span>
 
-               <span class="pull-right">
+             <span class="pull-right">
                 <span class="icon-group">
                   <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
                      <i @click="ExportVisible = true" class="icon iconfont icon-daochu"></i>
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="page-body" v-loading="loading" element-loading-text="拼命加载中">
-          <div class="table-time">
+            <div class="table-time">
             <span></span>
             <span>周一</span>
             <span>周二</span>
@@ -86,214 +86,210 @@
             <span>周六</span>
             <span>周日</span>
           </div>
-          <div v-for="item in templateData" class="AdTable">
-            <div class="AdTableLeft">
-              <div>
-                <i></i>
-                <p>
-                  <span class="name">{{item.ysmc}}</span>
-                  <span class="position">主治医师</span>
-                </p>
-              </div>
-            </div>
-            <div class="AdTableRight">
-              <div class="table-body">
-                <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
-                  <span>{{slot.sjdmc}}</span>
-                  <span v-for="week in slot.weekday">
-                    <el-popover v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
-                      <div class="fixed-info">
-                        <div class="fixed-body">
-                          <div class="fixed-title">出班信息</div>
-                          <p>
-                            <span class="fixed-label">就诊科室：</span>
-                            <span>{{week.ksmc}}</span>
-                          </p>
-                          <p>
-                            <span class="fixed-label">服务类型：</span>
-                            <span>{{week.fwlxdm}}</span>
-                          </p>
-                          <p>
-                            <span class="fixed-label">出诊时间：</span>
-                            <span>{{slot.sjdmc}}{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</span>
-                          </p>
-                          <p>
-                            <span class="fixed-label">就诊地址：</span>
-                            <span>{{week.czdz}}</span>
-                          </p>
-                          <p>
-                            <span class="fixed-label">号源数量：</span>
-                            <span>{{week.hxzs}}</span>
-                          </p>
-                        </div>
-                        <div class="fixed-footer">
-                          <el-button @click="ShiftVisible = true" type="text" size="small" class="el-button ">出班调整</el-button>
-                          <el-button @click="RecordVisible=true" type="text" size="small" class="el-button pull-right">调整记录</el-button>
-                        </div>
-                      </div>
-                      <div slot="reference" class="ordered disease">
-                        <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
-                        <p>{{week.ksmc}}</p>
-                      </div>
-                    </el-popover>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <el-dialog
-            title="出班调整"
-            :visible.sync="ShiftVisible"
-            size="small"
-            >
-            <div>
-              <div class="now-num">已有32位患者预约</div>
-              <div class="now-info">
+            <div v-for="item in templateData" class="AdTable">
+              <div class="AdTableLeft">
                 <div>
-                  <span class="tab-label">调整类型</span>
-                  <el-radio-group v-model="form1.resource" @change="FormChange">
-                    <el-radio label="替诊"></el-radio>
-                    <el-radio label="停诊"></el-radio>
-                    <el-radio label="调班"></el-radio>
-                  </el-radio-group>
+                  <i></i>
+                  <p>
+                    <span class="name">{{item.ysmc}}</span>
+                    <span class="position">主治医师</span>
+                  </p>
                 </div>
-                <!--替诊-->
-                <el-form v-if="replace" ref="form" :model="form1" label-width="110px">
-                  <el-form-item label="当前医生">
-                    <span>张文</span>
-                  </el-form-item>
-                  <div class="line"></div>
-                  <el-form-item label="替诊医生">
-                    <el-select class="width-300" v-model="form1.data1" filterable placeholder="请选择">
-                      <el-option
-                        v-for="item in form1.region"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="替诊原因">
-                    <el-input class="width-300" type="textarea" v-model="form1.desc"></el-input>
-                  </el-form-item>
-                </el-form>
-                <!--停诊-->
-                <el-form v-if="stop" ref="form" :model="form2" label-width="110px">
-                  <el-form-item label="停诊时间">
-                    <el-date-picker
-                      class="width-300"
-                      v-model="form2.date1"
-                      type="datetime"
-                      placeholder="选择日期时间">
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item label="停诊原因">
-                    <el-input class="width-300" type="textarea" v-model="form2.desc"></el-input>
-                  </el-form-item>
-                </el-form>
-                <!--调班-->
-                <el-form v-if="change" ref="form" :model="form3" label-width="110px">
-                  <el-form-item label="医生/科室">
-                    <span>张文/黄埔院区胸外科1</span>
-                  </el-form-item>
-                  <el-form-item label="预约时间">
-                    <span>2015/05/01</span>
-                  </el-form-item>
-                  <div class="change-icon">
-                    <i class="icon iconfont icon-duihuan"></i>
+              </div>
+              <div class="AdTableRight">
+                <div class="table-body">
+                  <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
+                    <span>{{slot.sjdmc}}</span>
+                    <span v-for="week in slot.weekday">
+                      <el-popover v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
+                        <div class="fixed-info">
+                          <div class="fixed-body">
+                            <div class="fixed-title">出班信息</div>
+                            <p>
+                              <span class="fixed-label">就诊科室：</span>
+                              <span>{{week.ksmc}}</span>
+                            </p>
+                            <p>
+                              <span class="fixed-label">服务类型：</span>
+                              <span>{{week.fwlxdm}}</span>
+                            </p>
+                            <p>
+                              <span class="fixed-label">出诊时间：</span>
+                              <span>{{slot.sjdmc}}{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</span>
+                            </p>
+                            <p>
+                              <span class="fixed-label">就诊地址：</span>
+                              <span>{{week.czdz}}</span>
+                            </p>
+                            <p>
+                              <span class="fixed-label">号源数量：</span>
+                              <span>{{week.hxzs}}</span>
+                            </p>
+                          </div>
+                          <div class="fixed-footer">
+                            <el-button @click="ShiftVisible = true" type="text" size="small" class="el-button ">出班调整</el-button>
+                            <el-button @click="RecordVisible=true" type="text" size="small" class="el-button pull-right">调整记录</el-button>
+                          </div>
+                        </div>
+                        <div slot="reference" class="ordered disease">
+                          <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
+                          <p>{{week.ksmc}}</p>
+                        </div>
+                      </el-popover>
+                    </span>
                   </div>
-                  <el-form-item label="调班医生">
-                    <el-cascader
-                      class="width-300"
-                      placeholder="可搜索"
-                      :options="form3.options"
-                      filterable
-                    ></el-cascader>
-                  </el-form-item>
-                  <el-form-item label="调班时间">
-                    <el-date-picker
-                      class="width-300"
-                      v-model="form3.date1"
-                      type="datetime"
-                      placeholder="选择日期时间">
-                    </el-date-picker>
-                  </el-form-item>
-                  <div class="line"></div>
-                  <el-form-item label="调班原因">
-                    <el-input class="width-300" type="textarea" v-model="form3.desc"></el-input>
-                  </el-form-item>
-                </el-form>
-
+                </div>
               </div>
             </div>
-  <span slot="footer" class="dialog-footer">
-    <el-button>恢复到最初排班</el-button>
-    <el-button @click="ShiftVisible = false">取 消</el-button>
-    <el-button type="primary" @click="MsgSuccess">确 定</el-button>
-  </span>
-          </el-dialog>
-          <el-dialog title="调整记录" :visible.sync="RecordVisible" size="small">
-            <div class="time-wrapper">
-              <div class="time-line">
-               <div class="time-left">
-                 <span>2017/04/28</span>
-                 <i class="active"></i>
-               </div>
-               <div class="time-right">
-                 <div>
-                   <p class="title">调整为"停诊"</p>
-                   <p>停诊时间：2017/05/01 8:00-12:00</p>
-                   <p>停诊原因：突发意外情况需要处理</p>
+              <el-dialog title="出班调整" :visible.sync="ShiftVisible" size="small"  >
+              <div>
+                <div class="now-num">已有32位患者预约</div>
+                <div class="now-info">
+                  <div>
+                    <span class="tab-label">调整类型</span>
+                    <el-radio-group v-model="form1.resource" @change="FormChange">
+                      <el-radio label="替诊"></el-radio>
+                      <el-radio label="停诊"></el-radio>
+                      <el-radio label="调班"></el-radio>
+                    </el-radio-group>
+                  </div>
+                  <!--替诊-->
+                  <el-form v-if="replace" ref="form" :model="form1" label-width="110px">
+                    <el-form-item label="当前医生">
+                      <span>张文</span>
+                    </el-form-item>
+                    <div class="line"></div>
+                    <el-form-item label="替诊医生">
+                      <el-select class="width-300" v-model="form1.data1" filterable placeholder="请选择">
+                        <el-option
+                          v-for="item in form1.region"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="替诊原因">
+                      <el-input class="width-300" type="textarea" v-model="form1.desc"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <!--停诊-->
+                  <el-form v-if="stop" ref="form" :model="form2" label-width="110px">
+                    <el-form-item label="停诊时间">
+                      <el-date-picker
+                        class="width-300"
+                        v-model="form2.date1"
+                        type="datetime"
+                        placeholder="选择日期时间">
+                      </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="停诊原因">
+                      <el-input class="width-300" type="textarea" v-model="form2.desc"></el-input>
+                    </el-form-item>
+                  </el-form>
+                  <!--调班-->
+                  <el-form v-if="change" ref="form" :model="form3" label-width="110px">
+                    <el-form-item label="医生/科室">
+                      <span>张文/黄埔院区胸外科1</span>
+                    </el-form-item>
+                    <el-form-item label="预约时间">
+                      <span>2015/05/01</span>
+                    </el-form-item>
+                    <div class="change-icon">
+                      <i class="icon iconfont icon-duihuan"></i>
+                    </div>
+                    <el-form-item label="调班医生">
+                      <el-cascader
+                        class="width-300"
+                        placeholder="可搜索"
+                        :options="form3.options"
+                        filterable
+                      ></el-cascader>
+                    </el-form-item>
+                    <el-form-item label="调班时间">
+                      <el-date-picker
+                        class="width-300"
+                        v-model="form3.date1"
+                        type="datetime"
+                        placeholder="选择日期时间">
+                      </el-date-picker>
+                    </el-form-item>
+                    <div class="line"></div>
+                    <el-form-item label="调班原因">
+                      <el-input class="width-300" type="textarea" v-model="form3.desc"></el-input>
+                    </el-form-item>
+                  </el-form>
+
+                </div>
+              </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button>恢复到最初排班</el-button>
+      <el-button @click="ShiftVisible = false">取 消</el-button>
+      <el-button type="primary" @click="MsgSuccess">确 定</el-button>
+    </span>
+            </el-dialog>
+              <el-dialog title="调整记录" :visible.sync="RecordVisible" size="small">
+              <div class="time-wrapper">
+                <div class="time-line">
+                 <div class="time-left">
+                   <span>2017/04/28</span>
+                   <i class="active"></i>
+                 </div>
+                 <div class="time-right">
+                   <div>
+                     <p class="title">调整为"停诊"</p>
+                     <p>停诊时间：2017/05/01 8:00-12:00</p>
+                     <p>停诊原因：突发意外情况需要处理</p>
+                   </div>
                  </div>
                </div>
-             </div>
-              <div class="time-line">
-                <div class="time-left">
-                  <span>2017/04/28</span>
-                  <i></i>
+                <div class="time-line">
+                  <div class="time-left">
+                    <span>2017/04/28</span>
+                    <i></i>
+                  </div>
+                  <div class="time-right">
+                    <div>
+                      <p class="title">调整为"停诊"</p>
+                      <p>停诊时间：2017/05/01 8:00-12:00</p>
+                      <p>停诊原因：突发意外情况需要处理</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="time-right">
-                  <div>
-                    <p class="title">调整为"停诊"</p>
-                    <p>停诊时间：2017/05/01 8:00-12:00</p>
-                    <p>停诊原因：突发意外情况需要处理</p>
+                <div class="time-line">
+                  <div class="time-left">
+                    <span>2017/04/28</span>
+                    <i></i>
+                  </div>
+                  <div class="time-right">
+                    <div>
+                      <p class="title">调整为"停诊"</p>
+                      <p>停诊时间：2017/05/01 8:00-12:00</p>
+                      <p>停诊原因：突发意外情况需要处理</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="time-line">
+                  <div class="time-left">
+                    <span>2017/04/28</span>
+                    <i></i>
+                  </div>
+                  <div class="time-right">
+                    <div>
+                      <p class="title">调整为"停诊"</p>
+                      <p>停诊时间：2017/05/01 8:00-12:00</p>
+                      <p>停诊原因：突发意外情况需要处理</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="time-line">
-                <div class="time-left">
-                  <span>2017/04/28</span>
-                  <i></i>
-                </div>
-                <div class="time-right">
-                  <div>
-                    <p class="title">调整为"停诊"</p>
-                    <p>停诊时间：2017/05/01 8:00-12:00</p>
-                    <p>停诊原因：突发意外情况需要处理</p>
-                  </div>
-                </div>
-              </div>
-              <div class="time-line">
-                <div class="time-left">
-                  <span>2017/04/28</span>
-                  <i></i>
-                </div>
-                <div class="time-right">
-                  <div>
-                    <p class="title">调整为"停诊"</p>
-                    <p>停诊时间：2017/05/01 8:00-12:00</p>
-                    <p>停诊原因：突发意外情况需要处理</p>
-                  </div>
-                </div>
-              </div>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="RecordVisible = false">取 消</el-button>
+                <el-button type="primary" @click="RecordVisible = false">确定</el-button>
+              </span>
+            </el-dialog>
             </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="RecordVisible = false">取 消</el-button>
-              <el-button type="primary" @click="RecordVisible = false">确定</el-button>
-            </span>
-          </el-dialog>
           </div>
-        </div>
       </div>
     </div>
 
@@ -504,7 +500,6 @@
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
-        console.log(this.serviceTypeList);
       },
       //获取时间段列表
       getTimeSlot(){

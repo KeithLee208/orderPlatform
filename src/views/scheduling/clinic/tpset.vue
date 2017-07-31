@@ -304,7 +304,7 @@
       //保存/新增接口
       save(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { update: [this.singleSchedule]}).then(data => {
-          console.log(data);
+          this.$message('保存成功');
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
@@ -314,7 +314,7 @@
       },
       //删除
       delSchedule(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [this.singleSchedule]}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: {mxxh:'0001'}}).then(data => {
           this.$message('已删除');
         console.log(data);
       }).catch(err => {
