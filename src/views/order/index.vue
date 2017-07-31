@@ -4,7 +4,9 @@
       <div class="order-search-box">
         <span class="pull-right">
             <el-button @click="AddVisible = true" type="primary">新增患者信息</el-button>
+           <router-link tag="span" to="/order/orderlist">
             <el-button class="btn-blue" @click="ListVisible = true" type="primary">预约列表</el-button>
+           </router-link>
          </span>
         <span class="order-search ">
              <el-input
@@ -107,7 +109,6 @@
           <span @click="collapse" class="detail-collapse">{{btntext}}<i class="icon iconfont icon-xiangzuo"></i></span>
         </el-form>
       </div>
-
       <div>
         <el-form :inline="true">
           <el-form-item label="门诊类型">
@@ -143,7 +144,7 @@
             <p>周一</p>
             <p>1</p>
           </span>
-          <span>周二</span>
+          <span class="today">周二</span>
           <span>周三</span>
           <span>周四</span>
           <span>周五</span>
@@ -213,12 +214,13 @@
                          <el-collapse-transition>
                           <div v-if="plusshow">
                             <div class="fixed-line"></div>
+                            <div class="plus-cost">服务费用：300元</div>
                             <div class="order-plus-row">
                             <span class="plus-lable fixed-label">选择渠道：</span>
                             <span>
                               <el-select size="small" placeholder="请选择">
-                                <el-option>
-                                  1
+                                <el-option >
+                                          1
                                 </el-option>
                               </el-select>
                             </span>
@@ -232,17 +234,18 @@
                             <div class="order-plus-label">
                               <el-button @click="plusshow=false" size="small">取消</el-button>
                               <el-button size="small">添加</el-button>
+                              <router-link to="/order/orderdetail" tag="span">
                               <el-button size="small">添加并预约</el-button>
+                              </router-link>
                             </div>
                           </div>
                         </el-collapse-transition>
                           <div class="fixed-line"></div>
                         </div>
-
                       </div>
                   <div slot="reference" class="ordered union">
                     <p>上午</p>
-                    <p>20元｜已预约2/46</p>
+                    <p>20元｜已约2/46</p>
                   </div>
                     </el-popover>
 
@@ -277,7 +280,7 @@
                 <span>
                    <div class="ordered VIP">
                     <p>08:00-11:00</p>
-                    <p>20元｜已预约2/46</p>
+                    <p>20元｜已约2/46</p>
                   </div>
                 </span>
                 <span></span>
@@ -306,7 +309,7 @@
                 <span>
                    <div class="ordered disease">
                     <p>08:00-11:00</p>
-                    <p>20元｜已预约2/46</p>
+                    <p>20元｜已约2/46</p>
                   </div>
                 </span>
                 <span></span>
@@ -320,7 +323,7 @@
     </div>
     <el-dialog title="患者信息登记" :visible.sync="AddVisible" size="large">
             <span>
-              <el-form :inline="true" class="demo-form-inline">
+              <el-form :inline="true" label-width="100px" class="demo-form-inline">
                  <el-row>
                 <el-col :span="8">
                   <el-form-item label="姓名：">
@@ -334,74 +337,72 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="联系电话：">
-                     <el-input placeholder="请输入联系电话"></el-input>
+                     <el-input  placeholder="请输入联系电话"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
                  <el-row>
                 <el-col :span="8">
                   <el-form-item label="性别：">
-                    <el-input placeholder="请输入性别"></el-input>
+                    <el-input  placeholder="请输入性别"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="费用列别：">
+                  <el-form-item label="婚姻状况：">
                      <el-input placeholder="请输入费用列别"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="初复诊：">
-                     <el-input placeholder="请输入初复诊"></el-input>
+                     <el-input  placeholder="请输入初复诊"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+                 <el-row>
+                <el-col :span="8">
+                  <el-form-item label="联系地址：">
+                    <el-input  placeholder="请输入民族"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="费用类别：">
+                     <el-input  placeholder="请输入联系地址"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="患者职业：">
+                     <el-input  placeholder="请输入患者职业"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
                  <el-row>
                 <el-col :span="8">
                   <el-form-item label="民族：">
-                    <el-input placeholder="请输入民族"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="联系地址：">
-                     <el-input placeholder="请输入联系地址"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="患者职业：">
-                     <el-input placeholder="请输入患者职业"></el-input>
+                    <el-input  placeholder="请输入婚姻状况"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
-                 <el-row>
-                <el-col :span="8">
-                  <el-form-item label="婚姻状况：">
-                    <el-input placeholder="请输入婚姻状况"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-                <div
-                  style="width: 100%;height: 1px;display: inline-block;margin-bottom:20px;border-bottom: 1px dashed #e0e0e0;"></div>
                  <el-row>
                   <el-col :span="8">
-                  <el-form-item label="户口所在地：">
-                    <el-input placeholder="请输入户口所在地"></el-input>
+                  <el-form-item label="户口地|省：">
+                    <el-input  placeholder="请输入户口所在地"></el-input>
                   </el-form-item>
                 </el-col>
                   <el-col :span="16">
                   <el-form-item label="详细地址：">
-                    <el-input placeholder="请输入详细地址"></el-input>
+                    <el-input class="width-469" placeholder="请输入详细地址"></el-input>
                   </el-form-item>
                 </el-col>
                 </el-row>
                  <el-row>
                   <el-col :span="8">
-                  <el-form-item label="居住地址：">
-                    <el-input placeholder="请输入居住地址"></el-input>
+                  <el-form-item label="居住地|省：">
+                    <el-input  placeholder="请输入居住地址"></el-input>
                   </el-form-item>
                 </el-col>
                   <el-col :span="16">
                   <el-form-item label="详细地址：">
-                    <el-input placeholder="请输入详细地址"></el-input>
+                    <el-input  class="width-469"  placeholder="请输入详细地址"></el-input>
                   </el-form-item>
                 </el-col>
                 </el-row>
@@ -409,7 +410,7 @@
             </span>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="AddVisible = false">取 消</el-button>
-                <el-button type="primary" @click="PrintVisible = false">生成就诊卡号并保存</el-button>
+                <el-button type="primary" @click="PrintVisible = false">保存</el-button>
               </span>
 
     </el-dialog>
@@ -709,6 +710,9 @@
   width: 230px;
   margin-right: 40px;
 }
+  .width-469{
+    width: 469px;
+  }
 .width-635{
   width: 635px;
 }
@@ -732,6 +736,9 @@
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
+  }
+  .table-time > .today{
+    color: rgb(32, 160, 255);
   }
 
   .AdTable > .AdTableLeft,
@@ -981,4 +988,12 @@
   float: left;
   margin-bottom: 10px;
 }
+  .plus-cost{
+    color: rgb(255,199,71);
+    width: 100%;
+    display: inline-block;
+    height: 25px;
+    line-height: 25px;
+    margin-bottom: 5px;
+  }
 </style>
