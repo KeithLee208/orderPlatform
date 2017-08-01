@@ -128,28 +128,50 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
-    <div class="pagebody">
-      <div class="type-filter">
+     </div>
+     <div class="pagebody">
+        <div class="type-filter">
         <span>服务类型</span>
         <span><i class="el-icon-menu all"></i>全部</span>
         <span class="allcan"><i></i>全部可约</span>
         <span class="somecan"><i></i>部分可约</span>
         <span class="cant"><i></i>预约已满</span>
         </div>
-      <div>
-
         <div class="table-time">
+          <div class="btn-left">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
+          <div class="btn-right">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
           <span>
-            <p>周一</p>
-            <p>1</p>
+            <p class="day">周一</p>
+            <p class="date">05/01 劳动节</p>
           </span>
-          <span class="today">周二</span>
-          <span>周三</span>
-          <span>周四</span>
-          <span>周五</span>
-          <span>周六</span>
-          <span>周日</span>
+          <span>
+           <p class="day today">周二</p>
+           <p class="date today">05/02 今天</p>
+          </span>
+          <span>
+             <p class="day">周三</p>
+             <p class="date">05/03</p>
+          </span>
+          <span>
+            <p class="day">周四</p>
+            <p class="date">05/04</p>
+          </span>
+          <span>
+             <p class="day">周五</p>
+             <p class="date">05/05</p>
+          </span>
+          <span>
+             <p class="day">周六</p>
+             <p class="date">05/06</p>
+          </span>
+          <span>
+             <p class="day">周日</p>
+             <p class="date">05/07</p>
+          </span>
         </div>
         <div class="AdTable">
           <div class="AdTableLeft">
@@ -173,20 +195,17 @@
                             <span class="fixed-label">出诊院区：</span>
                             <span>黄埔院区</span>
                           </p>
-                          <p>
+                           <p>
                             <span class="fixed-label">就诊科室：</span>
                             <span>胸外科精品B</span>
                           </p>
-                          <p>
+                           <p>
                             <span class="fixed-label">服务类型：</span>
                             <span>特需</span>
                           </p>
-                          <p>
+                           <p>
                             <span class="fixed-label">服务费用：</span>
-                            <span class="service-cost">
-                             <p>100元</p>
-                             <p>1-10</p>
-                             </span>
+                            <span class="service-cost"><p>200元</p><p>11-50</p></span>
                             <span class="service-cost">
                               <p>200元</p>
                               <p>11-50</p>
@@ -195,7 +214,7 @@
                               <p>300元</p>
                               <p>51-70</p>
                             </span>
-                          </p>
+                           </p>
                           <p>
                             <span class="fixed-label">出诊时间：</span>
                             <span>上午8:00-12:00</span>
@@ -239,8 +258,9 @@
                               </router-link>
                             </div>
                           </div>
+
                         </el-collapse-transition>
-                          <div class="fixed-line"></div>
+                         <div class="fixed-line"></div>
                         </div>
                       </div>
                   <div slot="reference" class="ordered union">
@@ -248,7 +268,6 @@
                     <p>20元｜已约2/46</p>
                   </div>
                     </el-popover>
-
                 </span>
                 <span></span>
                 <span></span>
@@ -259,68 +278,67 @@
               </div>
             </div>
           </div>
-        </div>
+         </div>
         <div class="AdTable">
-          <div class="AdTableLeft">
-            <div>
-              <i></i>
-              <p>
-                <span class="name">主治医师</span>
-                <span class="position">姜文</span>
-              </p>
-            </div>
+           <div class="AdTableLeft">
+          <div>
+            <i></i>
+            <p>
+              <span class="name">主治医师</span>
+              <span class="position">姜文</span>
+            </p>
           </div>
-          <div class="AdTableRight">
-            <div class="table-body">
-              <div class="border-top-1">
+        </div>
+           <div class="AdTableRight">
+          <div class="table-body">
+            <div class="border-top-1">
                 <span>
                 </span>
-                <span></span>
-                <span></span>
+              <span></span>
+              <span></span>
                 <span>
                    <div class="ordered VIP">
                     <p>08:00-11:00</p>
                     <p>20元｜已约2/46</p>
                   </div>
                 </span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
           </div>
         </div>
+        </div>
         <div class="AdTable">
           <div class="AdTableLeft">
-            <div>
-              <i></i>
-              <p>
-                <span class="name">普通门诊</span>
-              </p>
-            </div>
+          <div>
+            <i></i>
+            <p>
+              <span class="name">普通门诊</span>
+            </p>
           </div>
+        </div>
           <div class="AdTableRight">
-            <div class="table-body">
-              <div class="border-top-1">
+          <div class="table-body">
+            <div class="border-top-1">
                 <span>
                 </span>
-                <span></span>
-                <span></span>
+              <span></span>
+              <span></span>
                 <span>
                    <div class="ordered disease">
                     <p>08:00-11:00</p>
                     <p>20元｜已约2/46</p>
                   </div>
                 </span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
     <el-dialog title="患者信息登记" :visible.sync="AddVisible" size="large">
             <span>
               <el-form :inline="true" label-width="100px" class="demo-form-inline">
@@ -725,22 +743,46 @@
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
+    position: relative;
   }
+  .table-time>.btn-left,.btn-right{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top:25px;
+    cursor: pointer;
+  }
+  .table-time>.btn-left{
+    left: 170px;
+  }
+  .table-time>.btn-right{
+    right: 0px;
 
+  }
   .table-time > span {
     width: 14.285%;
     height: 55px;
-    line-height: 55px;
+    padding: 5px 0;
     float: left;
     font-size: 14px;
-    font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-  }
-  .table-time > .today{
-    color: rgb(32, 160, 255);
+    margin: 10px 0 0;
   }
 
+  .table-time > span>p{
+    height:23px;
+    line-height: 23px;
+  }
+  .table-time > span>p.day{
+    font-weight: bold;
+  }
+  .table-time > span>p.date{
+     color:#999;
+  }
+  .table-time > span>p.today{
+    color: rgb(32, 160, 255);
+  }
   .AdTable > .AdTableLeft,
   .AdTable > .AdTableRight {
     box-sizing: border-box;
