@@ -11,7 +11,7 @@
         <span>预约信息</span>
       </div>
       <el-form :inline="true" label-width="100px" class="demo-form-inline">
-        <el-row class="padding-left-30">
+        <el-row class="padding-left-15">
           <el-form-item>
             <el-radio-group class="width-230" >
               <el-radio label="普通门诊"></el-radio>
@@ -231,8 +231,8 @@
     margin-left: 20px;
 
   }
-.padding-left-30{
-  padding-left: 30px;
+.padding-left-15{
+  padding-left: 15px;
 }
   .fixed-line{
     width: 100%;

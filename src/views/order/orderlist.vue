@@ -163,13 +163,13 @@
               <span class="allcan">待挂号</span>
             </td>
             <td>
-              <el-tooltip class="item" effect="dark" content="取消" placement="bottom">
+              <el-tooltip open-delay=200  class="item" effect="dark" content="取消" placement="bottom">
                 <i @click="cancelShow=true"  class="icon iconfont icon-shanchu"></i>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
+              <el-tooltip open-delay=200  class="item" effect="dark" content="查看" placement="bottom">
                 <i class="icon iconfont icon-jiazai"></i>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
+              <el-tooltip open-delay=200  class="item" effect="dark" content="打印" placement="bottom">
                 <i class="icon iconfont icon-dayin"></i>
               </el-tooltip>
             </td>
@@ -541,7 +541,7 @@
   }
   .time-line{
     width: 100%;
-    height: 100px;
+    min-height: 100px;
     display: inline-block;
     position: relative;
     color: #999;
@@ -566,12 +566,11 @@
     box-sizing: border-box;
     padding-left: 170px;
     width: 100%;
-    height: 100px;
+    min-height: 100px;
     position: relative;
     top: -10px;
   }
   .time-right>div>p{
-    height: 30px;
     line-height: 30px;
   }
   .time-right>div>.title,.time-left>span{
