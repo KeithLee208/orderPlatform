@@ -3,10 +3,12 @@
     <div class="filter-warrper">
       <div class="order-search-box">
          <span class="pull-right">
-            <el-button @click="AddVisible = true" type="primary">新增患者信息</el-button>
-           <router-link tag="span" to="/order/orderlist">
-            <el-button class="btn-blue" @click="ListVisible = true" type="primary">预约列表</el-button>
-           </router-link>
+            <el-button class="btn-blue" @click="AddVisible = true" type="primary">新增患者信息</el-button>
+            <el-button class="btn-blue" type="primary">
+               <router-link tag="span" to="/order/orderlist">
+                 预约列表
+              </router-link>
+            </el-button>
          </span>
          <span class="order-search ">
              <el-input
@@ -16,39 +18,39 @@
             </el-input>
         </span>
       </div>
-        <el-form :inline="true" class="demo-form-inline" label-width="80px" label-position="left">
+        <el-form :inline="true" class="demo-form-inline" label-width="90px" label-position="left">
           <div class="form-row">
-            <el-form-item label="姓名">
+            <el-form-item label="姓名：">
               <el-input class="width-200" size="small" placeholder="请填写姓名"></el-input>
             </el-form-item>
-            <el-form-item label="身份证号">
+            <el-form-item label="身份证号：">
               <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="联系电话">
+            <el-form-item label="联系电话:">
               <el-input class="width-200" size="small" placeholder="请填写电话"></el-input>
             </el-form-item>
           </div>
           <el-collapse-transition>
             <div v-if="detailShow">
               <div class="form-row">
-                <el-form-item label="性别">
+                <el-form-item label="性别：">
                   <el-radio-group class="width-200">
                     <el-radio label="男"></el-radio>
                     <el-radio label="女"></el-radio>
                     <el-radio label="不详"></el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="婚姻状况">
+                <el-form-item label="婚姻状况：">
                   <el-radio-group class="width-200">
                     <el-radio label="已婚"></el-radio>
                     <el-radio label="未婚"></el-radio>
                     <el-radio label="不详"></el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="身份证号">
+                <el-form-item label="身份证号：">
                   <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -56,24 +58,16 @@
                 </el-form-item>
               </div>
               <div class="form-row">
-                <el-form-item label="联系地址">
+                <el-form-item label="联系地址：">
                   <el-input class="width-200" size="small" placeholder="请填写姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="费用类别">
+                <el-form-item label="费用类别：">
                   <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="患者职业">
-                  <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-              </div>
-              <div class="form-row">
-                <el-form-item label="民族">
+                <el-form-item label="患者职业：">
                   <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -81,24 +75,32 @@
                 </el-form-item>
               </div>
               <div class="form-row">
-                <el-form-item label="户口地|省">
+                <el-form-item label="民族：">
                   <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="详细地址">
+              </div>
+              <div class="form-row">
+                <el-form-item label="户口地|省：">
+                  <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="详细地址：">
                   <el-input class="width-515" size="small" placeholder="请填写详细地址"></el-input>
                 </el-form-item>
               </div>
               <div class="form-row">
-                <el-form-item label="居住地|省">
+                <el-form-item label="居住地|省：">
                   <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="详细地址">
+                <el-form-item label="详细地址：">
                   <el-input class="width-515" size="small" placeholder="请填写详细地址"></el-input>
                 </el-form-item>
               </div>
@@ -254,16 +256,19 @@
                               <div class="order-plus-label">
                                 <el-button @click="plusshow=false" size="small">取消</el-button>
                                 <el-button size="small">添加</el-button>
-                                <router-link to="/order/orderdetail" tag="span">
-                                  <el-button size="small">添加并预约</el-button>
-                                </router-link>
+                                  <el-button size="small">
+                                     <router-link to="/order/orderdetail" tag="span">
+                                    添加并预约
+                                      </router-link>
+                                  </el-button>
+
                               </div>
                             </div>
                           </el-collapse-transition>
                           <div class="fixed-line"></div>
                     </div>
                   </div>
-          <div slot="reference" class="ordered cant">
+                <div slot="reference" class="ordered cant">
                       <p>上午</p>
                       <p>20元｜已约2/46</p>
              </div>
@@ -293,9 +298,7 @@
           <div class="table-body">
             <div class="border-top-1">
             <span>
-            </span>
-              <span>
-                 <el-popover placement="right" width="250" trigger="hover">
+             <el-popover placement="right" width="250" trigger="hover">
                 <div class="fixed-info">
                     <div class="fixed-body">
                         <div class="fixed-title">出班信息1</div>
@@ -364,24 +367,27 @@
                               <div class="order-plus-label">
                                 <el-button @click="plusshow=false" size="small">取消</el-button>
                                 <el-button size="small">添加</el-button>
-                                <router-link to="/order/orderdetail" tag="span">
-                                  <el-button size="small">添加并预约</el-button>
-                                </router-link>
+                                  <el-button size="small">
+                                     <router-link to="/order/orderdetail" tag="span">
+                                    添加并预约
+                                      </router-link>
+                                  </el-button>
+
                               </div>
                             </div>
                           </el-collapse-transition>
                           <div class="fixed-line"></div>
                     </div>
                   </div>
-          <div slot="reference" class="ordered somecan">
+          <div slot="reference" class="ordered cant">
                       <p>上午</p>
                       <p>20元｜已约2/46</p>
              </div>
              </el-popover>
-              </span>
+            </span>
               <span></span>
-              <span>
-              </span>
+              <span></span>
+              <span></span>
               <span></span>
               <span></span>
               <span></span>
@@ -403,13 +409,7 @@
           <div class="table-body">
             <div class="border-top-1">
             <span>
-            </span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span>
-                  <el-popover placement="right" width="250" trigger="hover">
+             <el-popover placement="right" width="250" trigger="hover">
                 <div class="fixed-info">
                     <div class="fixed-body">
                         <div class="fixed-title">出班信息1</div>
@@ -478,21 +478,29 @@
                               <div class="order-plus-label">
                                 <el-button @click="plusshow=false" size="small">取消</el-button>
                                 <el-button size="small">添加</el-button>
-                                <router-link to="/order/orderdetail" tag="span">
-                                  <el-button size="small">添加并预约</el-button>
-                                </router-link>
+                                  <el-button size="small">
+                                     <router-link to="/order/orderdetail" tag="span">
+                                    添加并预约
+                                      </router-link>
+                                  </el-button>
+
                               </div>
                             </div>
                           </el-collapse-transition>
                           <div class="fixed-line"></div>
                     </div>
                   </div>
-          <div slot="reference" class="ordered allcan">
+          <div slot="reference" class="ordered cant">
                       <p>上午</p>
                       <p>20元｜已约2/46</p>
              </div>
              </el-popover>
-              </span>
+            </span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
               <span></span>
             </div>
           </div>
@@ -592,40 +600,40 @@
               </span>
 
   </el-dialog>
-  <el-dialog title="预约列表" :visible.sync="ListVisible" size="large">
-        <span>
-              <el-form :inline="true" class="demo-form-inline">
-                <el-row>
-                <el-col :span="24">
-                    <span style="float: right;width: 500px">
-                    <el-input
-                      placeholder="刷卡或输入，磁卡／保障卡／IC卡／病历号／身份证／姓名／电话"
-                      icon="search"
-                      size="small">
-                    </el-input>
-                    </span>
-        </el-col>
-        </el-row>
-        <el-row>
-            <div style="height: 200px;line-height: 200px;background: red;color: #fff;text-align: center">查询条件</div>
-        </el-row>
-        <el-row>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="date" label="日期" width="180">
-                </el-table-column>
-                <el-table-column prop="name" label="姓名" width="180">
-                </el-table-column>
-                <el-table-column prop="address" label="地址">
-                </el-table-column>
-            </el-table>
-        </el-row>
-        <el-row>
-            <el-pagination layout="prev, pager, next" :total="50">
-            </el-pagination>
-        </el-row>
-        </el-form>
-        </span>
-  </el-dialog>
+  <!--<el-dialog title="预约列表" :visible.sync="ListVisible" size="large">-->
+        <!--<span>-->
+              <!--<el-form :inline="true" class="demo-form-inline">-->
+                <!--<el-row>-->
+                <!--<el-col :span="24">-->
+                    <!--<span style="float: right;width: 500px">-->
+                    <!--<el-input-->
+                      <!--placeholder="刷卡或输入，磁卡／保障卡／IC卡／病历号／身份证／姓名／电话"-->
+                      <!--icon="search"-->
+                      <!--size="small">-->
+                    <!--</el-input>-->
+                    <!--</span>-->
+        <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<el-row>-->
+            <!--<div style="height: 200px;line-height: 200px;background: red;color: #fff;text-align: center">查询条件</div>-->
+        <!--</el-row>-->
+        <!--<el-row>-->
+            <!--<el-table :data="tableData" style="width: 100%">-->
+                <!--<el-table-column prop="date" label="日期" width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column prop="name" label="姓名" width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column prop="address" label="地址">-->
+                <!--</el-table-column>-->
+            <!--</el-table>-->
+        <!--</el-row>-->
+        <!--<el-row>-->
+            <!--<el-pagination layout="prev, pager, next" :total="50">-->
+            <!--</el-pagination>-->
+        <!--</el-row>-->
+        <!--</el-form>-->
+        <!--</span>-->
+  <!--</el-dialog>-->
   <el-dialog title="患者信息登记" :visible.sync="PrintVisible" size="large">
         <span>
               <el-form :inline="true" class="demo-form-inline">

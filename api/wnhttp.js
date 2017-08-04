@@ -65,7 +65,7 @@ export default {
                         });
                 } else if (options.mode === "mock") {
                     //debugger;
-                    axios.post(baseConfig.rap_baseUrl + tranCode, request)
+                    axios.post(baseConfig.rap_taobao_baseUrl + tranCode, request)
                         .then(response => {
                             let data;
                             if (typeof(response.data) == 'object') {
