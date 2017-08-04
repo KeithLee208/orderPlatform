@@ -189,7 +189,7 @@
 <script>
   import api from '../../../../api'
   import * as listArray from '../../../filters/array'
-  import channeldrag from '../../../components/base/drag/channel-drag.vue'
+
   export default {
     data() {
       return {
@@ -409,9 +409,6 @@
         //2. 网络错误，本地网络断开、超时等
       });
       } //出诊时间
-    },
-    components: {
-      channeldrag
     }
   };
 </script>

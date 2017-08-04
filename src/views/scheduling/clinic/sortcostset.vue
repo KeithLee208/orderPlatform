@@ -55,6 +55,61 @@
             </el-form-item>
           </el-col>
         </el-form-item>
+        <el-form-item label="服务费用">
+          <el-radio-group v-model="form.cost" @change="CostChange">
+            <el-radio label="1">按号序设置费用</el-radio>
+            <el-radio label="2">不按号序设置费用</el-radio>
+          </el-radio-group>
+          <span class="cost">服务总费用</span>
+          <el-input class="cost-input"></el-input>元
+        </el-form-item>
+        <div class="source" v-if="form.Source">
+          <div class="source-card" @mouseenter="SourceMouseOver()" @mouseleave="SourceMouseLeave()">
+            <el-form label-width="45px">
+              <el-form-item label="号段">
+                <el-col :span="10">
+                  <el-input></el-input>
+                </el-col>
+                <el-col class="line" style="text-align: center" :span="4">-</el-col>
+                <el-col :span="10">
+                  <el-input></el-input>
+                </el-col>
+              </el-form-item>
+              <el-form-item label="费用">
+                <el-input placeholder="元"></el-input>
+              </el-form-item>
+            </el-form>
+            <i v-if="form.CloseShow" @click="DelCard()" class="card-close el-icon-close"></i>
+          </div>
+          <div @click="AddCard()" class="source-plus">
+            <i class="el-icon-plus"></i>
+          </div>
+        </div>
+        <div class="unsource" v-if="form.UnSource">
+          <el-form label-width="100px">
+            <el-form-item label="设置总号源数">
+              <el-input style="width: 170px"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="form-line"></div>
+        <el-form-item label="配置号序">
+          <span class="num-info">(当前号源数18)</span>
+        </el-form-item>
+        <div class="Channel">
+          <el-radio-group v-model="form.channel" @change="ChannelChange">
+            <el-radio label="1">区分渠道</el-radio>
+            <el-radio label="2">不区分渠道</el-radio>
+          </el-radio-group>
+          <channeldrag v-if="form.Channel"></channeldrag>
+          <div class="UnChannel" v-if="form.UnChannel">
+            <el-form label-width="100px">
+              <el-form-item label="设置总号源数">
+                <el-input style="width: 170px"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
       </el-form>
       <div slot="footer"  class="dialog-footer">
         <el-button>取消</el-button>
@@ -65,6 +120,7 @@
 </template>
 
 <script>
+  import channeldrag from '../../../components/base/drag/channel-drag.vue'
   export default {
     data(){
       return{
@@ -77,7 +133,16 @@
           time:'',
           sjddm:'',
           czdz:'',
-          note:''
+          note:'',
+          desc: '',//
+          cost: '',//服务总费用
+          channel: '',
+          Source: false,
+          UnSource: false,
+          CloseShow: false,
+          Channel: false,
+          UnChannel: false,
+
         },
         formOptions:{
           serviceType:{
@@ -152,6 +217,46 @@
         this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
+      //服务费用Dom切换
+      CostChange(value) {
+        if (value == '1') {
+          this.form.Source = true;
+          this.form.UnSource = false;
+        } else if (value == '2') {
+          this.form.Source = false;
+          this.form.UnSource = true;
+        }
+      },
+      //配置号序Dom切换
+      ChannelChange(value) {
+        if (value == '1') {
+          this.form.Channel = true;
+          this.form.UnChannel = false;
+        } else if (value == '2') {
+          this.form.Channel = false;
+          this.form.UnChannel = true;
+
+        }
+      },
+      //服务类型卡片关闭按钮显示
+      SourceMouseOver() {
+        this.form.CloseShow = true;
+      },
+      //服务类型卡片关闭按钮显示
+      SourceMouseLeave() {
+        this.form.CloseShow = false;
+      },
+      //删除服务类型卡片
+      DelCard() {
+        alert('卡片删除事件.');
+      },
+      //添加服务类型卡片
+      AddCard() {
+        alert('增加卡片事件.');
+      },
+    },
+    components: {
+      channeldrag
     }
   }
 </script>
@@ -277,4 +382,89 @@
     margin: 10px 5px 0 10px;
   }
   /******************************服务类型*******************************/
+  /******************************服务费用*******************************/
+
+  .source,
+  .unsource {
+    margin-left: 80px;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .source-card {
+    width: 300px;
+    height: 155px;
+    border: 1px solid #E7ECF4;
+    border-radius: 2px;
+    box-sizing: border-box;
+    padding: 25px 25px 25px 10px;
+    transition: all .2s;
+    display: inline-block;
+    margin-right: 20px;
+    float: left;
+    position: relative;
+  }
+
+  .source-plus {
+    width: 155px;
+    height: 155px;
+    border: 1px dashed #E7ECF4;
+    border-radius: 2px;
+    box-sizing: border-box;
+    padding: 65px 25px 25px 60px;
+    transition: all .2s;
+    display: inline-block;
+    margin-right: 20px;
+    float: left;
+    cursor: pointer;
+  }
+
+  .source-plus>i {
+    color: #e0e0e0;
+    font-size: 25px;
+  }
+
+  .source-card:hover {
+    border: 1px solid rgba(132, 166, 181, .6);
+    box-shadow: 0 0 15px rgba(63, 81, 181, 0.3);
+  }
+
+  .source-plus:hover {
+    border: 1px dashed rgba(132, 166, 181, .6);
+    box-shadow: 0 0 15px rgba(63, 81, 181, 0.3);
+  }
+
+  .card-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    color: #e0e0e0;
+    cursor: pointer;
+  }
+
+  .card-close:hover {
+    color: #C5C5C5;
+  }
+  .cost {
+    width: 100px;
+    margin: 0 10px 0 40px;
+  }
+
+  .cost-input {
+    width: 100px;
+    margin: 0 10px 0 0px;
+  }
+
+  .num-info {
+    color: rgb(63, 169, 255);
+  }
+  .Channel {
+    margin-left: 80px;
+  }
+
+  .UnChannel {
+    margin-top: 20px;
+  }
+  /******************************服务费用*******************************/
 </style>

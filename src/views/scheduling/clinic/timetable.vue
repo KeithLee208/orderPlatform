@@ -798,6 +798,27 @@
     right: 36px;
     color: rgb(255,197,61);
   }
+  /******************************出班调整*******************************/
+  .change-icon{
+    text-align: center;
+    float: left;
+    width: 100%;
+    position: relative;
+    top: -15px;
+  }
+  .change-icon>i{
+    font-size: 60px;
+    color: rgb(62,156,255);
+  }
+  .tab-label{
+    width: 110px;
+    text-align: right;
+    display: inline-block;
+    font-size: 14px;
+    padding: 0px 12px 20px 0;
+    box-sizing: border-box;
+  }
+  /******************************出班调整*******************************/
   /******************************调整记录*******************************/
   .time-line{
     width: 100%;
@@ -805,8 +826,8 @@
     display: inline-block;
     position: relative;
     color: #999;
-
   }
+
   .time-line>.time-left{
     width: 150px;
     height: 100%;
