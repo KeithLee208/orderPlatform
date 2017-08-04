@@ -4,15 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import 'wued-ui/lib/theme-default/index.css'
-import WuedUI from 'wued-ui'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 import wnhttp from "../api/wnhttp";
 Vue.config.productionTip = false
-Vue.use(WuedUI)
+Vue.use(ElementUI);
 Vue.use(wnhttp, { mode: 'mock' });
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  render: h => h(App),
   router,
   store,
   template: '<App/>',

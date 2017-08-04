@@ -39,7 +39,7 @@
             <div class="Att-row-data">
             <span v-for="(att,index) in item.children">
               <router-link to="/scheduling/clinic/tptable">
-                  <el-popover  placement="bottom" width="200" trigger="hover">
+                  <el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">
                  <div class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>
                   <p><i class="default"></i>普通（10）</p>

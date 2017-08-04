@@ -23,8 +23,8 @@
               <el-input class="width-230" size="small" placeholder="请填写姓名"></el-input>
             </el-form-item>
             <el-form-item label="服务类型">
-              <el-select class="width-230" size="small" v-model="value" placeholder="身份证号">
-                <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              <el-select class="width-230" size="small" v-model="value" placeholder="服务类型">
+                <el-option label="1" value="1">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -44,16 +44,16 @@
                   <el-input class="width-230" size="small" placeholder="请填写姓名"></el-input>
                 </el-form-item>
                 <el-form-item label="预约医生">
-                  <el-select class="width-230" size="small" v-model="value" placeholder="身份证号">
-                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                  <el-select class="width-230" size="small" v-model="value" placeholder="预约医生">
+                    <el-option label="1" value="1">
                     </el-option>
                   </el-select>
                 </el-form-item>
               </div>
               <div class="form-row">
                 <el-form-item label="挂号时间">
-                  <el-select class="width-230" size="small" v-model="value" placeholder="身份证号">
-                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                  <el-select class="width-230" size="small" v-model="value" placeholder="挂号时间">
+                    <el-option label="1" value="1">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -163,13 +163,13 @@
               <span class="allcan">待挂号</span>
             </td>
             <td>
-              <el-tooltip open-delay=200  class="item" effect="dark" content="取消" placement="bottom">
-                <i @click="cancelShow=true"  class="icon iconfont icon-shanchu"></i>
+              <el-tooltip class="item" effect="dark" content="取消" placement="bottom">
+                <i @click="cancelShow=true" class="icon iconfont icon-shanchu"></i>
               </el-tooltip>
-              <el-tooltip open-delay=200  class="item" effect="dark" content="查看" placement="bottom">
+              <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
                 <i class="icon iconfont icon-jiazai"></i>
               </el-tooltip>
-              <el-tooltip open-delay=200  class="item" effect="dark" content="打印" placement="bottom">
+              <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
                 <i class="icon iconfont icon-dayin"></i>
               </el-tooltip>
             </td>
@@ -276,7 +276,9 @@
         detailShow:false,
         cancelShow:false,
         btntext:'展开',
-        tableData: [{
+        value:'',
+        tableData: [
+          {
           date: '2016-05-02',
           name: '王小虎虎',
           num: '3343669984',
@@ -300,7 +302,8 @@
             doctor:'李芸芸',
             time:'2017/05/03 上午8:00-12:00',
             state:'待挂号'
-        }, {
+        },
+          {
             date: '2016-05-02',
             name: '王小虎',
             num: '3343669984',
@@ -311,7 +314,8 @@
             doctor:'李芸芸',
             time:'2017/05/03 上午8:00-12:00',
             state:'待挂号'
-        }, {
+        },
+          {
             date: '2016-05-02',
             name: '王小虎',
             num: '3343669984',
@@ -322,7 +326,8 @@
             doctor:'李芸芸',
             time:'2017/05/03 上午8:00-12:00',
             state:'待挂号'
-        }]
+        }
+        ]
       }
     },
     methods:{
