@@ -80,6 +80,7 @@ export default {
                             let resHead = data.Response.Head;
                             if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {
                                 //成功
+                               this.$message(resHead.AckMessage);
                                 resolve(res);
                             } else {
                                 //失败

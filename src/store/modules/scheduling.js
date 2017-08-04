@@ -11,7 +11,11 @@ const state = {
   crumbs:{
     tptable:[]
   },//面包屑对象集合
-  currentDocSchedule:{}//当前所选医生出班表
+  currentDocSchedule:{},//当前所选医生出班表
+  currentTemplateSet:{
+    ksdm:'',
+    ysdm:''
+  }//当前出班模板设置
 };
 
 // state 中派生出一些状态
@@ -51,6 +55,11 @@ const mutations = {
   //更新当前所选医生出班表
   SET_CURRENTDOCSCHEDULE(state,data){
     state.currentDocSchedule =  data;
+  },
+  //更新当前出班模板设置
+  SET_CURRENTTEMPLATESET(state,payload){
+    state.currentTemplateSet[payload.key] =  payload.value;
+    console.log(state.currentTemplateSet);
   }
 };
 
