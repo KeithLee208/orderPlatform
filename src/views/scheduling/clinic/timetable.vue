@@ -47,7 +47,7 @@
               <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="week in slot.weekday">
-                      <el-popover v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
+                      <el-popover open-delay="600" v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
                         <div class="fixed-info">
                           <div class="fixed-body">
                             <div class="fixed-title">出班信息</div>

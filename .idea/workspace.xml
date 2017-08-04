@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e7151cc5-5340-404e-a24d-b6b9ebd5c3f6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/wnhttp.js" afterPath="$PROJECT_DIR$/api/wnhttp.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue" afterPath="$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -69,8 +69,8 @@
       <file leaf-file-name="wnhttp.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/wnhttp.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1792">
-              <caret line="67" column="60" selection-start-line="67" selection-start-column="60" selection-end-line="67" selection-end-column="60" />
+            <state relative-caret-position="-308">
+              <caret line="7" column="22" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -89,21 +89,22 @@
       <file leaf-file-name="tptable.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18368">
-              <caret line="656" column="0" selection-start-line="656" selection-start-column="0" selection-end-line="657" selection-end-column="35" />
+            <state relative-caret-position="460">
+              <caret line="643" column="3" selection-start-line="643" selection-start-column="3" selection-end-line="643" selection-end-column="3" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tpset.vue" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tpset.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tpset.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11912">
-              <caret line="626" column="3" selection-start-line="615" selection-start-column="2" selection-end-line="626" selection-end-column="3" />
+            <state relative-caret-position="247">
+              <caret line="33" column="14" selection-start-line="33" selection-start-column="14" selection-end-line="33" selection-end-column="14" />
               <folding>
                 <element signature="n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
                 <element signature="n#div#0;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#div#0;n#div#1;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
                 <element signature="n#el-col#0;n#el-form-item#5;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
                 <element signature="n#el-col#1;n#el-form-item#5;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
                 <element signature="e#4496#4601#0" expanded="false" />
@@ -171,12 +172,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="timetable.vue" pinned="false" current-in-tab="false">
+      <file leaf-file-name="timetable.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22036">
-              <caret line="787" column="69" selection-start-line="735" selection-start-column="2" selection-end-line="787" selection-end-column="69" />
-              <folding />
+            <state relative-caret-position="282">
+              <caret line="50" column="46" selection-start-line="50" selection-start-column="36" selection-end-line="50" selection-end-column="46" />
+              <folding>
+                <element signature="n#div#0;n#el-popover#0;n#span#1;n#div#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -210,6 +213,7 @@
         <option value="$PROJECT_DIR$/src/views/order/orderlist.vue" />
         <option value="$PROJECT_DIR$/src/views/order/index.vue" />
         <option value="$PROJECT_DIR$/api/wnhttp.js" />
+        <option value="$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue" />
       </list>
     </option>
   </component>
@@ -630,12 +634,12 @@
       <workItem from="1501550782243" duration="15589000" />
       <workItem from="1501634895701" duration="8829000" />
       <workItem from="1501721359102" duration="9514000" />
-      <workItem from="1501822827363" duration="270000" />
+      <workItem from="1501822827363" duration="844000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156221000" />
+    <option name="totallyTimeSpent" value="156795000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -980,22 +984,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22036">
-          <caret line="787" column="69" selection-start-line="735" selection-start-column="2" selection-end-line="787" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18368">
-          <caret line="656" column="0" selection-start-line="656" selection-start-column="0" selection-end-line="657" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/views/order/orderdetail.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
@@ -1061,21 +1049,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/wnhttp.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1792">
-          <caret line="67" column="60" selection-start-line="67" selection-start-column="60" selection-end-line="67" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tpset.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11912">
-          <caret line="626" column="3" selection-start-line="615" selection-start-column="2" selection-end-line="626" selection-end-column="3" />
+        <state relative-caret-position="247">
+          <caret line="33" column="14" selection-start-line="33" selection-start-column="14" selection-end-line="33" selection-end-column="14" />
           <folding>
             <element signature="n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
             <element signature="n#div#0;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#1;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
             <element signature="n#el-col#0;n#el-form-item#5;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
             <element signature="n#el-col#1;n#el-form-item#5;n#el-form#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="false" />
             <element signature="e#4496#4601#0" expanded="false" />
@@ -1091,6 +1072,32 @@
             <element signature="e#6603#6669#0" expanded="false" />
             <element signature="e#7289#7544#0" expanded="false" />
             <marker date="1501550206202" expanded="true" signature="9189:9201" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="643" column="3" selection-start-line="643" selection-start-column="3" selection-end-line="643" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/wnhttp.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-308">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/timetable.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="50" column="46" selection-start-line="50" selection-start-column="36" selection-end-line="50" selection-end-column="46" />
+          <folding>
+            <element signature="n#div#0;n#el-popover#0;n#span#1;n#div#0;n#div#0;n#div#1;n#div#1;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
