@@ -143,22 +143,6 @@
           }
           mynum+=y;
         }
-
-//        console.log(newArr);
-//        for(var i=0;i<this.channal.length;i++){
-//          sum += this.channal[i].num;
-//            newArr.push({name:i,type:''});
-//          for(var x=0;x<sum;x++){
-//            newArr[i].type.push(x);
-//          }
-//        }
-//        console.log(newArr);
-//        for(var x=0;)
-//        this.channal.map( item => {
-//            item.children.map( item1 => {
-//                newArr.push({name:item1.name,type:item.type});
-//            });
-//        });
         this.ballList = newArr;
       },
       datadragEnd (evt) {

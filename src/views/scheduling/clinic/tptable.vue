@@ -420,7 +420,7 @@
       },
       //选择医生进入排班设置页
       selectDoc(item){
-        this.$store.commit('scheduling/SET_CURRENTDOCSCHEDULE',item)
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET',{key:'ysdm',value:item.ysdm})
       },
       MsgSuccess() {
         this.SettingVisible=false;
@@ -437,7 +437,7 @@
       },
       //门办设置出班模板，清空vuex的医生模板信息
       clearCurrentDocSchedule(){
-        this.$store.state.scheduling.currentDocSchedule = {};
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET',{key:'ysdm',value:''})
       }
     },
     filters: {

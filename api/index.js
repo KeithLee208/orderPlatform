@@ -50,22 +50,24 @@ export default {
   post: function (target, params = {}) {
     return new Promise ((resolve, reject) => {
       console.time(target);
-      axios({
-        url:target,
-        method:'post',
-        headers:{
-          'X-Requested-With':'XMLHttpRequest',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: params,
-        transformRequest: [function (data) {
-          let ret = ''
-          for (let it in data) {
-            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-          }
-          return ret
-        }],
-      }).then(res => {
+      // axios({
+      //   url:target,
+      //   method:'post',
+      //   headers:{
+      //     'X-Requested-With':'XMLHttpRequest',
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   },
+      //   data: params,
+      //   transformRequest: [function (data) {
+      //     let ret = ''
+      //     for (let it in data) {
+      //       ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+      //     }
+      //     return ret
+      //   }],
+      // })
+      axios.post(target, params)
+        .then(res => {
         resolve(res.data);
         console.timeEnd(target);
       }).catch(error => {

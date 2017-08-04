@@ -25,7 +25,7 @@
             <span class="submit"><i></i>已提交（10）</span>
             <span class="unsubmit"><i></i>待提交（2）</span>
             <span class="pull-right">
-              <router-link tag="span" to="/scheduling/clinic/sortset">
+              <router-link tag="span" to="/scheduling/clinic/sortcostset">
                 <el-button class="btn-blue"  type="primary">设置费用及号序</el-button>
                 </router-link>
               </span>

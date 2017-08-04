@@ -2,18 +2,18 @@
   <div>
     <div class="page-head">
       <span class="creat-btn">
-      <el-button v-if="$store.state.login.userInfo.type === '门办'" class="btn-blue" @click="CreatVisible = true" type="primary">创建模板</el-button>
+      <el-button v-if="$store.state.login.userInfo.type === '门办'" class="btn-blue" @click="creatVisible = true" type="primary">创建模板</el-button>
       </span>
     </div>
-    <el-dialog title="模板名称" :visible.sync="CreatVisible" size="tiny">
+    <el-dialog title="模板名称" :visible.sync="creatVisible" size="tiny">
               <div>
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-input placeholder="请输入模板名称" v-model="form.name"></el-input>
                 </el-form>
             </div>
               <span slot="footer" class="dialog-footer">
-                <el-button @click="CreatVisible = false">取 消</el-button>
-                <el-button type="primary" @click="msgSuccess">创 建</el-button>
+                <el-button @click="creatVisible = false">取 消</el-button>
+                <el-button type="primary" @click="newTemplate">创 建</el-button>
               </span>
     </el-dialog>
     <div v-loading="loading" element-loading-text="拼命加载中" class="page-main">
@@ -30,7 +30,7 @@
     data() {
       return {
         TpCard: [],
-        CreatVisible:false,
+        creatVisible:false,
         loading:true,
         form:{
           name:''
@@ -75,11 +75,23 @@
           //2. 网络错误，本地网络断开、超时等
         });
       },
-      msgSuccess(){
-        this.CreatVisible=false;
-        this.$message({
-          message: '创建成功！',
-          type: 'success'
+      newTemplate(){
+        let params = {
+          czry:'胡一刀',
+          mbmc:this.form.name
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S00", params).then(data => {
+          console.log(data);
+          this.creatVisible = false;
+          this.$message({
+            message: '创建成功！',
+            type: 'success'
+          });
+        }).catch(err => {
+          console.log(err);
+          //这里错误有2种错误
+          //1. 服务端业务错误，错误码邮件中有
+          //2. 网络错误，本地网络断开、超时等
         });
       }
     }

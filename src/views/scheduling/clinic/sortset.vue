@@ -16,7 +16,7 @@
               <span v-for="(item,index) in form.Type.category">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.type,{active:form.Type.active==index}]"></i>
-                {{item.text}}（{{item.num}}）
+                {{item.text}}
               </span>
           </div>
         </el-form-item>

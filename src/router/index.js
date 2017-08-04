@@ -13,7 +13,7 @@ import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
 import timetable from '../views/scheduling/clinic/timetable'
 import tpset from '../views/scheduling/clinic/tpset'
-import sortset from '../views/scheduling/clinic/sortset'
+import sortcostset from '../views/scheduling/clinic/sortcostset'
 import orderdetail from '../views/order/orderdetail'
 import orderlist from '../views/order/orderlist'
 
@@ -56,7 +56,7 @@ export default new Router({
         { path: '/scheduling/clinic/tptable', component: ctptable},
         { path: '/scheduling/clinic/tplist', component: ctplist},
         { path: '/scheduling/clinic/tpset', component: tpset},
-        { path: '/scheduling/clinic/sortset', component: sortset},
+        { path: '/scheduling/clinic/sortcostset', component: sortcostset},
       ]
     },
     {

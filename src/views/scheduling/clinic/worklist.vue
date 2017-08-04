@@ -36,7 +36,7 @@
           </div>
           <div class="Att-row-data">
             <span v-for="(att,index) in item.children">
-               <router-link to="/scheduling/clinic/worktable" exact tag="span">
+               <router-link to="/scheduling/clinic/timetable" exact tag="span">
                <el-popover  placement="bottom" width="200" trigger="hover">
                  <div  v-if="$store.state.login.userInfo.type=== '门办'"  class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>

@@ -11,7 +11,7 @@
     <div class="box-title">
       <span>出班预览</span>
     </div>
-    <el-form  ref="form1" :model="form1" label-width="80px">
+    <el-form  ref="form" :model="form" label-width="80px">
       <div class="table-time">
         <span></span>
         <span>周一</span>
@@ -37,7 +37,7 @@
             <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="week in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule()">
+                    <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule(week)">
                       <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule()" class="icon iconfont icon-shanchu"></i>
@@ -56,53 +56,53 @@
       <el-form-item label="服务类型">
         <div class="type-filter in-model">
           <span><i class="el-icon-menu all"></i>全部</span>
-              <span v-for="(item,index) in form1.serviceType.list">
+              <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
-                <i @click="selection(index)"  :class="[item.fwlxdm,{active:form1.serviceType.activeIndex==index}]"></i>
+                <i @click="selection(index)"  :class="[item.fwlxdm,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select v-model="form1.department.val"  placeholder="请选择">
-          <el-option v-for="item in form1.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
+        <el-select v-model="form.ksmc"  placeholder="请选择">
+          <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form1.doctor.val" :placeholder='form1.doctor.val'>
-          <el-option v-for="item in form1.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
+        <el-select v-model="form.ysmc" :placeholder='form.ysmc'>
+          <el-option v-for="item in formOptions.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择病种">
-        <el-select v-model="form1.disease.val" placeholder="请选择病种">
-          <el-option v-for="item in form1.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
+        <el-select v-model="form.disease" placeholder="请选择病种">
+          <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="就诊时间">
-        <el-radio-group v-model="form1.visitTime.val">
-          <el-radio v-for="item in form1.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
+        <el-radio-group v-model="form.cbrqlx">
+          <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="出诊时间">
         <el-col :span="8">
-          <el-radio-group v-model="form1.slotTime.val">
-            <el-radio v-for="item in form1.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
+          <el-radio-group v-model="form.sjddm">
+            <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
           </el-radio-group>
         </el-col>
         <el-col :span="10">
           <el-form-item label="时间段">
-            <el-time-picker is-range v-model="form1.time.val" placeholder="选择时间范围">
+            <el-time-picker is-range v-model="form.time" placeholder="选择时间范围">
             </el-time-picker>
           </el-form-item>
         </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
-        <el-input type="input" v-model="form1.address"></el-input>
+        <el-input type="input" v-model="form.czdz"></el-input>
       </el-form-item>
       <el-form-item label="备注信息">
-        <el-input type="input" v-model="form1.note"></el-input>
+        <el-input type="input" v-model="form.note"></el-input>
       </el-form-item>
     </el-form>
 
@@ -115,69 +115,72 @@
 </div>
 </template>
 <script>
-  import * as listArray from '../../../filters/array'
+  import * as arr from '../../../filters/array'
   export default{
     data() {
       return {
-        form1:{
+        form:{
+          fwlxdm:'',
+          ysmc:'',
+          disease:'',
+          ksmc:'',
+          cbrqlx:'',
+          time:'',
+          sjddm:'',
+          czdz:'',
+          note:''
+        },
+        formOptions:{
           serviceType:{
             isShow:true,
-            val:'',
             list:[],
             activeIndex:0
           },
           doctor:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[]
           },
           disease:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[]
           },
           department:{
             isShow:true,
             isEdit:true,
-            val:[],
             list:[]
           },
           week:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[]
           },
           visitTime:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[
-                {name:"周一",val:"星期一"},
-                {name:"周二",val:"星期二"},
-                {name:"周三",val:"星期三"},
-                {name:"周四",val:"星期四"},
-                {name:"周五",val:"星期五"},
-                {name:"周六",val:"星期六"},
-                {name:"周日",val:"星期日"}]
+              {name:"周一",val:"星期一"},
+              {name:"周二",val:"星期二"},
+              {name:"周三",val:"星期三"},
+              {name:"周四",val:"星期四"},
+              {name:"周五",val:"星期五"},
+              {name:"周六",val:"星期六"},
+              {name:"周日",val:"星期日"}]
           },
           time:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[]
           },
           slotTime:{
             isShow:true,
             isEdit:true,
-            val:'',
             list:[]
           },
           address:'',
           note:''
-        },
+        },//表单控制
         currentDocSchedule:{
           ysmc:"默认",
           ysdm:"",
@@ -208,58 +211,101 @@
           ]
         },//当前所选医生出班时间表
         singleSchedule:{},
-        timeSlotList:[],//时间段列表
+        timeSlot:[],//时间段列表
         templateData:[],//排版模板数据
+        isAdd:false//添加或修改操作
       };
     },
     created() {
       this.$nextTick(() => {
-        this.init();
+        setTimeout(_ => {
+          this.init();
+        },0);
       })
     },
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        this.getDocScheduleInfo();//获取具体出班信息
+        if(this.$store.state.scheduling.currentTemplateSet['ysdm']){
+          this.getDocScheduleList();//获取医生出班模板列表
+        }else{
+          this.$message('无医生信息');
+        }
       },
-      //获取时间段列表
+      //获取各种字典数据
       getDicData(){
-          this.form1.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-          this.form1.doctor.list = this.$store.state.scheduling.doctorList;
-          this.form1.department.list = this.$store.state.scheduling.departmentList;
-          this.form1.disease.list = this.$store.state.scheduling.specDiseaseList;
-          this.form1.slotTime.list = this.$store.state.scheduling.timeSlotList;
+          this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+          this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
+          this.formOptions.department.list = this.$store.state.scheduling.departmentList;
+          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
+          this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
-      //获取当前所选医生出班信息
-      getDocScheduleInfo(){
-        setTimeout( _ => {
-          if(this.$store.state.scheduling.currentDocSchedule.ysmc) {
-            this.currentDocSchedule = this.$store.state.scheduling.currentDocSchedule;
-            this.getSingleSchedule();
-          }
-        },0)
-      },
-      //获取单次出班信息
-      getSingleSchedule(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q03", { mxxh: '0001'}).then(data => {
-            this.singleSchedule = data;
-        console.log( this.singleSchedule);
-            this.setForm(data);
+      //获取医生出班模板列表
+      getDocScheduleList(){
+        let params = {
+          ksdm:'',
+          ysdm:''
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
+          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
         }).catch(err => {
           console.log(err);
         });
       },
+      //数据处理
+      formatData(list){
+        //医生→时间段→日期
+        let newArr = [];
+        list.map((item,index) => {
+          newArr[index] = {"ysmc":item.name,"slot":[]};
+          this.timeSlot.map(slot => {
+            slot.weekday = [{},{},{},{},{},{},{}];
+            item.children.map(week => {
+              newArr[index].ysmc = week.ysmc;
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
+                slot.weekday[0] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
+                slot.weekday[1] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
+                slot.weekday[2] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
+                slot.weekday[3] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
+                slot.weekday[4] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
+                slot.weekday[5] = week;
+              }
+              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
+                slot.weekday[6] = week;
+              }
+            })
+            newArr[index].slot.push(slot);
+          });
+        });
+        return newArr;
+      },
+      //获取单次出班信息
+      getSingleSchedule(item){
+        //修改添加/保存状态
+        this.isAdd = false;
+        console.log('单次出班模板 %o',item);
+        this.singleSchedule = item;
+        this.setForm(item);
+      },
       //表单填充策略
       setForm(data){
-        this.form1.department.val = data.ksmc;
-        this.form1.doctor.val = data.ysmc;
-        this.form1.visitTime.val = data.cbrqlx;
-        this.form1.slotTime.val = data.sjddm;
-        this.form1.address = data.czdz;
+        Object.assign(this.form,data)
       },
       //设置新的排班信息
       setNewSchedule(){
         this.$message('设置新的出班信息');
+        //修改添加/保存状态
+        this.isAdd = true;
         let _data = {
           cbrqlx: '',
           cbzt: '',
@@ -299,10 +345,11 @@
         });
       },
       selection(index) {
-        this.form1.serviceType.activeIndex = index;
+        this.formOptions.serviceType.activeIndex = index;
       },
       //保存/新增接口
       save(){
+        console.log(this.form);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { update: [this.singleSchedule]}).then(data => {
           this.$message('保存成功');
         }).catch(err => {

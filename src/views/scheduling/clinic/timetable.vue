@@ -151,6 +151,7 @@
               <div class="line"></div>
               <el-form-item label="替诊医生">
                 <el-cascader
+                  :model="shiftForm.replaceForm.doctor"
                   :options="departmentList"
                   @active-item-change="handleItemChange"
                   :props="props"
@@ -177,7 +178,7 @@
             <!--调班-->
             <el-form v-if="shiftForm.shiftType == '调班'" ref="form" :model="shiftForm.adjustForm" label-width="110px">
               <el-form-item label="医生/科室">
-                <span>张文/黄埔院区胸外科1</span>
+                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
               </el-form-item>
               <el-form-item label="预约时间">
                 <span>2015/05/01</span>
@@ -187,10 +188,9 @@
               </div>
               <el-form-item label="调班医生">
                 <el-cascader
-                  class="width-300"
-                  placeholder="可搜索"
-                  :options="shiftForm.adjustForm.doctorList"
-                  filterable
+                  :options="departmentList"
+                  @active-item-change="handleItemChange"
+                  :props="props"
                 ></el-cascader>
               </el-form-item>
               <el-form-item label="调班时间">
@@ -211,8 +211,8 @@
       </div>
       <span slot="footer" class="dialog-footer">
       <el-button>恢复到最初排班</el-button>
-      <el-button @click="ShiftVisible = false">取 消</el-button>
-      <el-button type="primary" @click="ShiftVisible = false">确 定</el-button>
+      <el-button @click="shiftVisible = false">取 消</el-button>
+      <el-button type="primary" @click="handleSaveClick()">确 定</el-button>
     </span>
     </el-dialog>
     <!--记录调整-->
@@ -304,7 +304,7 @@
             shiftVisible:false,//出班调整弹窗控制
             selectWeek:{},//当前所选单次排班
             shiftForm:{
-              shiftType:'',
+              shiftType:'替诊',
               replaceForm:{
                 doctor:'',
                 desc:''
@@ -415,6 +415,7 @@
         },
         //处理科室医生级联
         handleItemChange(item){
+          console.log(item);
           this.getDoctorList().then(data => {
             console.log('医生列表 %o',data);
             data.map(item => {
@@ -435,6 +436,70 @@
                 console.log(err);
               });
             })
+        },
+        //出班调整-保存分类别：替诊、停诊、调班
+        handleSaveClick(){
+          if(this.shiftForm.shiftType == '替诊'){
+              this.saveReplace();
+          }else if(this.shiftForm.shiftType == '停诊'){
+              this.saveStop();
+          }else if(this.shiftForm.shiftType == '调班'){
+              this.saveAdjust();
+          }
+        },
+        //替诊保存
+        saveReplace(){
+            console.log(this.shiftForm.replaceForm.doctor);
+            let params = {
+                  ksdm:'',
+                  ksmc:'',
+                  mxxh:'',
+                  tzyy:'',
+                  ysdm:'',
+                  ysmc:''
+                };
+            return new Promise((resolve,reject) => {
+              this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S06", params).then(data => {
+                resolve(data);
+              }).catch(err => {
+                reject(err);
+                console.log(err);
+              });
+            })
+        },
+        //停诊保存
+        saveStop(){
+          console.log(this.shiftForm.stopForm);
+          let params = {
+            mxxh:'',
+            tzsj:'',
+            tzyy:''
+          };
+          return new Promise((resolve,reject) => {
+            this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S05", params).then(data => {
+              resolve(data);
+            }).catch(err => {
+              reject(err);
+              console.log(err);
+            });
+          })
+        },
+        //调班保存
+        saveAdjust(){
+          console.log(this.shiftForm.adjustForm);
+          let params = {
+            mxxh1:'',
+            mxxh2:'',
+            tbyy:''
+          };
+          return new Promise((resolve,reject) => {
+            this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S07", params).then(data => {
+              resolve(data);
+            }).catch(err => {
+              reject(err);
+              console.log(err);
+            });
+          })
         }
       },
       filters: {
