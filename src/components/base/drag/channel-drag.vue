@@ -33,6 +33,7 @@
 <script>
   import draggable from 'vuedraggable'
   export default{
+    props: ['orderType'],
     data(){
       return{
        channal:[

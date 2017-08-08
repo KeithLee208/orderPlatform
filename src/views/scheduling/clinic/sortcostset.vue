@@ -136,6 +136,7 @@
           note:'',
           desc: '',//
           cost: '',//服务总费用
+          ordertype:'',
           channel: '',
           Source: false,
           UnSource: false,
