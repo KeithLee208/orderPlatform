@@ -56,42 +56,8 @@
           </el-col>
         </el-form-item>
         <el-form-item label="服务费用">
-          <el-radio-group v-model="form.cost" @change="CostChange">
-            <el-radio label="1">按号序设置费用</el-radio>
-            <el-radio label="2">不按号序设置费用</el-radio>
-          </el-radio-group>
-          <span class="cost">服务总费用</span>
-          <el-input class="cost-input"></el-input>元
+          <span>50元</span>
         </el-form-item>
-        <div class="source" v-if="form.Source">
-          <div class="source-card" @mouseenter="SourceMouseOver()" @mouseleave="SourceMouseLeave()">
-            <el-form label-width="45px">
-              <el-form-item label="号段">
-                <el-col :span="10">
-                  <el-input></el-input>
-                </el-col>
-                <el-col class="line" style="text-align: center" :span="4">-</el-col>
-                <el-col :span="10">
-                  <el-input></el-input>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="费用">
-                <el-input placeholder="元"></el-input>
-              </el-form-item>
-            </el-form>
-            <i v-if="form.CloseShow" @click="DelCard()" class="card-close el-icon-close"></i>
-          </div>
-          <div @click="AddCard()" class="source-plus">
-            <i class="el-icon-plus"></i>
-          </div>
-        </div>
-        <div class="unsource" v-if="form.UnSource">
-          <el-form label-width="100px">
-            <el-form-item label="设置总号源数">
-              <el-input style="width: 170px"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
         <div class="form-line"></div>
         <el-form-item label="配置号序">
           <span class="num-info">(当前号源数18)</span>
