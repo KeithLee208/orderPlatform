@@ -56,6 +56,9 @@
           </el-col>
         </el-form-item>
         <el-form-item label="服务费用">
+          <el-input v-model="form.cost" class="cost-input"></el-input>元
+        </el-form-item>
+        <el-form-item label="服务费用" style="display: none">
           <el-radio-group v-model="form.cost" @change="CostChange">
             <el-radio label="1">按号序设置费用</el-radio>
             <el-radio label="2">不按号序设置费用</el-radio>
@@ -201,9 +204,9 @@
     },
     created(){
         this.$nextTick(()=> {
-//          setTimeout( _ => {
+          setTimeout( _ => {
             this.init();
-//          },0);
+          },0);
         })
     },
     methods:{
@@ -236,7 +239,6 @@
         } else if (value == '2') {
           this.form.Channel = false;
           this.form.UnChannel = true;
-
         }
       },
       //服务类型卡片关闭按钮显示
@@ -453,7 +455,7 @@
   }
 
   .cost-input {
-    width: 100px;
+    width: 200px;
     margin: 0 10px 0 0px;
   }
 
