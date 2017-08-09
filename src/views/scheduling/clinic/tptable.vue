@@ -7,15 +7,15 @@
           <i class="iconfont icon-sousuo"></i>
         </div>
         <router-link
-          :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tpcard':'/scheduling/clinic/tplist'" >
+          :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/tpcard':'/scheduling/clinic/tplist'">
           <i class="el-icon-close"></i>
         </router-link>
       </div>
       <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
-    <div class="setting-body">
-      <div  class="setting-main">
+    <div class="setting-body" v-loading="loading" element-loading-text="拼命加载中">
+      <div class="setting-main">
         <div>
           <div class="page-head">
             <div class="type-filter">
@@ -29,178 +29,180 @@
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
-                  <el-tooltip  v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark" content="设置出班模板" placement="bottom">
+                  <el-tooltip v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark"
+                              content="设置出班模板" placement="bottom">
                      <router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
                      </router-link>
                   </el-tooltip>
-                  <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark" content="提交至门办" placement="bottom">
+                  <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark"
+                              content="提交至门办" placement="bottom">
                     <i @click="SubmitVisible = true" class="icon iconfont icon-tijiao"></i>
                   </el-tooltip>
                 </span>
                  <!--设置-->
-              <!--<el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">-->
-             <!--&lt;!&ndash;<div class="Adjustment" style="">&ndash;&gt;-->
-               <!--&lt;!&ndash;<a>调整记录</a>&ndash;&gt;-->
-             <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--<div>-->
-              <!--<el-form  ref="form" :model="form" label-width="80px">-->
-                  <!--<el-form-item label="服务类型">-->
-                       <!--<div class="type-filter in-model">-->
-                        <!--<span ><i class="el-icon-menu all"></i>全部</span>-->
-                        <!--<span><i class="default"></i>普通（10）</span>-->
-                        <!--<span><i class="expert"></i>专家（2）</span>-->
-                        <!--<span><i class="disease"></i>专病（3）</span>-->
-                        <!--<span><i class="union"></i>联合（4）</span>-->
-                        <!--<span><i class="VIP"></i>特需（5）</span>-->
-                        <!--</div>-->
-                  <!--</el-form-item>-->
+                 <!--<el-dialog  title="设置出班信息" :visible.sync="SettingVisible" size="large"  top="5%">-->
+                 <!--&lt;!&ndash;<div class="Adjustment" style="">&ndash;&gt;-->
+                 <!--&lt;!&ndash;<a>调整记录</a>&ndash;&gt;-->
+                 <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                 <!--<div>-->
+                 <!--<el-form  ref="form" :model="form" label-width="80px">-->
+                 <!--<el-form-item label="服务类型">-->
+                 <!--<div class="type-filter in-model">-->
+                 <!--<span ><i class="el-icon-menu all"></i>全部</span>-->
+                 <!--<span><i class="default"></i>普通（10）</span>-->
+                 <!--<span><i class="expert"></i>专家（2）</span>-->
+                 <!--<span><i class="disease"></i>专病（3）</span>-->
+                 <!--<span><i class="union"></i>联合（4）</span>-->
+                 <!--<span><i class="VIP"></i>特需（5）</span>-->
+                 <!--</div>-->
+                 <!--</el-form-item>-->
                  <!--<el-form-item label="选择医生">-->
-                      <!--<el-col :span="14">-->
-                        <!--<el-select v-model="form.region" placeholder="请选择医生">-->
-                          <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
-                          <!--<el-option label="秦明" value="秦明"></el-option>-->
-                        <!--</el-select>-->
-                      <!--</el-col>-->
-                      <!--<el-col :span="10">-->
-                          <!--<el-form-item label="选择病种">-->
-                              <!--<el-select v-model="form.region" placeholder="请选择病种">-->
-                                  <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
-                                  <!--<el-option label="秦明" value="秦明"></el-option>-->
-                              <!--</el-select>-->
-                          <!--</el-form-item>-->
-                      <!--</el-col>-->
-                   <!--</el-form-item>-->
-                  <!--<el-form-item label="选择院区">-->
-                    <!--<el-radio-group v-model="form.radio">-->
-                      <!--<el-radio :label="1">徐汇院区</el-radio>-->
-                      <!--<el-radio :label="2">黄埔院区</el-radio>-->
-                    <!--</el-radio-group>-->
-                  <!--</el-form-item>-->
-                   <!--<el-form-item label="就诊科室">-->
-                    <!--<el-radio-group v-model="form.radio2">-->
-                      <!--<el-radio :label="4">胸外科精品A</el-radio>-->
-                      <!--<el-radio :label="5">胸外科精品B</el-radio>-->
-                    <!--</el-radio-group>-->
-                  <!--</el-form-item>-->
-                  <!--<el-form-item label="就诊时间">-->
-                      <!--<el-checkbox-group v-model="form.type">-->
-                          <!--<el-checkbox label="周一" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周二" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周三" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周四" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周五" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周六" name="type"></el-checkbox>-->
-                          <!--<el-checkbox label="周七" name="type"></el-checkbox>-->
-                      <!--</el-checkbox-group>-->
-                  <!--</el-form-item>-->
+                 <!--<el-col :span="14">-->
+                 <!--<el-select v-model="form.region" placeholder="请选择医生">-->
+                 <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
+                 <!--<el-option label="秦明" value="秦明"></el-option>-->
+                 <!--</el-select>-->
+                 <!--</el-col>-->
+                 <!--<el-col :span="10">-->
+                 <!--<el-form-item label="选择病种">-->
+                 <!--<el-select v-model="form.region" placeholder="请选择病种">-->
+                 <!--<el-option label="赵大宝" value="赵大宝"></el-option>-->
+                 <!--<el-option label="秦明" value="秦明"></el-option>-->
+                 <!--</el-select>-->
+                 <!--</el-form-item>-->
+                 <!--</el-col>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item label="选择院区">-->
+                 <!--<el-radio-group v-model="form.radio">-->
+                 <!--<el-radio :label="1">徐汇院区</el-radio>-->
+                 <!--<el-radio :label="2">黄埔院区</el-radio>-->
+                 <!--</el-radio-group>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item label="就诊科室">-->
+                 <!--<el-radio-group v-model="form.radio2">-->
+                 <!--<el-radio :label="4">胸外科精品A</el-radio>-->
+                 <!--<el-radio :label="5">胸外科精品B</el-radio>-->
+                 <!--</el-radio-group>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item label="就诊时间">-->
+                 <!--<el-checkbox-group v-model="form.type">-->
+                 <!--<el-checkbox label="周一" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周二" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周三" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周四" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周五" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周六" name="type"></el-checkbox>-->
+                 <!--<el-checkbox label="周七" name="type"></el-checkbox>-->
+                 <!--</el-checkbox-group>-->
+                 <!--</el-form-item>-->
                  <!--<el-form-item label="出诊时间">-->
-                  <!--<el-col :span="14">-->
-                      <!--<el-radio-group v-model="form.resource">-->
-                          <!--<el-radio label="上午 8:00-12:00"></el-radio>-->
-                          <!--<el-radio label="下午 13:00-17:00"></el-radio>-->
-                          <!--<el-radio label="晚上 17:00-22:00"></el-radio>-->
-                      <!--</el-radio-group>-->
-                  <!--</el-col>-->
-                  <!--<el-col :span="10">-->
-                    <!--<el-form-item label="时间段">-->
-                     <!--<el-time-picker-->
-                       <!--is-range-->
-                       <!--v-model="form.value3"-->
-                       <!--placeholder="选择时间范围">-->
-                    <!--</el-time-picker>-->
-                      <!--</el-form-item>-->
-                  <!--</el-col>-->
-                    <!--</el-form-item>-->
-                  <!--<el-form-item label="就诊地址">-->
-                      <!--<el-input type="input" v-model="form.desc"></el-input>-->
-                  <!--</el-form-item>-->
-                <!--<el-form-item label="备注信息">-->
-                      <!--<el-input type="input" v-model="form.desc"></el-input>-->
-                  <!--</el-form-item>-->
-                <!--<el-form-item >-->
-                      <!--<el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>-->
-                  <!--</el-form-item>-->
-                   <!--<div class="table-time">-->
-            <!--<span></span>-->
-            <!--<span>周一</span>-->
-            <!--<span>周二</span>-->
-            <!--<span>周三</span>-->
-            <!--<span>周四</span>-->
-            <!--<span>周五</span>-->
-            <!--<span>周六</span>-->
-            <!--<span>周日</span>-->
-          <!--</div>-->
-         <!--<div class="AdTable">-->
-            <!--<div class="AdTableLeft">-->
-              <!--<div>-->
-                <!--<i></i>-->
-                <!--<p>-->
-                  <!--<span class="name">主治医师</span>-->
-                  <!--<span class="position">张文</span>-->
-                <!--</p>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="AdTableRight">-->
-              <!--<div class="table-body">-->
-                <!--<div class="border-top-1">-->
-                  <!--<span>上午</span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                <!--</div>-->
-                <!--<div>-->
-                  <!--<span>下午</span>-->
-                  <!--<span>-->
-                  <!--<div @click="dialogVisible = true" class="ordered disease">-->
-                    <!--<p>09:00-11:30</p>-->
-                    <!--<p>胸外科精品B</p>-->
-                  <!--</div>-->
-                <!--</span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span>-->
-                  <!--<div class="ordered union">-->
-                    <!--<p>09:00-11:30</p>-->
-                    <!--<p>胸外科精品B</p>-->
-                  <!--</div>-->
-                <!--</span>-->
-                  <!--<span></span>-->
-                <!--</div>-->
-                <!--<div>-->
-                  <!--<span>晚上</span>-->
-                  <!--<span></span>-->
-                  <!--<span>-->
-                  <!--<div class="ordered VIP">-->
-                    <!--<p>09:00-11:30</p>-->
-                    <!--<p>胸外科精品B</p>-->
-                  <!--</div>-->
-                  <!--</span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                  <!--<span></span>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-              <!--</el-form>-->
-              <!--</div>-->
-             <!--<div slot="footer" class="dialog-footer">-->
-                <!--<el-button  @click="SettingVisible = false" >取消</el-button>-->
+                 <!--<el-col :span="14">-->
+                 <!--<el-radio-group v-model="form.resource">-->
+                 <!--<el-radio label="上午 8:00-12:00"></el-radio>-->
+                 <!--<el-radio label="下午 13:00-17:00"></el-radio>-->
+                 <!--<el-radio label="晚上 17:00-22:00"></el-radio>-->
+                 <!--</el-radio-group>-->
+                 <!--</el-col>-->
+                 <!--<el-col :span="10">-->
+                 <!--<el-form-item label="时间段">-->
+                 <!--<el-time-picker-->
+                 <!--is-range-->
+                 <!--v-model="form.value3"-->
+                 <!--placeholder="选择时间范围">-->
+                 <!--</el-time-picker>-->
+                 <!--</el-form-item>-->
+                 <!--</el-col>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item label="就诊地址">-->
+                 <!--<el-input type="input" v-model="form.desc"></el-input>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item label="备注信息">-->
+                 <!--<el-input type="input" v-model="form.desc"></el-input>-->
+                 <!--</el-form-item>-->
+                 <!--<el-form-item >-->
+                 <!--<el-button @click="TemSuccess" class="pull-right"  type="success">保存并继续</el-button>-->
+                 <!--</el-form-item>-->
+                 <!--<div class="table-time">-->
+                 <!--<span></span>-->
+                 <!--<span>周一</span>-->
+                 <!--<span>周二</span>-->
+                 <!--<span>周三</span>-->
+                 <!--<span>周四</span>-->
+                 <!--<span>周五</span>-->
+                 <!--<span>周六</span>-->
+                 <!--<span>周日</span>-->
+                 <!--</div>-->
+                 <!--<div class="AdTable">-->
+                 <!--<div class="AdTableLeft">-->
+                 <!--<div>-->
+                 <!--<i></i>-->
+                 <!--<p>-->
+                 <!--<span class="name">主治医师</span>-->
+                 <!--<span class="position">张文</span>-->
+                 <!--</p>-->
+                 <!--</div>-->
+                 <!--</div>-->
+                 <!--<div class="AdTableRight">-->
+                 <!--<div class="table-body">-->
+                 <!--<div class="border-top-1">-->
+                 <!--<span>上午</span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--</div>-->
+                 <!--<div>-->
+                 <!--<span>下午</span>-->
+                 <!--<span>-->
+                 <!--<div @click="dialogVisible = true" class="ordered disease">-->
+                 <!--<p>09:00-11:30</p>-->
+                 <!--<p>胸外科精品B</p>-->
+                 <!--</div>-->
+                 <!--</span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span>-->
+                 <!--<div class="ordered union">-->
+                 <!--<p>09:00-11:30</p>-->
+                 <!--<p>胸外科精品B</p>-->
+                 <!--</div>-->
+                 <!--</span>-->
+                 <!--<span></span>-->
+                 <!--</div>-->
+                 <!--<div>-->
+                 <!--<span>晚上</span>-->
+                 <!--<span></span>-->
+                 <!--<span>-->
+                 <!--<div class="ordered VIP">-->
+                 <!--<p>09:00-11:30</p>-->
+                 <!--<p>胸外科精品B</p>-->
+                 <!--</div>-->
+                 <!--</span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--<span></span>-->
+                 <!--</div>-->
+                 <!--</div>-->
+                 <!--</div>-->
+                 <!--</div>-->
+                 <!--</el-form>-->
+                 <!--</div>-->
+                 <!--<div slot="footer" class="dialog-footer">-->
+                 <!--<el-button  @click="SettingVisible = false" >取消</el-button>-->
                  <!--<el-button @click="MsgSuccess" type="primary">保存</el-button>-->
-                  <!--<el-button type="success" >保存并设置下一位</el-button>-->
-              <!--</div>-->
-              <!--</el-dialog>-->
+                 <!--<el-button type="success" >保存并设置下一位</el-button>-->
+                 <!--</div>-->
+                 <!--</el-dialog>-->
                  <!--打印-->
-               <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
+               <el-dialog title="当前已设置" :close-on-click-modal="false" :visible.sync="SubmitVisible" size="tiny">
                 <div class="infolist">
                   提交至门办（接口）
                 </div>
@@ -210,7 +212,7 @@
                           </span>
               </el-dialog>
                  <!--导出-->
-              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny" >
+              <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny">
               <span>
               <p>起始时间：
                 <el-date-picker
@@ -237,33 +239,33 @@
               </span>
             </div>
           </div>
-          <div class="page-body" v-loading="loading" element-loading-text="拼命加载中">
-          <div class="table-time">
-            <span></span>
-            <span>周一</span>
-            <span>周二</span>
-            <span>周三</span>
-            <span>周四</span>
-            <span>周五</span>
-            <span>周六</span>
-            <span>周日</span>
-          </div>
-          <div v-for="item in templateData" class="AdTable">
-            <div class="AdTableLeft">
-              <div>
-                <i></i>
-                <p>
-                  <span class="name">{{item.ysmc}}</span>
-                  <span class="position">主治医师</span>
-                </p>
-              </div>
+          <div class="page-body">
+            <div class="table-time">
+              <span></span>
+              <span>周一</span>
+              <span>周二</span>
+              <span>周三</span>
+              <span>周四</span>
+              <span>周五</span>
+              <span>周六</span>
+              <span>周日</span>
             </div>
-            <div class="AdTableRight">
-              <div class="table-body">
-                <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
-                  <span>{{slot.sjdmc}}</span>
+            <div v-for="item in templateData" class="AdTable">
+              <div class="AdTableLeft">
+                <div>
+                  <i></i>
+                  <p>
+                    <span class="name">{{item.ysmc}}</span>
+                    <span class="position">主治医师</span>
+                  </p>
+                </div>
+              </div>
+              <div class="AdTableRight">
+                <div class="table-body">
+                  <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
+                    <span>{{slot.sjdmc}}</span>
                   <span v-for="week in slot.weekday">
-                    <el-popover :open-delay="500" v-if="week.cbrqlx"  placement="bottom" width="200" trigger="hover">
+                    <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
                       <div class="fixed-info">
                         <div class="fixed-body">
                           <div class="fixed-title">出班信息</div>
@@ -290,7 +292,7 @@
                         </div>
                         <div class="fixed-footer">
                            <router-link @click.native="selectDoc(item)" to="/scheduling/clinic/tpset">
-                                <el-button  type="text" size="small">查看详情</el-button>
+                                <el-button type="text" size="small">查看详情</el-button>
                              </router-link>
                         </div>
                       </div>
@@ -300,10 +302,10 @@
                       </div>
                     </el-popover>
                   </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -331,23 +333,23 @@
           value3: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
           desc: ''
         },
-        addtable:[1,2,3],
+        addtable: [1, 2, 3],
         pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
-        loading:true,
-        crumbs:[],//面包屑数据
-        serviceTypeList:[],//服务类型列表
-        timeSlot:[],//时间段列表
-        templateData:[],//排版模板数据
+        loading: true,
+        crumbs: [],//面包屑数据
+        serviceTypeList: [],//服务类型列表
+        timeSlot: [],//时间段列表
+        templateData: [],//排版模板数据
       };
     },
     created(){
       this.$nextTick(() => {
-          this.init();
-      })
+        this.init();
+    })
     },
     methods: {
       init(){
@@ -373,57 +375,64 @@
       },
       //数据初始化
       dataInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '20000000.1.1.0320',mbdm:'45182452-4bad-43fa-a9ac-4e646c0c1c09' }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
+          ksdm: '20000000.1.1.0320',
+          mbdm: '45182452-4bad-43fa-a9ac-4e646c0c1c09'
+        }).then(data => {
           this.TpCard = data;
-          this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-          this.loading=false;
-        }).catch(err => {
+        this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+        this.loading = false;
+      }).
+        catch(err => {
           console.log(err);
-        });
+      })
+        ;
       },
       //数据处理
       formatData(list){
         //医生→时间段→日期
         let newArr = [];
-        list.map((item,index) => {
-            newArr[index] = {"ysdm":item.name,"slot":[]};
-            this.timeSlot.map(slot => {
-              slot.weekday = [{},{},{},{},{},{},{}];
-                  item.children.map(week => {
-                    newArr[index].ysmc = week.ysmc;
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
-                        slot.weekday[0] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
-                        slot.weekday[1] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
-                        slot.weekday[2] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
-                        slot.weekday[3] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
-                        slot.weekday[4] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
-                        slot.weekday[5] = week;
-                    }
-                    if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
-                        slot.weekday[6] = week;
-                    }
-                  })
-              newArr[index].slot.push(slot);
-            });
-        });
+        list.map((item, index) => {
+          newArr[index] = {"ysdm": item.name, "slot": []};
+        this.timeSlot.map(slot => {
+          slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
+        item.children.map(week => {
+          newArr[index].ysmc = week.ysmc;
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期一') {
+          slot.weekday[0] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期二') {
+          slot.weekday[1] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期三') {
+          slot.weekday[2] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期四') {
+          slot.weekday[3] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期五') {
+          slot.weekday[4] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期六') {
+          slot.weekday[5] = week;
+        }
+        if (week.sjddm === slot.sjddm && week.cbrqlx === '星期天') {
+          slot.weekday[6] = week;
+        }
+      })
+        newArr[index].slot.push(slot);
+      })
+        ;
+      })
+        ;
         return newArr;
       },
       //选择医生进入排班设置页
       selectDoc(item){
-        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET',{key:'ysdm',value:item.ysdm})
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {key: 'ysdm', value: item.ysdm})
       },
       MsgSuccess() {
-        this.SettingVisible=false;
+        this.SettingVisible = false;
         this.$message({
           message: '提交成功！',
           type: 'success'
@@ -437,12 +446,12 @@
       },
       //门办设置出班模板，清空vuex的医生模板信息
       clearCurrentDocSchedule(){
-        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET',{key:'ysdm',value:''})
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {key: 'ysdm', value: ''})
       }
     },
     filters: {
       timeFormat: function (time) {
-        if(!time)return;
+        if (!time)return;
         return time.split(' ')[1]
       },
     },
@@ -463,7 +472,7 @@
     box-sizing: border-box;
   }
 
-  .setting-header > div>a > i {
+  .setting-header > div > a > i {
     font-size: 14px;
     color: #fff;
   }
@@ -474,12 +483,14 @@
 
   .setting-header > .used-time {
     font-size: 14px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     margin-left: 15px;
   }
-  .setting-header > .used-time>i{
+
+  .setting-header > .used-time > i {
     margin-right: 5px;
   }
+
   .setting-body {
     width: 100%;
     padding: 20px;
@@ -494,22 +505,31 @@
     background: #fff;
     box-sizing: border-box;
   }
-  .Adjustment{
-    height: 25px; line-height:25px;position: absolute;right: 20px;top: 30px;
+
+  .Adjustment {
+    height: 25px;
+    line-height: 25px;
+    position: absolute;
+    right: 20px;
+    top: 30px;
   }
-  .Adjustment>a{
+
+  .Adjustment > a {
     text-decoration: none;
-    color:rgb(32, 160, 255);
+    color: rgb(32, 160, 255);
   }
-  .setting-dialog-text{
+
+  .setting-dialog-text {
     padding-left: 20%;
   }
-  .setting-dialog-text>p{
+
+  .setting-dialog-text > p {
     color: #999;
     height: 30px;
     line-height: 30px;
   }
-/*-------------------------------*/
+
+  /*-------------------------------*/
   .table-time {
     display: inline-block;
     width: 100%;
@@ -590,14 +610,17 @@
     display: inline-block;
     float: left;
   }
-  .AdTableLeft > div > p>.name{
+
+  .AdTableLeft > div > p > .name {
     font-size: 15px;
     font-weight: bold;
     color: #333;
   }
-  .AdTableLeft > div > p>.position{
+
+  .AdTableLeft > div > p > .position {
     color: #999;
   }
+
   .table-body > div {
     width: 100%;
     display: inline-block;
@@ -619,7 +642,8 @@
     border-bottom: 1px solid #D4DEED;
     box-sizing: border-box;
   }
-/*-------------------------*/
+
+  /*-------------------------*/
   .ordered {
     width: 100%;
     height: 100%;
@@ -633,6 +657,7 @@
     height: 20px;
     line-height: 20px;
   }
+
   /*default,expert,disease,union,VIP*/
 
   .ordered.PT,
@@ -718,9 +743,11 @@
     margin: 15px 5px 0 10px;
     cursor: pointer;
   }
-  .in-model > span > i, .in-model > span>.all{
+
+  .in-model > span > i, .in-model > span > .all {
     margin: 10px 5px 0 10px;
   }
+
   .setting-wraaper {
     position: absolute;
     display: inline-block;
@@ -731,53 +758,62 @@
     background: #fff;
   }
 
-  .fixed-info{
+  .fixed-info {
     padding: 5px;
     color: #999;
   }
-  .fixed-body{
+
+  .fixed-body {
     border-bottom: 1px dashed #e0e0e0;
     padding-bottom: 10px;
   }
-  .fixed-body>p{
+
+  .fixed-body > p {
     width: 100%;
     display: inline-block;
   }
-  .fixed-body>p>span{
+
+  .fixed-body > p > span {
     display: inline-block;
     float: left;
     width: 130px;
   }
 
-  .fixed-body>p>span.fixed-label{
+  .fixed-body > p > span.fixed-label {
     width: 60px;
   }
-  .fixed-title{
+
+  .fixed-title {
     height: 30px;
     line-height: 30px;
     font-size: 14px;
     color: #333;
   }
-  .fixed-footer{
+
+  .fixed-footer {
     margin-top: 15px;
   }
-  .btn-blue{
+
+  .btn-blue {
     background: #fff;
     border-color: #50bfff;
     color: #50bfff;
   }
-  .btn-blue:hover{
+
+  .btn-blue:hover {
     color: #fff;
     background-color: #20a0ff;
     border-color: #20a0ff;
   }
-  .now-num{
+
+  .now-num {
     position: absolute;
-    top:15px;
+    top: 15px;
     right: 30px;
-    color: rgb(255,197,61);
+    color: rgb(255, 197, 61);
   }
-  .tab-label{
+
+  .tab-label {
     width: 110px;
     text-align: right;
     display: inline-block;
@@ -785,24 +821,29 @@
     padding: 0px 12px 20px 0;
     box-sizing: border-box;
   }
-  .line{
+
+  .line {
     width: 100%;
     float: left;
     margin-bottom: 22px;
     display: inline-block;
     border-bottom: 1px dashed #e0e0e0;
   }
-  .icon-group>i{
+
+  .icon-group > i {
     margin-left: 15px;
-    color: rgb(192,189,185);
+    color: rgb(192, 189, 185);
   }
-  .icon-group>i:hover{
-    color: rgb(89,100,185);
+
+  .icon-group > i:hover {
+    color: rgb(89, 100, 185);
   }
+
   .top-search {
-    margin: 10px 15px 0 0 ;
+    margin: 10px 15px 0 0;
     position: relative;
   }
+
   .top-searchinput {
     width: 184px;
     height: 34px;
@@ -815,26 +856,32 @@
     color: #fff;
     transition: box-shadow ease-in-out .25s;
   }
+
   .top-searchinput:focus {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
     outline: 0;
   }
+
   .top-searchinput::-webkit-input-placeholder { /* WebKit browsers */
-    color:    #FFF;
+    color: #FFF;
     opacity: .5;
   }
-  .top-searchinput:-moz-placeholder{  /* Mozilla Firefox 4 to 18 */
-    color:    #FFF;
+
+  .top-searchinput:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #FFF;
     opacity: .5;
   }
+
   .top-searchinput::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    #FFF;
+    color: #FFF;
     opacity: .5;
   }
+
   .top-searchinput:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    #FFF;
+    color: #FFF;
     opacity: .5;
   }
+
   .top-search > i {
     position: absolute;
     right: 20px;
@@ -846,7 +893,8 @@
     cursor: pointer;
 
   }
-  .page-body{
+
+  .page-body {
     height: calc(90vh - 300px);
   }
 </style>

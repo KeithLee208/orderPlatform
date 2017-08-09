@@ -7,7 +7,7 @@
     </router-link>
     <span>设置出班信息</span>
   </div>
-  <div class="set-body">
+  <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
     <div class="box-title">
       <span>出班预览</span>
     </div>
@@ -111,7 +111,6 @@
       <el-button type="primary" @click="save()">保存并继续</el-button>
     </div>
   </div>
-
 </div>
 </template>
 <script>
@@ -213,7 +212,8 @@
         singleSchedule:{},
         timeSlot:[],//时间段列表
         templateData:[],//排版模板数据
-        isAdd:false//添加或修改操作
+        isAdd:false,//添加或修改操作
+        loading:true//数据读取状态
       };
     },
     created() {
@@ -285,6 +285,7 @@
               }
             })
             newArr[index].slot.push(slot);
+        this.loading=false;
           });
         });
         return newArr;
