@@ -40,7 +40,7 @@
             <span v-for="(att,index) in item.children">
               <router-link to="/scheduling/clinic/tptable">
                   <el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">
-                 <div class="fixed-info">
+                  <div class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>
                   <p><i class="default"></i>普通（10）</p>
                   <p><i class="expert"></i>专家（2）</p>
@@ -49,7 +49,7 @@
                   <p><i class="VIP"></i>特需（5）</p>
                  </div>
                   <el-button type="text" slot="reference">{{att.ksmc}}</el-button>
-            </el-popover>
+                  </el-popover>
                 </router-link>
             </span>
             </div>

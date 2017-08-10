@@ -70,9 +70,12 @@
           <div v-if="formOptions.Channel">
             <div class="Channel-Warrper">
               <draggable v-model="channalList" @update="datadragEnd"  @start="drag=true" @end="drag=false">
-                <div v-for="(item,index) in channalList" :key="index" class="channel-box" :class="item.qdmc">
+                <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
                   <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
-                  <input  v-else="item.edit" @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" type="text">
+                  <p v-else="item.edit" class="top">
+                  <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
+                  </p>
+                  <!---->
                   <p class="footer">{{item.qdmc}}</p>
                 </div>
               </draggable>
@@ -82,14 +85,14 @@
             </div>
             <div v-if="ball">
               <div class="ball-row">
-                <draggable  v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
+                <draggable v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
                   <transition-group tag="div" :name="'flip-list'">
                      <span v-for="(item,index) in ballList" :key="item.hx">
                        <i :class="item.qddm" :style="item.style">
                          <p class="num">{{item.hx}}</p>
                          <p class="price">
                            <span class="ball-price pull-left" v-if="!item.edit" @click="ballList[index].edit = true">{{item.je}}</span>
-                            <input v-if="item.edit" v-model="item.je" @blur="ballList[index].edit = false" v-focus class="ball-edit" type="text">
+                            <input v-if="item.edit"  @blur="ballList[index].edit = false" v-model="item.je"  v-focus class="ball-edit" :style="{background:item.style.background,color:item.style.color}" type="text">
                            <span class="pull-left">¥</span>
                          </p>
                         </i>
@@ -293,6 +296,7 @@
         ball:false,
         ballList:[],
         styleArr:[
+          {border:'1px solid #e0e0e0',background: '#fff',color: '#666'},
           {border:'1px solid #c0e5ff',background: '#e9f6ff',color: '#20a0ff'},
           {border: '1px solid #bcf1d4',background: '#bcf1d4',color: '#0caf4e'},
           {border: '1px solid #feebc3',background: '#fff8ea',color: '#e8a623'},
@@ -352,7 +356,14 @@
           mynum+=y;
         }
         this.ballList = newArr;
-        console.log(this.ballList);
+        this.form.hxList=this.ballList;
+//        for(var i = 0;i < this.form.hxList.length;i++){
+//          delete this.form.hxList[i].edit;
+//          delete this.form.hxList[i].style;
+//        }
+//        console.log(this.ballList)
+//        console.log(this.form.hxList)
+//        this.form.hxList=this.ballList;
       },
       datadragEnd (evt){
 
@@ -728,7 +739,6 @@
   }
   .num-edit{
     border: none;
-    border-bottom: 1px solid #e0e0e0;
     text-align: center;
     height: 35px;
     line-height: 35px;
@@ -736,7 +746,7 @@
     width: 100%;
     display: inline-block;
     float: left;
-    margin-top: 3px;
+margin-top: 3px;
   }
   .ball-price {
     width: 30px;
