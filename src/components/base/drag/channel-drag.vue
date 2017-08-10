@@ -1,20 +1,16 @@
 <template>
   <div>
     <div class="Channel-Warrper">
-<<<<<<< HEAD
-      <draggable v-model="channal" @update="datadragEnd"  @start="drag=true" @end="drag=false">
-           <div v-for="(item,index) in channal" :key="item.num" class="channel-box" :class="item.type">
-=======
       <draggable v-model="channal" @update="datadragEnd" @start="drag=true" @end="drag=false">
         <transition-group :name="'flip-list'">
           <div v-for="(item,index) in channal" :key="item.num" class="channel-box" :class="item.type">
->>>>>>> 1926557a993cd502ef8d4bf55d9354eedbf04139
             <p v-if="item.edit==false" @click="numedit(index)" class="top">{{item.num}}</p>
             <p v-if="item.edit==true" class="top">
               <input v-model="item.num" v-focus class="num-edit" type="text">
             </p>
             <p class="footer">{{item.name}}</p>
           </div>
+        </transition-group>
       </draggable>
     </div>
     <div class="production">
@@ -29,12 +25,9 @@
                  <p class="num">{{item1.index}}</p>
                  <p class="price">
                    <span class="ball-price pull-left" v-if="item1.editcan==false" @click="balledit(index)">{{item1.price}}</span>
-<<<<<<< HEAD
                     <input v-if="item1.editcan==true" v-model="item1.price" v-focus class="ball-edit" type="text">
-=======
                     <input maxlength="3" v-if="item1.editcan==true" v-model="ballnum" v-focus class="ball-edit" type="text"
                            v-on:keyup.enter="changeball(index)">
->>>>>>> 1926557a993cd502ef8d4bf55d9354eedbf04139
                    <span class="pull-left">¥</span>
                  </p>
                 </i>
