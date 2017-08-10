@@ -2,16 +2,20 @@
   <div class="Scheduling-body">
    <div class="filter-warrper">
       <div class="Scheduling-tab">
+
         <!--<router-link to="/scheduling/department/worktable" exact tag="span">科室出班表</router-link>-->
         <!--<router-link to="/scheduling/department/templatesetting" tag="span">科室排班模板</router-link>-->
         <!--<router-link to="/scheduling/medical/wordtable" exact tag="span">医务科出班表</router-link>-->
         <!--<router-link to="/scheduling/medical/template" tag="span">医务科排班模板</router-link>-->
         <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/timetable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
         <router-link to="/scheduling/clinic/tpcard" tag="span">出班模板</router-link>
+
       </div>
     </div>
     <div class="pagebody">
+      <transition name="el-fade-in-linear">
       <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
