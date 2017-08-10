@@ -84,12 +84,12 @@
               <div class="ball-row">
                 <draggable  v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
                   <transition-group tag="div" :name="'flip-list'">
-                     <span v-for="(item,index) in ballList" :key="item.index">
+                     <span v-for="(item,index) in ballList" :key="item.hx">
                        <i :class="item.qddm" :style="item.style">
-                         <p class="num">{{item.index}}</p>
+                         <p class="num">{{item.hx}}</p>
                          <p class="price">
-                           <span class="ball-price pull-left" v-if="!item.edit" @click="item.edit = !item.edit">{{item.price}}</span>
-                            <input v-if="item.edit" v-model="item.price" v-focus class="ball-edit" type="text">
+                           <span class="ball-price pull-left" v-if="!item.edit" @click="ballList[index].edit = true">{{item.je}}</span>
+                            <input v-if="item.edit" v-model="item.je" @blur="ballList[index].edit = false" v-focus class="ball-edit" type="text">
                            <span class="pull-left">¥</span>
                          </p>
                         </i>
@@ -347,7 +347,7 @@
         var mynum = 0;
         for(var x = 0;x < this.channalList.length;x++){
           for(var y=0;y<this.channalList[x].num;y++){
-            newArr.push({index:y+mynum+1,qddm:this.channalList[x].qddm,price:50,edit:false,style:this.channalList[x].style});
+            newArr.push({hx:y+mynum+1,qddm:this.channalList[x].qddm,je:50,edit:false,style:this.channalList[x].style});
           }
           mynum+=y;
         }
