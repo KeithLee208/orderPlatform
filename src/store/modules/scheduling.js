@@ -15,7 +15,8 @@ const state = {
   currentTemplateSet:{
     ksdm:'',
     ysdm:''
-  }//当前出班模板设置
+  },//当前出班模板设置
+  channalList:[]//预约渠道列表
 };
 
 // state 中派生出一些状态
@@ -60,6 +61,10 @@ const mutations = {
   SET_CURRENTTEMPLATESET(state,payload){
     state.currentTemplateSet[payload.key] =  payload.value;
     console.log(state.currentTemplateSet);
+  },
+  //更新预约渠道
+  SET_CHANNALLIST(state,data){
+    state.channalList =  data;
   }
 };
 

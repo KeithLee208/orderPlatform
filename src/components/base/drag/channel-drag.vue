@@ -2,12 +2,13 @@
   <div>
     <div class="Channel-Warrper">
       <draggable v-model="channal" @update="datadragEnd"  @start="drag=true" @end="drag=false">
-        <transition-group :name="'flip-list'">
-           <div v-for="item in channal" :key="item.num" class="channel-box" :class="item.type">
-            <p class="top">{{item.num}}</p>
+           <div v-for="(item,index) in channal" :key="item.num" class="channel-box" :class="item.type">
+            <p v-if="item.edit==false" @click="numedit(index)" class="top">{{item.num}}</p>
+            <p v-if="item.edit==true" class="top">
+              <input v-model="item.num" v-focus class="num-edit" type="text">
+            </p>
             <p class="footer">{{item.name}}</p>
           </div>
-        </transition-group>
       </draggable>
     </div>
     <div class="production">
@@ -17,8 +18,15 @@
       <div class="ball-row">
         <draggable  v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
           <transition-group tag="div" :name="'flip-list'">
-             <span v-for="item1 in ballList" :key="item1.index">
-               <i :class="item1.type">{{item1.index}}</i>
+             <span v-for="(item1,index) in ballList" :key="item1.index">
+               <i :class="item1.type">
+                 <p class="num">{{item1.index}}</p>
+                 <p class="price">
+                   <span class="ball-price pull-left" v-if="item1.editcan==false" @click="balledit(index)">{{item1.price}}</span>
+                    <input v-if="item1.editcan==true" v-model="item1.price" v-focus class="ball-edit" type="text">
+                   <span class="pull-left">¥</span>
+                 </p>
+                </i>
              </span>
           </transition-group>
         </draggable>
@@ -41,10 +49,11 @@
          name:'非预约',
          num:5,
          type:'default',
+         edit:false,
          children:
            [
              {
-              name:88
+              name:88,
              },
              {
                name:89
@@ -64,6 +73,7 @@
            name:'院内预约',
            num:3,
            type:'hospital',
+           edit:false,
            children:
              [
                {
@@ -81,6 +91,7 @@
            name:'官微预约',
            num:4,
            type:'wechat',
+           edit:false,
            children:
              [
                {
@@ -101,6 +112,7 @@
            name:'挂号网预约',
            num:2,
            type:'web',
+           edit:false,
            children:
              [
                {
@@ -115,6 +127,7 @@
            name:'官网预约',
            num:1,
            type:'official',
+           edit:false,
            children:
              [
                {
@@ -123,6 +136,8 @@
              ]
          }
        ],
+        editnum:'',
+        ballnum:'',
         ball:false,
         ballList:[],
       }
@@ -132,22 +147,53 @@
         return JSON.stringify(this.channal, null, 2);
       }
     },
+    created(){
+      this.$nextTick(()=> {
+
+      })
+    },
     methods:{
       production(){
         this.ball=true;
         let newArr = [];
         var mynum=0;
         for(var x=0;x<this.channal.length;x++){
-
           for(var y=0;y<this.channal[x].num;y++){
-            newArr.push({index:y+mynum+1,type:this.channal[x].type});
+            newArr.push({index:y+mynum+1,type:this.channal[x].type,price:120,editcan:false});
           }
           mynum+=y;
         }
         this.ballList = newArr;
       },
+      numedit(index){
+        this.channal[index].edit=true;
+//        document.getElementById(inputid).focus();
+//        alert(this.$refs['editnum']);
+      },
+      balledit(index){
+        this.ballList[index].editcan=true;
+      },
+      changenum(index){
+        this.channal[index].num=this.editnum;
+        this.channal[index].edit=false;
+        this.editnum='';
+      },
+      changeball(index){
+        console.log(this.ballnum);
+        this.ballList[index].price=this.ballnum;
+        this.ballList[index].editcan=false;
+        this.ballnum='';
+      },
       datadragEnd (evt) {
 
+      }
+    },
+    directives: {
+      focus: {
+        inserted: function (el) {
+          // 聚焦元素
+          el.focus()
+        }
       }
     },
     components:{
@@ -178,19 +224,19 @@
   .channel-box>.footer{
     font-size: 12px;
   }
-  .channel-box.default{
+  .channel-box.default,.default>p>input[type=text]{
     color: #666;
   }
-  .channel-box.hospital{
+  .channel-box.hospital,.hospital>p>input[type=text]{
     color: #20a0ff;
   }
-  .channel-box.wechat{
+  .channel-box.wechat,.wechat>p>input[type=text]{
     color: #0caf4e;
   }
-  .channel-box.web{
+  .channel-box.web,.web>p>input[type=text]{
     color: #e8a623;
   }
-  .channel-box.official{
+  .channel-box.official,.official>p>input[type=text]{
     color: #ff4949;
   }
   .channel-box>p{
@@ -231,6 +277,15 @@
     border-radius: 50%;
     border: 1px solid #e0e0e0;
     font-size: 18px;
+  }
+  .ball-row>div>div>span>i>p.num{
+    height:35px;
+    line-height: 35px
+  }
+  .ball-row>div>div>span>i>p.price{
+    height:14px;
+    line-height: 14px;
+    font-size: 14px;
   }
   .ball-row>span
   {
@@ -290,5 +345,45 @@
     display: inline-block;
     margin-bottom: 20px;
   }
-
+.num-edit{
+  border: none;
+  text-align: center;
+  height: 35px;
+  line-height: 35px;
+  font-size: 32px;
+  width: 100%;
+  display: inline-block;
+  float: left;
+  margin-top: 3px;
+}
+.ball-price{
+  width: 30px;
+  margin: 0 0 0 8px;
+}
+  .ball-edit{
+    border: none;
+    text-align: center;
+    height: 14px;
+    line-height: 14px;
+    font-size: 14px;
+    width: 30px;
+    display: inline-block;
+    float: left;
+    margin: 0 0 0 8px;
+  }
+  .default .ball-edit{
+    background: #fff;
+  }
+  .hospital .ball-edit{
+    background: #e9f6ff;
+  }
+  .wechat .ball-edit{
+    background: #e7faf0;
+  }
+  .web .ball-edit{
+    background: #fff8ea;
+  }
+  .official .ball-edit{
+    background: #ffeded;
+  }
 </style>

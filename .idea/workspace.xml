@@ -4,9 +4,7 @@
     <list default="true" id="e7151cc5-5340-404e-a24d-b6b9ebd5c3f6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/base/drag/channel-drag.vue" afterPath="$PROJECT_DIR$/src/components/base/drag/channel-drag.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/store/modules/scheduling.js" afterPath="$PROJECT_DIR$/src/store/modules/scheduling.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue" afterPath="$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/scheduling/index.vue" afterPath="$PROJECT_DIR$/src/views/scheduling/index.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -31,9 +29,12 @@
       <file leaf-file-name="sortcostset.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="568">
-              <caret line="218" column="99" selection-start-line="218" selection-start-column="99" selection-end-line="218" selection-end-column="99" />
-              <folding />
+            <state relative-caret-position="-138">
+              <caret line="184" column="54" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="54" />
+              <folding>
+                <element signature="e#3684#4105#0" expanded="false" />
+                <element signature="e#4127#5265#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -50,17 +51,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="channel-drag.vue" pinned="false" current-in-tab="false">
+      <file leaf-file-name="channel-drag.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/base/drag/channel-drag.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
+            <state relative-caret-position="568">
+              <caret line="361" column="22" selection-start-line="361" selection-start-column="16" selection-end-line="361" selection-end-column="22" />
               <folding>
-                <element signature="e#1263#2833#0" expanded="false" />
-                <element signature="e#1368#1651#0" expanded="false" />
-                <element signature="e#1779#1971#0" expanded="false" />
-                <element signature="e#2476#2611#0" expanded="false" />
-                <element signature="e#2633#2824#0" expanded="false" />
+                <element signature="e#1949#3633#0" expanded="false" />
+                <element signature="e#3847#4820#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -86,11 +84,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.vue" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/index.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="105" column="7" selection-start-line="105" selection-start-column="7" selection-end-line="105" selection-end-column="7" />
+            <state relative-caret-position="392">
+              <caret line="104" column="11" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -99,7 +97,7 @@
       <file leaf-file-name="tptable.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
+            <state relative-caret-position="7420">
               <caret line="265" column="49" selection-start-line="265" selection-start-column="49" selection-end-line="265" selection-end-column="49" />
               <folding />
             </state>
@@ -109,7 +107,7 @@
       <file leaf-file-name="tpcard.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tpcard.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
+            <state relative-caret-position="280">
               <caret line="19" column="83" selection-start-line="19" selection-start-column="72" selection-end-line="19" selection-end-column="83" />
               <folding />
             </state>
@@ -119,7 +117,7 @@
       <file leaf-file-name="tp-card.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/base/card/tp-card.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
+            <state relative-caret-position="1092">
               <caret line="60" column="20" selection-start-line="60" selection-start-column="20" selection-end-line="60" selection-end-column="20" />
               <folding />
             </state>
@@ -168,10 +166,10 @@
         <option value="$PROJECT_DIR$/src/main.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/views/order/orderlist.vue" />
-        <option value="$PROJECT_DIR$/src/components/base/drag/channel-drag.vue" />
-        <option value="$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue" />
         <option value="$PROJECT_DIR$/src/store/modules/scheduling.js" />
         <option value="$PROJECT_DIR$/src/views/scheduling/index.vue" />
+        <option value="$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue" />
+        <option value="$PROJECT_DIR$/src/components/base/drag/channel-drag.vue" />
       </list>
     </option>
   </component>
@@ -578,12 +576,12 @@
       <workItem from="1501721359102" duration="9514000" />
       <workItem from="1501822827363" duration="13653000" />
       <workItem from="1502066588290" duration="3032000" />
-      <workItem from="1502154112609" duration="5334000" />
+      <workItem from="1502154112609" duration="22598000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="177970000" />
+    <option name="totallyTimeSpent" value="195234000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -625,7 +623,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -853,7 +851,7 @@
         <state relative-caret-position="140">
           <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -966,44 +964,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="265" column="49" selection-start-line="265" selection-start-column="49" selection-end-line="265" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tpcard.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="19" column="83" selection-start-line="19" selection-start-column="72" selection-end-line="19" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/base/drag/channel-drag.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
-          <folding>
-            <element signature="e#1263#2833#0" expanded="false" />
-            <element signature="e#1368#1651#0" expanded="false" />
-            <element signature="e#1779#1971#0" expanded="false" />
-            <element signature="e#2476#2611#0" expanded="false" />
-            <element signature="e#2633#2824#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/base/card/tp-card.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="60" column="20" selection-start-line="60" selection-start-column="20" selection-end-line="60" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/store/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1022,19 +982,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue">
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/index.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="218" column="99" selection-start-line="218" selection-start-column="99" selection-end-line="218" selection-end-column="99" />
+        <state relative-caret-position="392">
+          <caret line="104" column="11" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/scheduling/index.vue">
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tptable.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="105" column="7" selection-start-line="105" selection-start-column="7" selection-end-line="105" selection-end-column="7" />
+        <state relative-caret-position="7420">
+          <caret line="265" column="49" selection-start-line="265" selection-start-column="49" selection-end-line="265" selection-end-column="49" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/sortcostset.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-138">
+          <caret line="184" column="54" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="54" />
+          <folding>
+            <element signature="e#3684#4105#0" expanded="false" />
+            <element signature="e#4127#5265#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/scheduling/clinic/tpcard.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="19" column="83" selection-start-line="19" selection-start-column="72" selection-end-line="19" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/base/card/tp-card.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1092">
+          <caret line="60" column="20" selection-start-line="60" selection-start-column="20" selection-end-line="60" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/base/drag/channel-drag.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="568">
+          <caret line="361" column="22" selection-start-line="361" selection-start-column="16" selection-end-line="361" selection-end-column="22" />
+          <folding>
+            <element signature="e#1949#3633#0" expanded="false" />
+            <element signature="e#3847#4820#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -21,91 +21,88 @@
           </div>
         </el-form-item>
         <el-form-item label="选择科室">
-          <el-select v-model="form.ksmc"  placeholder="请选择">
-            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
+          <el-select v-model="form.ksdmList" multiple  placeholder="请选择">
+            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksbm">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择医生">
-          <el-select v-model="form.ysmc" :placeholder='form.ysmc'>
-            <el-option v-for="item in formOptions.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
+          <el-select v-model="form.ysdmList" multiple placeholder='请选择'>
+            <el-option v-for="item in formOptions.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgbm"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择病种">
-          <el-select v-model="form.disease" placeholder="请选择病种">
-            <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-            </el-option>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="选择病种">-->
+          <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
+            <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item label="就诊时间">
-          <el-radio-group v-model="form.cbrqlx">
-            <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
-          </el-radio-group>
+          <el-checkbox-group v-model="form.cbrqlx">
+            <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="出诊时间">
           <el-col :span="8">
-            <el-radio-group v-model="form.sjddm">
-              <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
-            </el-radio-group>
+            <el-checkbox-group v-model="form.sjddm">
+              <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+            </el-checkbox-group>
           </el-col>
-          <el-col :span="10">
-            <el-form-item label="时间段">
-              <el-time-picker is-range v-model="form.time" placeholder="选择时间范围">
-              </el-time-picker>
-            </el-form-item>
-          </el-col>
+          <!--<el-col :span="10">-->
+            <!--<el-form-item label="时间段">-->
+              <!--<el-time-picker is-range v-model="form.time" placeholder="选择时间范围">-->
+              <!--</el-time-picker>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
         </el-form-item>
         <el-form-item label="服务费用">
-          <el-input v-model="form.cost" class="cost-input"></el-input>元
+          <span>50元</span>
         </el-form-item>
-        <el-form-item label="服务费用" style="display: none">
-          <el-radio-group v-model="form.cost" @change="CostChange">
-            <el-radio label="1">按号序设置费用</el-radio>
-            <el-radio label="2">不按号序设置费用</el-radio>
-          </el-radio-group>
-          <span class="cost">服务总费用</span>
-          <el-input class="cost-input"></el-input>元
-        </el-form-item>
-        <div class="source" v-if="form.Source">
-          <div class="source-card" @mouseenter="SourceMouseOver()" @mouseleave="SourceMouseLeave()">
-            <el-form label-width="45px">
-              <el-form-item label="号段">
-                <el-col :span="10">
-                  <el-input></el-input>
-                </el-col>
-                <el-col class="line" style="text-align: center" :span="4">-</el-col>
-                <el-col :span="10">
-                  <el-input></el-input>
-                </el-col>
-              </el-form-item>
-              <el-form-item label="费用">
-                <el-input placeholder="元"></el-input>
-              </el-form-item>
-            </el-form>
-            <i v-if="form.CloseShow" @click="DelCard()" class="card-close el-icon-close"></i>
-          </div>
-          <div @click="AddCard()" class="source-plus">
-            <i class="el-icon-plus"></i>
-          </div>
-        </div>
-        <div class="unsource" v-if="form.UnSource">
-          <el-form label-width="100px">
-            <el-form-item label="设置总号源数">
-              <el-input style="width: 170px"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
         <div class="form-line"></div>
         <el-form-item label="配置号序">
           <span class="num-info">(当前号源数18)</span>
         </el-form-item>
         <div class="Channel">
-          <el-radio-group v-model="form.channel" @change="ChannelChange">
+          <el-radio-group v-model="formOptions.channel" @change="channelChange">
             <el-radio label="1">区分渠道</el-radio>
             <el-radio label="2">不区分渠道</el-radio>
           </el-radio-group>
-          <channeldrag v-if="form.Channel"></channeldrag>
-          <div class="UnChannel" v-if="form.UnChannel">
+          <div v-if="formOptions.Channel">
+            <div class="Channel-Warrper">
+              <draggable v-model="channalList" @update="datadragEnd"  @start="drag=true" @end="drag=false">
+                <div v-for="(item,index) in channalList" :key="index" class="channel-box" :class="item.qdmc">
+                  <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
+                  <input  v-else="item.edit" @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" type="text">
+                  <p class="footer">{{item.qdmc}}</p>
+                </div>
+              </draggable>
+            </div>
+            <div class="production">
+              <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
+            </div>
+            <div v-if="ball">
+              <div class="ball-row">
+                <draggable  v-model="ballList" @update="datadragEnd" @start="drag=true" @end="drag=false">
+                  <transition-group tag="div" :name="'flip-list'">
+                     <span v-for="(item,index) in ballList" :key="item.index">
+                       <i :class="item.qddm" :style="item.style">
+                         <p class="num">{{item.index}}</p>
+                         <p class="price">
+                           <span class="ball-price pull-left" v-if="!item.edit" @click="item.edit = !item.edit">{{item.price}}</span>
+                            <input v-if="item.edit" v-model="item.price" v-focus class="ball-edit" type="text">
+                           <span class="pull-left">¥</span>
+                         </p>
+                        </i>
+                     </span>
+                  </transition-group>
+                </draggable>
+                <span>
+                 <i class="plus el-icon-plus"></i>
+               </span>
+              </div>
+            </div>
+          </div>
+          <div class="UnChannel" v-if="formOptions.UnChannel">
             <el-form label-width="100px">
               <el-form-item label="设置总号源数">
                 <el-input style="width: 170px"></el-input>
@@ -116,7 +113,7 @@
       </el-form>
       <div slot="footer"  class="dialog-footer">
         <el-button>取消</el-button>
-        <el-button type="primary">保存并继续</el-button>
+        <el-button type="primary" @click="save">保存并继续</el-button>
       </div>
     </div>
   </div>
@@ -124,29 +121,23 @@
 
 <script>
   import channeldrag from '../../../components/base/drag/channel-drag.vue'
+  import draggable from 'vuedraggable'
   export default {
     data(){
       return{
         form:{
           fwlxdm:'',
-          ysmc:'',
+          ysdmList:[],
           disease:'',
-          ksmc:'',
-          cbrqlx:'',
+          ksdmList:[],
+          cbrqlx:[],
           time:'',
-          sjddm:'',
+          sjddm:[],
           czdz:'',
           note:'',
           desc: '',//
           cost: '',//服务总费用
           ordertype:'',
-          channel: '',
-          Source: false,
-          UnSource: false,
-          CloseShow: false,
-          Channel: false,
-          UnChannel: false,
-
         },
         formOptions:{
           serviceType:{
@@ -197,21 +188,127 @@
             list:[]
           },
           address:'',
-          note:''
+          note:'',
+          channel: '1',
+          Source: false,
+          UnSource: false,
+          CloseShow: false,
+          Channel: true,
+          UnChannel: false,
         },//表单控制
         timeSlot:[],//时间段列表
+        channalList:[],
+        channal:[
+          {
+            name:'非预约',
+            num:5,
+            type:'default',
+            edit:false,
+            children:
+              [
+                {
+                  name:88,
+                },
+                {
+                  name:89
+                },
+                {
+                  name:90
+                },
+                {
+                  name:91
+                },
+                {
+                  name:92
+                },
+              ]
+          },
+          {
+            name:'院内预约',
+            num:3,
+            type:'hospital',
+            edit:false,
+            children:
+              [
+                {
+                  name:1
+                },
+                {
+                  name:2
+                },
+                {
+                  name:3
+                }
+              ]
+          },
+          {
+            name:'官微预约',
+            num:4,
+            type:'wechat',
+            edit:false,
+            children:
+              [
+                {
+                  name:78
+                },
+                {
+                  name:79
+                },
+                {
+                  name:60
+                },
+                {
+                  name:81
+                }
+              ]
+          },
+          {
+            name:'挂号网预约',
+            num:2,
+            type:'web',
+            edit:false,
+            children:
+              [
+                {
+                  name:18
+                },
+                {
+                  name:19
+                }
+              ]
+          },
+          {
+            name:'官网预约',
+            num:1,
+            type:'official',
+            edit:false,
+            children:
+              [
+                {
+                  name:1
+                }
+              ]
+          }
+        ],
+        ball:false,
+        ballList:[],
+        styleArr:[
+          {border:'1px solid #c0e5ff',background: '#e9f6ff',color: '#20a0ff'},
+          {border: '1px solid #bcf1d4',background: '#bcf1d4',color: '#0caf4e'},
+          {border: '1px solid #feebc3',background: '#fff8ea',color: '#e8a623'},
+          {border: '1px solid #ffcccc',background: '#ffeded',color: '#ff4949'}
+        ]
       }
     },
     created(){
         this.$nextTick(()=> {
-          setTimeout( _ => {
             this.init();
-          },0);
         })
     },
     methods:{
       init(){
         this.getDicData();//获取字典数据
+        this.getChannalList();
       },
       //获取各种字典数据
       getDicData(){
@@ -221,45 +318,60 @@
         this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
-      //服务费用Dom切换
-      CostChange(value) {
-        if (value == '1') {
-          this.form.Source = true;
-          this.form.UnSource = false;
-        } else if (value == '2') {
-          this.form.Source = false;
-          this.form.UnSource = true;
-        }
+      getChannalList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {}).then(data => {
+          data.map((item, index) => {
+            item.edit = false;
+            item.num = 1;
+            item.style = this.styleArr[index]
+          });
+          this.$store.commit('scheduling/SET_CHANNALLIST',data);
+          this.channalList = data;
+        }).catch(err => {
+          console.log(err);
+        });
       },
       //配置号序Dom切换
-      ChannelChange(value) {
+      channelChange(value) {
         if (value == '1') {
-          this.form.Channel = true;
-          this.form.UnChannel = false;
+          this.formOptions.Channel = true;
+          this.formOptions.UnChannel = false;
         } else if (value == '2') {
-          this.form.Channel = false;
-          this.form.UnChannel = true;
+          this.formOptions.Channel = false;
+          this.formOptions.UnChannel = true;
         }
       },
-      //服务类型卡片关闭按钮显示
-      SourceMouseOver() {
-        this.form.CloseShow = true;
+      getSortList(){
+        this.ball=true;
+        let newArr = [];
+        var mynum = 0;
+        for(var x = 0;x < this.channalList.length;x++){
+          for(var y=0;y<this.channalList[x].num;y++){
+            newArr.push({index:y+mynum+1,qddm:this.channalList[x].qddm,price:50,edit:false,style:this.channalList[x].style});
+          }
+          mynum+=y;
+        }
+        this.ballList = newArr;
+        console.log(this.ballList);
       },
-      //服务类型卡片关闭按钮显示
-      SourceMouseLeave() {
-        this.form.CloseShow = false;
+      datadragEnd (evt){
+
       },
-      //删除服务类型卡片
-      DelCard() {
-        alert('卡片删除事件.');
-      },
-      //添加服务类型卡片
-      AddCard() {
-        alert('增加卡片事件.');
-      },
+      //保存
+      save(){
+          console.log('保存 %o',this.form);
+      }
+    },
+    directives: {
+      focus: {
+        inserted: function (el) {
+          // 聚焦元素
+          el.select()
+        }
+      }
     },
     components: {
-      channeldrag
+      draggable
     }
   }
 </script>
@@ -455,7 +567,7 @@
   }
 
   .cost-input {
-    width: 200px;
+    width: 100px;
     margin: 0 10px 0 0px;
   }
 
@@ -470,4 +582,196 @@
     margin-top: 20px;
   }
   /******************************服务费用*******************************/
+
+  /******************************号序配置*******************************/
+  .Channel-Warrper{
+    margin: 20px 0 20px 0;
+  }
+  .channel-box{
+    min-width: 130px;
+    width: 17.5%;
+    height: 84px;
+    display: inline-block;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    margin-right: 2%;
+    cursor: move;
+    box-sizing: border-box;
+  }
+  .channel-box>.top{
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 32px;
+  }
+  .channel-box>.footer{
+    font-size: 12px;
+  }
+  .channel-box.default,.default>p>input[type=text]{
+    color: #666;
+  }
+  .channel-box.hospital,.hospital>p>input[type=text]{
+    color: #20a0ff;
+  }
+  .channel-box.wechat,.wechat>p>input[type=text]{
+    color: #0caf4e;
+  }
+  .channel-box.web,.web>p>input[type=text]{
+    color: #e8a623;
+  }
+  .channel-box.official,.official>p>input[type=text]{
+    color: #ff4949;
+  }
+  .channel-box>p{
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+  }
+
+  .ball-row{
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px dashed #e0e0e0;
+  }
+  .ball-row:last-child{
+    border-bottom: 1px transparent;
+  }
+  .ball-row>span:last-child{
+    border-right: 1px transparent;
+  }
+  .ball-row>div>div>span
+  {
+    display: inline-block;
+    width: 10%;
+    height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    padding: 10px;
+  }
+
+  .ball-row>div>div>span>i{
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+  }
+  .ball-row>div>div>span>i>p.num{
+    height:35px;
+    line-height: 35px
+  }
+  .ball-row>div>div>span>i>p.price{
+    height:14px;
+    line-height: 14px;
+    font-size: 14px;
+  }
+  .ball-row>span
+  {
+    display: inline-block;
+    width: 10%;
+    height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    padding: 10px;
+  }
+  .ball-row>span>i{
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+
+  }
+
+  .ball-row>div>div>span>i.hospital{
+    border: 1px solid #c0e5ff;
+    background: #e9f6ff;
+    color: #20a0ff;
+  }
+  .ball-row>div>div>span>i.wechat{
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+    color: #0caf4e;
+  }
+  .ball-row>div>div>span>i.web{
+    border: 1px solid #feebc3;
+    background: #fff8ea;
+    color: #e8a623;
+  }
+  .ball-row>div>div>span>i.official{
+    border: 1px solid #ffcccc;
+    background: #ffeded;
+    color: #ff4949;
+  }
+  .ball-row>span>i.plus{
+    color: #e0e0e0;
+  }
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+
+  .no-move {
+    transition: transform 0s;
+  }
+  .production {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .num-edit{
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+    height: 35px;
+    line-height: 35px;
+    font-size: 32px;
+    width: 100%;
+    display: inline-block;
+    float: left;
+    margin-top: 3px;
+  }
+  .ball-price {
+    width: 30px;
+    margin: 0 0 0 9px;
+  }
+  .ball-row > div > div > span > i > p.num {
+    height: 33px;
+    line-height: 38px;
+    font-weight: bold;
+  }
+  .ball-edit {
+    border: none;
+    text-align: center;
+    height: 13px;
+    line-height: 13px;
+    font-size: 14px;
+    width: 30px;
+    display: inline-block;
+    float: left;
+    margin: 0 0 0 9px;
+  }
+  .default .ball-edit{
+    background: #fff;
+  }
+  .hospital .ball-edit{
+    background: #e9f6ff;
+  }
+  .wechat .ball-edit{
+    background: #e7faf0;
+  }
+  .web .ball-edit{
+    background: #fff8ea;
+  }
+  .official .ball-edit{
+    background: #ffeded;
+  }
+  /******************************号序配置*******************************/
 </style>
