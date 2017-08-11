@@ -32,14 +32,16 @@
           </div>
         </div>
         <div class="Att-list-body">
-          <div class="Att-row" v-for="item in attList">
+          <div class="Att-row" v-for="(item,index) in attList">
             <div class="Att-row-lable">
-              {{item.name}}
+              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"  @change="event=>AllChange(event,index)">{{item.name}}</el-checkbox>
             </div>
             <div class="Att-row-data">
-            <span v-for="(att,index) in item.children">
-              <router-link to="/scheduling/clinic/tptable">
+              <div style="margin: 15px 0;"></div>
+              <el-checkbox-group @change="ListChange(index)" v-model="checkedAttlist" >
+                <span class="radiobox" v-for="(att,index) in item.children">
                   <el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">
+                  <el-checkbox  slot="reference" style="color: rgb(32, 178, 255);" :label="att" :key="att">{{att.ksmc}}</el-checkbox>
                   <div class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>
                   <p><i class="default"></i>普通（10）</p>
@@ -48,10 +50,13 @@
                   <p><i class="union"></i>联合（4）</p>
                   <p><i class="VIP"></i>特需（5）</p>
                  </div>
-                  <el-button type="text" slot="reference">{{att.ksmc}}</el-button>
-                  </el-popover>
-                </router-link>
-            </span>
+                </el-popover>
+                </span>
+              </el-checkbox-group>
+            <!--<span v-for="(att,index) in item.children">-->
+              <!--&lt;!&ndash;<router-link to="/scheduling/clinic/tptable">&ndash;&gt;-->
+                 <!---->
+            <!--</span>-->
             </div>
           </div>
         </div>
@@ -109,7 +114,7 @@
           </el-form-item>
           <el-form-item label="出诊时间">
             <el-col :span="14">
-              <el-radio-group v-model="form.OutTimeValue">
+              <el-radio-group v-model="form.OutTimeValue" >
                 <el-radio v-for="item in form.OutTime" :label="item.sjdmc+item.kssj+'-'+item.jssj" :value="item.sjddm"></el-radio>
               </el-radio-group>
             </el-col>
@@ -197,6 +202,10 @@
         SettingVisible: false,
         loading:true,
         attList: [],
+        checkList:[],//用于全选的科室列表
+        checkedAttlist:[],//已选中的科室value数组
+        checkAll: false,//全选状态
+        isIndeterminate: false,//部分被选时状态
         form: {
           //        服务类型
           Type: {
@@ -260,8 +269,7 @@
           CloseShow: false,
           Channel: false,
           UnChannel: false,
-
-        }
+        },
       }
     },
     created() {
@@ -273,6 +281,17 @@
     })
     },
     methods: {
+      //全选改变时
+     AllChange(event,index) {
+        this.checkedAttlist =  event.target.checked ? this.attList[index].children: [];
+        this.isIndeterminate = false;
+      },
+      //单选改变时
+      ListChange(index) {
+        let checkedCount = this.checkedAttlist.length;
+        this.checkAll = checkedCount === this.attList[index].children.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.attList[index].children.length;
+      },
       //获取面包屑数据
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tplist;
@@ -357,7 +376,7 @@
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {
           kstybm: '20000000.1.1.0320'
         }).then(data => {
-          let newArr = listArray.classifyArr(data, 'sjksbm');
+        let newArr = listArray.classifyArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
         this.loading=false;
@@ -366,7 +385,9 @@
             ksbm: data[i].ksbm,
             ksmc: data[i].ksmc
           });
+          this.checkList.push(data[i].ksmc);
         }
+        console.log(attList);
         this.form.DepartOptions = selcetArr;
       }).catch(err => {
           console.log(err);
@@ -618,11 +639,11 @@
     width: 100%;
     box-sizing: border-box;
     display: inline-block;
-    border-bottom: 1px solid #E7ECF4;
+    border-bottom: 1px dashed #E7ECF4;
     padding-bottom: 15px;
   }
 
-  .Att-row-data>span {
+  .Att-row-data .radiobox {
     float: left;
     width: 185px;
     height: 30px;
