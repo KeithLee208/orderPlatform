@@ -32,10 +32,10 @@
           </el-select>
         </el-form-item>
         <!--<el-form-item label="选择病种">-->
-          <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
-            <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
-            <!--</el-option>-->
-          <!--</el-select>-->
+        <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
+        <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
+        <!--</el-option>-->
+        <!--</el-select>-->
         <!--</el-form-item>-->
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.cbrqlx">
@@ -49,10 +49,10 @@
             </el-checkbox-group>
           </el-col>
           <!--<el-col :span="10">-->
-            <!--<el-form-item label="时间段">-->
-              <!--<el-time-picker is-range v-model="form.time" placeholder="选择时间范围">-->
-              <!--</el-time-picker>-->
-            <!--</el-form-item>-->
+          <!--<el-form-item label="时间段">-->
+          <!--<el-time-picker is-range v-model="form.time" placeholder="选择时间范围">-->
+          <!--</el-time-picker>-->
+          <!--</el-form-item>-->
           <!--</el-col>-->
         </el-form-item>
         <el-form-item label="服务费用">
@@ -301,9 +301,9 @@
       }
     },
     created(){
-        this.$nextTick(()=> {
-            this.init();
-        })
+      this.$nextTick(()=> {
+        this.init();
+      })
     },
     methods:{
       init(){
@@ -359,7 +359,7 @@
       },
       //保存
       save(){
-          console.log('保存 %o',this.form);
+        console.log('保存 %o',this.form);
       }
     },
     directives: {
@@ -423,7 +423,6 @@
     width: 100%;
     display: inline-block;
   }
-
   /******************************服务类型*******************************/
   .type-filter > span {
     display: inline-block;
