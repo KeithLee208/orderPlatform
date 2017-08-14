@@ -31,13 +31,13 @@
                 <span class="icon-group">
                   <el-tooltip v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark"
                               content="设置出班模板" placement="bottom">
-                     <router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">
+                     <!--<router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">-->
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
-                     </router-link>
+                     <!--</router-link>-->
                   </el-tooltip>
                   <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark"
                               content="提交至门办" placement="bottom">
-                    <i @click="SubmitVisible = true" class="icon iconfont icon-tijiao"></i>
+
                   </el-tooltip>
                 </span>
                <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
@@ -734,7 +734,6 @@
     cursor: pointer;
 
   }
-
   .page-body {
     height: calc(90vh - 300px);
   }
