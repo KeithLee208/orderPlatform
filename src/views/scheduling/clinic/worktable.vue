@@ -507,7 +507,7 @@
       },
       //数据初始化
       dataInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'' }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", { ksdm: '',mbdm:'',yydm:this.$store.state.login.userInfo.yydm }).then(data => {
           this.TpCard = data;
         this.formatData(arr.classifyArr(data, 'ysdm'));
         this.loading=false;

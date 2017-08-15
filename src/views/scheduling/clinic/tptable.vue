@@ -21,11 +21,9 @@
             <div class="type-filter">
               <span>服务类型</span>
               <span><i class="el-icon-menu all"></i>全部</span>
-              <span><i class="default"></i>普通（10）</span>
-              <span><i class="expert"></i>专家（2）</span>
-              <span><i class="disease"></i>专病（3）</span>
-              <span><i class="union"></i>联合（4）</span>
-              <span><i class="VIP"></i>特需（5）</span>
+              <span v-for="(item,index) in serviceTypeList">
+                <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.sfxm.length}}）
+              </span>
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
@@ -47,10 +45,10 @@
                 <div class="infolist">
                   提交至门办（接口）
                 </div>
-                            <span slot="footer" class="dialog-footer">
-                            <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
-                            <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
-                          </span>
+                  <span slot="footer" class="dialog-footer">
+                  <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
+                  <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
+                </span>
               </el-dialog>
                  <!--导出-->
               <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny">
@@ -185,6 +183,7 @@
         serviceTypeList: [],//服务类型列表
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
+        checkList:[]
       };
     },
     created(){
@@ -201,6 +200,8 @@
         //获取时间段
         this.getTimeSlot();
         this.dataInit();
+        //获取已选科室列表
+        this.getCheckList();
       },
       //获取面包屑
       getCrumbs(){
@@ -209,16 +210,23 @@
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+        console.log(this.serviceTypeList)
       },
       //获取时间段列表
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
+      //获取已选科室列表
+      getCheckList(){
+        this.checkList = this.$store.state.scheduling.curSelDepartList;
+        console.log(this.checkList);
+      },
       //数据初始化
       dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: '20000000.1.1.0320',
-          mbdm: '45182452-4bad-43fa-a9ac-4e646c0c1c09'
+          mbdm: '45182452-4bad-43fa-a9ac-4e646c0c1c09',
+          yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
           this.TpCard = data;
         this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
@@ -503,7 +511,7 @@
 
   .ordered.PT,
   .ordered.ZJ,
-  .ordered.disease,
+  .ordered.ZB,
   .ordered.LH,
   .ordered.TX {
     cursor: pointer;
@@ -551,26 +559,26 @@
     font-size: 16px;
   }
 
-  .type-filter > span > .default {
+  .type-filter > span > .PT {
     background: #fff;
   }
 
-  .type-filter > span > .expert {
+  .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
 
-  .type-filter > span > .disease {
+  .type-filter > span > .ZB {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
   }
 
-  .type-filter > span > .union {
+  .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
 
-  .type-filter > span > .VIP {
+  .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
   }

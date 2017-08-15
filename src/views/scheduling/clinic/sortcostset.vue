@@ -323,7 +323,9 @@
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       getChannalList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {
+          yydm: this.$store.state.login.userInfo.yydm
+        }).then(data => {
           data.map((item, index) => {
             item.edit = false;
             item.num = 1;

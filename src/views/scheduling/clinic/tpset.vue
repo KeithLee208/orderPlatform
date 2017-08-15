@@ -58,7 +58,7 @@
           <span><i class="el-icon-menu all"></i>全部</span>
               <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
-                <i @click="selection(index)"  :class="[item.fwlxdm,{active:formOptions.serviceType.activeIndex==index}]"></i>
+                <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
         </div>
@@ -244,7 +244,8 @@
       getDocScheduleList(){
         let params = {
           ksdm:'',
-          ysdm:''
+          ysdm:'',
+          yydm:this.$store.state.login.userInfo.yydm
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];

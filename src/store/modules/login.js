@@ -4,7 +4,8 @@
 const namespaced = true;
 const state = {
   userInfo:{
-    type:'科室'
+    type:'科室',
+    yydm:'001'
   },//登录信息
 };
 

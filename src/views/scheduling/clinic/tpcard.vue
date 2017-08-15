@@ -48,7 +48,6 @@
     },
     methods: {
       init(){
-
       },
 
       handleLinkTo(card){
@@ -65,7 +64,7 @@
         }
       },
       cardlistInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '' }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '',yydm:this.$store.state.login.userInfo.yydm }).then(data => {
           this.TpCard = data;
           this.loading=false;
         }).catch(err => {
@@ -78,6 +77,7 @@
       newTemplate(){
         let params = {
           czry:'胡一刀',
+          yydm:'001',
           mbmc:this.form.name
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S00", params).then(data => {

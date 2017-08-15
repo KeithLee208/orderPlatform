@@ -60,6 +60,12 @@
             </div>
           </div>
         </div>
+        <span class="pull-right">
+          <el-button class="btn-blue"  type="primary">导出</el-button>
+          <router-link tag="span" to='/scheduling/clinic/tptable'>
+             <el-button @click="postCheckList" class="btn-blue"  type="primary">设置出班</el-button>
+          </router-link>
+        </span>
       </div>
     </div>
     <el-dialog title="设置费用及号序" :visible.sync="SettingVisible" size="large" top="5%">
@@ -274,6 +280,7 @@
     },
     created() {
       this.$nextTick(() => {
+        console.log(this.$router);
         this.getCrumbs();//获取面包屑数据
         this.TpListInit(); //科室列表
         this.DiseaseInit(); //专病病种
@@ -354,7 +361,8 @@
       }, //服务类型筛选表单
       DiseaseInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
-          kstybm: '20000000.1.1.0320'
+          kstybm: '20000000.1.1.0320',
+          yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
           this.form.Disease = data;
         let newArr = [];
@@ -374,7 +382,8 @@
       }, //专病病种
       TpListInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {
-          kstybm: '20000000.1.1.0320'
+          kstybm: '20000000.1.1.0320',
+          yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
         let newArr = listArray.classifyArr(data, 'sjksbm');
         let selcetArr = [];
@@ -387,7 +396,6 @@
           });
           this.checkList.push(data[i].ksmc);
         }
-        console.log(attList);
         this.form.DepartOptions = selcetArr;
       }).catch(err => {
           console.log(err);
@@ -401,6 +409,7 @@
           this.form.DocDisabled = false;
           this.form.Doctext = '请选择对应科室的医生';
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
+            yydm:this.$store.state.login.userInfo.yydm,
             kstybm: this.form.DepartmentValue
           }).then(data => {
             this.form.DocOptions = data;
@@ -419,6 +428,7 @@
       }, //选择科室根据所选筛选医生
       OutTimeInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {
+          yydm:this.$store.state.login.userInfo.yydm,
           kstybm: '20000000.1.1.0320'
         }).then(data => {
           this.form.OutTime = data;
@@ -429,7 +439,10 @@
         //1. 服务端业务错误，错误码邮件中有
         //2. 网络错误，本地网络断开、超时等
       });
-      } //出诊时间
+      }, //出诊时间
+      postCheckList(){
+        this.$store.commit('scheduling/SET_CURSELDEPARTLIST', [this.checkedAttlist])
+      }
     }
   };
 </script>

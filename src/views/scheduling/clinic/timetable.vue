@@ -363,7 +363,7 @@
       },
       //获取出报表数据
       getTableList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {ksdm: '', mbdm: '', yydm: ''}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {ksdm: '', mbdm: '', yydm:this.$store.state.login.userInfo.yydm}).then(data => {
           console.log('出班组模板明细列表 %o', data);
           this.tableList = this.formatData(arr.classifyArr(data, 'ysdm'));
           this.loading = false;
@@ -434,7 +434,7 @@
       //科室获取医生列表
       getDoctorList(){
         return new Promise((resolve, reject) => {
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm: '20000000.1.1.0320'}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm: '20000000.1.1.0320',yydm:this.$store.state.login.userInfo.yydm}).then(data => {
             resolve(data);
           }).catch(err => {
             console.log(err);

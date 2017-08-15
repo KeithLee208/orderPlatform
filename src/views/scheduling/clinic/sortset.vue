@@ -269,7 +269,7 @@
       }, //服务类型筛选表单
       DiseaseInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
-          kstybm: '20000000.1.1.0320'
+          kstybm: '20000000.1.1.0320',yydm:'001'
         }).then(data => {
           this.form.Disease = data;
         let newArr = [];
@@ -289,7 +289,7 @@
       }, //专病病种
       TpListInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {
-          kstybm: '20000000.1.1.0320'
+          kstybm: '20000000.1.1.0320',yydm:'001'
         }).then(data => {
         let selcetArr = [];
         for (var i = 0; i < data.length; i++) {
@@ -313,7 +313,8 @@
           this.form.DocDisabled = false;
           this.form.Doctext = '请选择对应科室的医生';
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-            kstybm: this.form.DepartmentValue
+            kstybm: this.form.DepartmentValue,
+            yydm:'001'
           }).then(data => {
             this.form.DocOptions = data;
         }).catch(err => {
@@ -331,6 +332,7 @@
       }, //选择科室根据所选筛选医生
       OutTimeInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {
+          yydm:this.$store.state.login.userInfo.yydm,
           kstybm: '20000000.1.1.0320'
         }).then(data => {
           this.form.OutTime = data;

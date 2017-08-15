@@ -16,7 +16,8 @@ const state = {
     ksdm:'',
     ysdm:''
   },//当前出班模板设置
-  channalList:[]//预约渠道列表
+  channalList:[],//预约渠道列表
+  curSelDepartList:[]//当前选择科室列表
 };
 
 // state 中派生出一些状态
@@ -65,6 +66,10 @@ const mutations = {
   //更新预约渠道
   SET_CHANNALLIST(state,data){
     state.channalList =  data;
+  },
+  //更新当前选择科室列表
+  SET_CURSELDEPARTLIST(state,data){
+    state.curSelDepartList =  data;
   }
 };
 
