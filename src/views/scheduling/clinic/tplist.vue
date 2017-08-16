@@ -288,7 +288,7 @@
       //全选改变时
      AllChange(event,index) {
         this.checkedAttlist =  event.target.checked ? this.attList[index].children: [];
-        this.isIndeterminate = false;
+        this.attList[index].isIndeterminate = false;
       },
       //单选改变时
       ListChange(index) {
