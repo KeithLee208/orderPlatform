@@ -56,3 +56,25 @@ export function classifyArr (arr,key){
   });
   return newArr
 }
+//门办科室列表分类
+export function classifyCheckArr (arr,key){
+  let newArr = arr
+    .map(item => [item[key]])
+    .reduce((a,b) => a.concat(b))
+    .distinct()
+    .map(item => ({
+      name:item,
+      allChecked:false,
+      isIndeterminate: false,
+      children:[]
+    }));
+  arr.map(item => {
+    newArr.map(newItem => {
+      if(item[key] === newItem.name){
+        // newItem.children.push({item});
+        newItem.children[newItem.children.length] = item;
+      }
+    })
+  });
+  return newArr
+}

@@ -34,7 +34,7 @@
         <div class="Att-list-body">
           <div class="Att-row" v-for="(item,index) in attList">
             <div class="Att-row-lable">
-              <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"  @change="event=>AllChange(event,index)">{{item.name}}</el-checkbox>
+              <el-checkbox :indeterminate="item.isIndeterminate" v-model="item.allChecked"  @change="event=>AllChange(event,index)">{{item.name}}</el-checkbox>
             </div>
             <div class="Att-row-data">
               <div style="margin: 15px 0;"></div>
@@ -210,8 +210,6 @@
         attList: [],
         checkList:[],//用于全选的科室列表
         checkedAttlist:[],//已选中的科室value数组
-        checkAll: false,//全选状态
-        isIndeterminate: false,//部分被选时状态
         form: {
           //        服务类型
           Type: {
@@ -280,7 +278,6 @@
     },
     created() {
       this.$nextTick(() => {
-        console.log(this.$router);
         this.getCrumbs();//获取面包屑数据
         this.TpListInit(); //科室列表
         this.DiseaseInit(); //专病病种
@@ -291,13 +288,14 @@
       //全选改变时
      AllChange(event,index) {
         this.checkedAttlist =  event.target.checked ? this.attList[index].children: [];
-        this.isIndeterminate = false;
+        this.attList[index].isIndeterminate = false;
       },
       //单选改变时
       ListChange(index) {
         let checkedCount = this.checkedAttlist.length;
-        this.checkAll = checkedCount === this.attList[index].children.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.attList[index].children.length;
+        this.attList[index].allChecked = checkedCount === this.attList[index].children.length;
+        this.attList[index].isIndeterminate = checkedCount > 0 && checkedCount < this.attList[index].children.length;
+        console.log(this.attList[index].isIndeterminate);
       },
       //获取面包屑数据
       getCrumbs(){
@@ -385,7 +383,7 @@
           kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
-        let newArr = listArray.classifyArr(data, 'sjksbm');
+        let newArr = listArray.classifyCheckArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
         this.loading=false;
@@ -441,7 +439,7 @@
       });
       }, //出诊时间
       postCheckList(){
-        this.$store.commit('scheduling/SET_CURSELDEPARTLIST', [this.checkedAttlist])
+        this.$store.commit('scheduling/SET_CURSELDEPARTLIST', this.checkedAttlist)
       }
     }
   };

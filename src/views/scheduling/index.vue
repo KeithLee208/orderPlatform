@@ -29,9 +29,9 @@
     },
     created(){
       this.$nextTick(() => {
-//          this.login().then(() => {
+          this.login().then(() => {
             this.init();
-//          });
+          });
       })
     },
     methods:{
