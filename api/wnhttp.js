@@ -63,7 +63,8 @@ export default {
                             console.log(error); // for debug
                             reject(error);
                         });
-                } else if (options.mode === "mock") {
+                }
+                else if (options.mode === "mock") {
                     //debugger;
                     axios.post(baseConfig.rap_baseUrl + tranCode, request)
                         .then(response => {

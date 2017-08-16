@@ -14,6 +14,16 @@
       <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
+    <div class="setting-tag" v-if="$store.state.login.userInfo.type === '门办'">
+      <div @click="selection(index)" :class="{active:checkLIstActive==index}" v-for="(item,index) in checkList">
+        <span>{{item.ksmc}}</span>
+        <i @click="selectDel(index)" class="pull-right icon iconfont icon-shanchu"></i>
+      </div>
+      <div class="back-btn">
+        <i class="icon iconfont icon-xiangzuo"></i>
+        <span>返回添加科室</span>
+      </div>
+    </div>
     <div class="setting-body" v-loading="loading" element-loading-text="拼命加载中">
       <div class="setting-main">
         <div>
@@ -149,7 +159,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -183,7 +192,8 @@
         serviceTypeList: [],//服务类型列表
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
-        checkList:[]
+        checkList:[],//已选科室列表
+        checkLIstActive:0//已选科室列表点击active
       };
     },
     created(){
@@ -292,6 +302,17 @@
           message: '成功！',
           type: 'success'
         });
+      },
+      selection(index) {
+        this.checkLIstActive = index;
+      },
+      selectDel(index){
+        if(this.checkList.length==1)
+        {
+          alert('已是最后一个科室');
+          return
+        }
+        this.checkList.splice(index,1);
       },
       //门办设置出班模板，清空vuex的医生模板信息
       clearCurrentDocSchedule(){
@@ -744,5 +765,69 @@
   }
   .page-body {
     height: calc(90vh - 300px);
+  }
+
+  /******************科室标签*********************/
+  .setting-tag{
+    display: inline-block;
+    width: 100%;
+    min-height: 47px;
+    background: #f3f6fb;
+    padding: 20px 25px 10px;
+    box-sizing: border-box;
+  }
+  .setting-tag>.active{
+    background: rgb(29,143,255);
+  }
+  .setting-tag>.active>span,.setting-tag>.active>i,.setting-tag>.active:hover>i{
+    color: #fff;
+  }
+  .setting-tag>div>i{
+    font-size: 10px;
+    cursor: pointer;
+    color: #aaa;
+  }
+  .setting-tag>div>i:hover{
+    color: rgb(29,143,255);
+  }
+  .setting-tag>div{
+    display: inline-block;
+    float: left;
+    min-width: 90px;
+    height: 25px;
+    line-height: 25px;
+    background: #fff;
+    color: #666;
+    padding: 0 10px;
+    box-sizing: border-box;
+    cursor: default;
+    border-radius: 2px;
+    position: relative;
+    bottom: 0px;
+    margin:0 10px 10px 0;
+  }
+  .setting-tag>div:hover{
+    box-shadow: 0 0 5px rgba(62,82,179, 0.2);
+  }
+  .back-btn{
+    background: transparent !important;
+    border: 1px solid rgb(29,143,255);
+    color:rgb(29,143,255);
+  }
+  .back-btn>span{
+    color:rgb(29,143,255);
+  }
+  .back-btn:hover{
+    background: rgb(29,143,255) !important;
+    box-shadow: 0 0 5px rgba(29,143,255, 0.3) !important;
+  }
+  .back-btn:hover>span{
+    color:#fff;
+  }
+  .back-btn>i{
+    color:rgb(29,143,255) !important;
+  }
+  .back-btn:hover>i{
+    color:#fff !important;
   }
 </style>

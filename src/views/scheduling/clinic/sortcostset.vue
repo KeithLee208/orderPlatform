@@ -7,7 +7,6 @@
       </router-link>
       <span>设置费用及号序</span>
     </div>
-
     <div class="set-body">
       <div class="info-detail">查看设置详情</div>
       <el-form ref="form" :model="form" label-width="80px">
