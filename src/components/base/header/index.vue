@@ -41,7 +41,8 @@
     data(){
         return{
             userInfo:{
-                type:'科室'
+                type:'科室',
+                yydm:'001'
             }
         }
     },
@@ -53,7 +54,8 @@
     methods:{
       setUserInfo(type){
           this.userInfo.type = type;
-          this.$store.commit('login/SET_USERINFO',this.userInfo)
+          this.userInfo.yydm = '001';
+          this.$store.commit('login/SET_USERINFO',this.userInfo);
       }
     }
   }

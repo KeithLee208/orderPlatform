@@ -11,6 +11,7 @@ const state = {
   crumbs:{
     tptable:[]
   },//面包屑对象集合
+  mbdm:[],//点击卡片传递所选科室代码
   currentDocSchedule:{},//当前所选医生出班表
   currentTemplateSet:{
     ksdm:'',
@@ -70,6 +71,10 @@ const mutations = {
   //更新当前选择科室列表
   SET_CURSELDEPARTLIST(state,data){
     state.curSelDepartList =  data;
+  },
+  //卡片页点击传递科室代码
+  POST_MBDM(state,data){
+    state.mbdm=data;
   }
 };
 

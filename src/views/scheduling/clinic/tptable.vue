@@ -229,17 +229,20 @@
       //获取已选科室列表
       getCheckList(){
         this.checkList = this.$store.state.scheduling.curSelDepartList;
-        console.log(this.checkList);
+        alert(this.$store.state.login.userInfo.type);
       },
       //数据初始化
       dataInit(){
+        console.log(this.$store.state.scheduling.mbdm )
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.$store.state.login.userInfo.kstybm || '20000000.2.2.3202',
-          mbdm: this.$store.state.login.userInfo.mbdm || '001',
+          ksdm: this.$store.state.login.userInfo.ksdm||'20000000.2.2.3202',
+//          ksdm: this.$store.state.login.userInfo.ksdm,
+          mbdm: this.$store.state.scheduling.mbdm||'001' ,
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
           this.TpCard = data;
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+          console.log(arr.classifyArr(data, 'ysdm'))
           this.loading = false;
       }).catch(err => {
           console.log(err);
@@ -248,7 +251,7 @@
       //数据处理
       formatData(list){
         //医生→时间段→日期
-        let newArr = [];console.log('slotlist %o',this.timeSlot);
+        let newArr = [];
         list.map((item, index) => {
           newArr[index] = {"ysdm": item.name, "slot": []};
         this.timeSlot.map(slot => {
@@ -368,7 +371,7 @@
 
   .setting-main {
     width: 100%;
-    min-height: 790px;
+    /*min-height: 790px;*/
     display: inline-block;
     background: #fff;
     box-sizing: border-box;
@@ -546,7 +549,7 @@
     background: rgb(192, 229, 255);
   }
 
-  .ordered.disease {
+  .ordered.ZB {
     color: rgb(12, 175, 148);
     background: rgb(231, 250, 240);
   }

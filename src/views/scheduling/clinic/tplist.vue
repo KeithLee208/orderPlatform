@@ -60,12 +60,15 @@
             </div>
           </div>
         </div>
+        <div style="position: fixed;bottom: 0;left:0;width: 100%;box-sizing: border-box;padding: 0px 50px;height: 72px;background:#fff;z-index:9;line-height: 72px;border-top: 1px solid #ddd;
+        box-shadow:0 -1px 5px 0 rgba(221,221,221,.5) ">
         <span class="pull-right">
           <el-button class="btn-blue"  type="primary">导出</el-button>
           <router-link tag="span" to='/scheduling/clinic/tptable'>
              <el-button @click="postCheckList" class="btn-blue"  type="primary">设置出班</el-button>
           </router-link>
         </span>
+        </div>
       </div>
     </div>
     <el-dialog title="设置费用及号序" :visible.sync="SettingVisible" size="large" top="5%">
@@ -282,6 +285,7 @@
         this.TpListInit(); //科室列表
         this.DiseaseInit(); //专病病种
         this.OutTimeInit(); //出诊时间
+        console.log(this.$store.state.login.userInfo);
     })
     },
     methods: {
@@ -295,7 +299,6 @@
         let checkedCount = this.checkedAttlist.length;
         this.attList[index].allChecked = checkedCount === this.attList[index].children.length;
         this.attList[index].isIndeterminate = checkedCount > 0 && checkedCount < this.attList[index].children.length;
-        console.log(this.attList[index].isIndeterminate);
       },
       //获取面包屑数据
       getCrumbs(){
@@ -482,7 +485,7 @@
 
   .setting-body {
     width: 100%;
-    padding: 20px;
+    padding: 20px 20px 80px;
     box-sizing: border-box;
     display: inline-block;
   }

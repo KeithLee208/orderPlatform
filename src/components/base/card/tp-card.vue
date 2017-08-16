@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition name="el-zoom-in-top">
-      <router-link   :to="{path:$store.state.login.userInfo.type === '科室'?
+      <router-link :to="{path:$store.state.login.userInfo.type === '科室'?
                 '/scheduling/clinic/tptable':'/scheduling/clinic/tplist'}"
                      exact tag="span">
       <div v-if="CardShow" class="tp-card">
