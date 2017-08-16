@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-default/index.css'
 import wnhttp from "../api/wnhttp";
 Vue.config.productionTip = false
 Vue.use(ElementUI);
-Vue.use(wnhttp, { mode: 'mock' });
+Vue.use(wnhttp, { mode: 'dev' });
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
