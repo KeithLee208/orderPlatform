@@ -38,7 +38,7 @@
               <span>{{slot.sjdmc}}</span>
               <span v-for="week in slot.weekday">
                     <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule(week)">
-                      <p>{{week.kssj | timeFormat}}-{{week.jssj |timeFormat}}</p>
+                      <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule()" class="icon iconfont icon-shanchu"></i>
                     </span>
@@ -230,6 +230,7 @@
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
           this.$message('无医生信息');
+          this.loading=false;
         }
       },
       //获取各种字典数据
@@ -243,9 +244,9 @@
       //获取医生出班模板列表
       getDocScheduleList(){
         let params = {
-          ksdm:'',
-          ysdm:'',
-          yydm:this.$store.state.login.userInfo.yydm
+          ksdm : this.$store.state.scheduling.currentTemplateSet.ksdm,
+          mbdm : this.$store.state.scheduling.currentTemplateSet.mbdm,
+          ysdm : this.$store.state.scheduling.currentTemplateSet.ysdm,
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
@@ -286,7 +287,7 @@
               }
             })
             newArr[index].slot.push(slot);
-        this.loading=false;
+            this.loading=false;
           });
         });
         return newArr;
@@ -351,8 +352,7 @@
       },
       //保存/新增接口
       save(){
-        console.log(this.form);
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { update: [this.singleSchedule]}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.singleSchedule],isCover:false}).then(data => {
           this.$message('保存成功');
         }).catch(err => {
           console.log(err);

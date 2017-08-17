@@ -13,10 +13,7 @@ const state = {
   },//面包屑对象集合
   mbdm:[],//点击卡片传递所选科室代码
   currentDocSchedule:{},//当前所选医生出班表
-  currentTemplateSet:{
-    ksdm:'',
-    ysdm:''
-  },//当前出班模板设置
+  currentTemplateSet:{},//当前出班模板设置
   channalList:[],//预约渠道列表
   curSelDepartList:[]//当前选择科室列表
 };
@@ -60,9 +57,8 @@ const mutations = {
     state.currentDocSchedule =  data;
   },
   //更新当前出班模板设置
-  SET_CURRENTTEMPLATESET(state,payload){
-    state.currentTemplateSet[payload.key] =  payload.value;
-    console.log(state.currentTemplateSet);
+  SET_CURRENTTEMPLATESET(state,data){
+    state.currentTemplateSet = data;
   },
   //更新预约渠道
   SET_CHANNALLIST(state,data){

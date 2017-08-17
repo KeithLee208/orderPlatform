@@ -117,7 +117,7 @@
                 <div class="table-body">
                   <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                     <span>{{slot.sjdmc}}</span>
-                  <span v-for="week in slot.weekday">
+                  <span v-for="week in slot.weekday" key="week.zbxh">
                     <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
                       <div class="fixed-info">
                         <div class="fixed-body">
@@ -142,9 +142,13 @@
                             <span class="fixed-label">号源数量：</span>
                             <span>{{week.hxzs}}</span>
                           </p>
+                           <p>
+                            <span class="fixed-label">医生名称：</span>
+                            <span>{{week.ysmc}}</span>
+                          </p>
                         </div>
                         <div class="fixed-footer">
-                           <router-link @click.native="selectDoc(item)" to="/scheduling/clinic/tpset">
+                           <router-link @click.native="selectDoc(week)" to="/scheduling/clinic/tpset">
                                 <el-button type="text" size="small">查看详情</el-button>
                              </router-link>
                         </div>
@@ -226,7 +230,6 @@
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
-        console.log(this.serviceTypeList)
       },
       //获取时间段列表
       getTimeSlot(){
@@ -239,8 +242,6 @@
       },
       //数据初始化
       dataInit(){
-        console.log('模板代码 %o',this.$store.state.scheduling.mbdm)
-        console.log('可是代码 %o',this.$store.state.scheduling.ksdm)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
@@ -252,6 +253,8 @@
           else{
             this.TpCard = data;
             this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+            console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
+            console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
             this.loading = false;
           }
 
@@ -264,43 +267,42 @@
         //医生→时间段→日期
         let newArr = [];
         list.map((item, index) => {
-          newArr[index] = {"ysdm": item.name, "slot": []};
-        this.timeSlot.map(slot => {
-          slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
-        item.children.map(week => {
-          newArr[index].ysmc = week.ysmc;
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期一') {
-          slot.weekday[0] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期二') {
-          slot.weekday[1] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期三') {
-          slot.weekday[2] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期四') {
-          slot.weekday[3] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期五') {
-          slot.weekday[4] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期六') {
-          slot.weekday[5] = week;
-        }
-        if (week.sjddm == slot.sjddm && week.cbrqlx == '星期天') {
-          slot.weekday[6] = week;
-        }
-      })
-        newArr[index].slot.push(slot);
-      })
-        ;
-      })
-        ;
+          newArr[index] = arr.clone(item);
+          newArr[index].slot = [];
+          this.timeSlot.map((slot) => {
+            slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
+            item.children.map((week) => {
+              newArr[index].ysmc = week.ysmc;
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期一') {
+                slot.weekday.splice(0,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期二') {
+                slot.weekday.splice(1,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期三') {
+                slot.weekday.splice(2,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期四') {
+                slot.weekday.splice(3,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期五') {
+                slot.weekday.splice(4,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期六') {
+                slot.weekday.splice(5,1,arr.clone(week));
+              }
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期天') {
+                slot.weekday.splice(6,1,arr.clone(week));
+              }
+            })
+            newArr[index].slot.push(slot);
+          });
+      });
         return newArr;
       },
       //选择医生进入排班设置页
       selectDoc(item){
-        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {key: 'ysdm', value: item.ysdm})
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', item)
       },
       MsgSuccess() {
         this.SettingVisible = false;
@@ -347,7 +349,7 @@
       },
       //门办设置出班模板，清空vuex的医生模板信息
       clearCurrentDocSchedule(){
-        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {key: 'ysdm', value: ''})
+        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {})
       }
     },
     filters: {
