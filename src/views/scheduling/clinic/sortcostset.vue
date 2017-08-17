@@ -12,16 +12,15 @@
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="服务类型">
           <div class="type-filter in-model">
-            <span><i class="el-icon-menu all"></i>全部</span>
             <span v-for="(item,index) in formOptions.serviceType.list">
-                <i @click="formOptions.serviceType.activeIndex = index"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
+                <i @click="fwlxChange(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
           </div>
         </el-form-item>
         <el-form-item label="选择科室">
-          <el-select v-model="form.ksdmList" multiple filterable placeholder="请选择">
-            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksbm">
+          <el-select @change="handlerDepartChange" v-model="form.ksdmList"  filterable placeholder="请选择">
+            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
             </el-option>
           </el-select>
         </el-form-item>
@@ -43,9 +42,9 @@
         </el-form-item>
         <el-form-item label="出诊时间">
           <el-col :span="8">
-            <el-checkbox-group v-model="form.sjddm">
-              <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
-            </el-checkbox-group>
+            <el-radio-group v-model="form.sjddm">
+              <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
+            </el-radio-group>
           </el-col>
           <!--<el-col :span="10">-->
           <!--<el-form-item label="时间段">-->
@@ -128,18 +127,11 @@
     data(){
       return{
         form:{
-          fwlxdm:'',
+          fwlxList:['PT'],
           ysdmList:[],
-          disease:'',
           ksdmList:[],
           cbrqlx:[],
-          time:'',
           sjddm:[],
-          czdz:'',
-          note:'',
-          desc: '',//
-          cost: '',//服务总费用
-          ordertype:'',
         },
         formOptions:{
           serviceType:{
@@ -179,11 +171,6 @@
               {name:"周六",val:"星期六"},
               {name:"周日",val:"星期日"}]
           },
-          time:{
-            isShow:true,
-            isEdit:true,
-            list:[]
-          },
           slotTime:{
             isShow:true,
             isEdit:true,
@@ -200,46 +187,7 @@
         },//表单控制
         timeSlot:[],//时间段列表
         channalList:[],
-        channal:[
-          {
-            name:'非预约',
-            num:5,
-            type:'default',
-            edit:false,
-            children:[]
-
-          },
-          {
-            name:'院内预约',
-            num:3,
-            type:'hospital',
-            edit:false,
-            children: []
-          },
-          {
-            name:'官微预约',
-            num:4,
-            type:'wechat',
-            edit:false,
-            children:[]
-          },
-          {
-            name:'挂号网预约',
-            num:2,
-            type:'web',
-            edit:false,
-            children:
-              []
-          },
-          {
-            name:'官网预约',
-            num:1,
-            type:'official',
-            edit:false,
-            children:
-              []
-          }
-        ],
+        channal:[],
         ball:false,
         ballList:[],
         styleArr:[
@@ -265,7 +213,7 @@
       getDicData(){
         this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
         this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-        this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
+//        this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
         this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
@@ -280,6 +228,7 @@
           });
           this.$store.commit('scheduling/SET_CHANNALLIST',data);
           this.channalList = data;
+          console.log(this.channalList)
         }).catch(err => {
           console.log(err);
         });
@@ -317,9 +266,32 @@
       datadragEnd (evt){
 
       },
+      //科室选择不同医生
+      handlerDepartChange(val){
+        this.form.ysdmList=[];
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm:val}).then(data => {
+          this.formOptions.doctor.list = data;
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //服务类型切换
+      fwlxChange(index){
+        this.formOptions.serviceType.activeIndex = index;
+        this.form.fwlxList=this.formOptions.serviceType.list[index].mzlx;
+        console.log(this.form.fwlxList);
+      },
       //保存
       save(){
         console.log('保存 %o',this.form);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:false}).then(data => {
+          this.$message('保存成功');
+        }).catch(err => {
+          console.log(err);
+          //这里错误有2种错误
+          //1. 服务端业务错误，错误码邮件中有
+          //2. 网络错误，本地网络断开、超时等
+        });
       }
     },
     directives: {
