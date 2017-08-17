@@ -64,7 +64,7 @@
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select v-model="form.ksmc" filterable  placeholder="请选择" @change="handlerDepartChange">
+        <el-select v-model="form.ksdm" filterable  placeholder="请选择" @change="handlerDepartChange">
           <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
           </el-option>
         </el-select>
@@ -370,6 +370,9 @@
                           .filter(item => item.lx == 'ZLF')[0].mxxh;
         this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
         this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
+
+        this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
+        this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
       },
       MsgSuccess() {
         this.SubmitVisible = false;
@@ -390,10 +393,9 @@
       },
       //保存/新增接口
       save(){
+        this.formDataFormat();
         console.log('入参 %o',this.form);
-        console.log('医生列表 %o',this.formOptions.doctor.list);
-        return false;
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.singleSchedule],isCover:false}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:false}).then(data => {
           this.$message('保存成功');
         }).catch(err => {
           console.log(err);
