@@ -57,16 +57,15 @@
             key:'tptable',
             val:[card.mbmc,'科室']
           })
-          console.log('模板代码 %o',card.mbdm);
-          this.$store.commit('scheduling/POST_MBDM',card.mbdm)
+          this.$store.commit('scheduling/SET_MBDM',card.mbdm)
         }
         else if(this.$store.state.login.userInfo.type === '门办'){
           this.$store.commit('scheduling/SET_CRUMBS',{
             key:'tplist',
             val:[card.mbmc]
           })
+          this.$store.commit('scheduling/SET_MBDM',card.mbdm)
         }
-
       },
       cardlistInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '',yydm:this.$store.state.login.userInfo.yydm }).then(data => {

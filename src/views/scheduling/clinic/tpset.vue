@@ -243,10 +243,11 @@
       //获取医生出班模板列表
       getDocScheduleList(){
         let params = {
-          ksdm:'',
-          ysdm:'',
+          ksdm:this.$store.state.scheduling.currentTemplateSet.ksdm,
+          ysdm:this.$store.state.scheduling.currentTemplateSet.ysdm,
           yydm:this.$store.state.login.userInfo.yydm
         };
+        console.log(params);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
         }).catch(err => {

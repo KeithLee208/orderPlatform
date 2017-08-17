@@ -285,7 +285,7 @@
         this.TpListInit(); //科室列表
         this.DiseaseInit(); //专病病种
         this.OutTimeInit(); //出诊时间
-        console.log(this.$store.state.login.userInfo);
+
     })
     },
     methods: {
@@ -389,7 +389,6 @@
         let newArr = listArray.classifyCheckArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
-        console.log( this.attList);
         this.loading=false;
         for (var i = 0; i < data.length; i++) {
           selcetArr.push({
