@@ -39,13 +39,13 @@
                 <span class="icon-group">
                   <el-tooltip v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark"
                               content="设置出班模板" placement="bottom">
-                     <!--<router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">-->
-                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
-                     <!--</router-link>-->
+                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
                   </el-tooltip>
                   <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark"
                               content="提交至门办" placement="bottom">
-
+                      <router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">
+                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
+                           </router-link>
                   </el-tooltip>
                 </span>
                <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
@@ -198,7 +198,9 @@
     },
     created(){
       this.$nextTick(() => {
-        this.init();
+        setTimeout(_ => {
+          this.init();
+        },0);
     })
     },
     methods: {
@@ -232,16 +234,22 @@
       },
       //数据初始化
       dataInit(){
-        console.log(this.$store.state.scheduling.mbdm )
+        console.log('模板代码 %o',this.$store.state.scheduling.mbdm)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
-          mbdm: '001' ,
+          mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
-          this.TpCard = data;
-          this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+          if(data==''){
+            this.loading = false;
+          }
+          else{
+            this.TpCard = data;
+            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+            this.loading = false;
+          }
           console.log(arr.classifyArr(data, 'ysdm'))
-          this.loading = false;
+
       }).catch(err => {
           console.log(err);
         });
