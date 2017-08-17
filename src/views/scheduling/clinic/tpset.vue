@@ -248,6 +248,7 @@
           mbdm : this.$store.state.scheduling.currentTemplateSet.mbdm,
           ysdm : this.$store.state.scheduling.currentTemplateSet.ysdm,
         };
+        console.log(params);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
         }).catch(err => {

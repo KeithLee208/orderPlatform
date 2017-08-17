@@ -15,7 +15,8 @@ const state = {
   currentDocSchedule:{},//当前所选医生出班表
   currentTemplateSet:{},//当前出班模板设置
   channalList:[],//预约渠道列表
-  curSelDepartList:[]//当前选择科室列表
+  curSelDepartList:[],//当前选择科室列表
+  SelDepartListKsdm:[]//门办已选科室列表进入详情页科室代码
 };
 
 // state 中派生出一些状态
@@ -67,11 +68,12 @@ const mutations = {
   //更新当前选择科室列表
   SET_CURSELDEPARTLIST(state,data){
     state.curSelDepartList =  data;
-    console.log( state.curSelDepartList)
+
   },
-  //卡片页点击传递科室代码
-  POST_MBDM(state,data){
+  //卡片页点击传递模板代码
+  SET_MBDM(state,data){
     state.mbdm=data;
+    console.log('模板代码',state.mbdm);
   }
 };
 

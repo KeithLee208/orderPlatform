@@ -55,15 +55,6 @@
                <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
                </el-dialog>
 
-               <el-dialog title="当前已设置" :close-on-click-modal="false" :visible.sync="SubmitVisible" size="tiny">
-                <div class="infolist">
-                  提交至门办（接口）
-                </div>
-                  <span slot="footer" class="dialog-footer">
-                  <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
-                  <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
-                </span>
-              </el-dialog>
                  <!--导出-->
               <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny">
               <span>
@@ -103,7 +94,8 @@
               <span>周六</span>
               <span>周日</span>
             </div>
-            <div v-for="item in templateData" class="AdTable">
+            <router-link to="/scheduling/clinic/tpset">
+            <div @click="selectDoc(item)" v-for="item in templateData" class="AdTable">
               <div class="AdTableLeft">
                 <div>
                   <i></i>
@@ -115,7 +107,7 @@
               </div>
               <div class="AdTableRight">
                 <div class="table-body">
-                  <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
+                  <div  v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                     <span>{{slot.sjdmc}}</span>
                   <span v-for="week in slot.weekday" key="week.zbxh">
                     <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
@@ -163,6 +155,7 @@
                 </div>
               </div>
             </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -219,9 +212,9 @@
         this.getServiceType();
         //获取时间段
         this.getTimeSlot();
-        this.dataInit();
         //获取已选科室列表
         this.getCheckList();
+        this.dataInit();
       },
       //获取面包屑
       getCrumbs(){
@@ -243,7 +236,7 @@
       //数据初始化
       dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
+          ksdm: this.checkList[0].ksbm ||'20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
@@ -319,8 +312,10 @@
       },
       selection(index) {
         this.checkLIstActive = index;
+        console.log(this.checkList[index].ksbm);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.checkList[index].ksdm,
+//            this.checkList[index].ksbm ||
+          ksdm: '20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001',
         }).then(data => {
@@ -479,12 +474,16 @@
 
   .AdTable {
     position: relative;
-    margin: 0 0 10px 0;
+    padding: 10px;
     display: inline-block;
     width: 100%;
+    transition:all .2s;
+    box-shadow: 0 0 15px rgba(63,81,181, 0);
   }
-
-  .AdTableLeft > div {
+ .AdTable:hover{
+   box-shadow: 0 0 15px rgba(63,81,181, 0.5);
+}
+.AdTableLeft > div {
     height: 166px;
     line-height: 166px;
   }
