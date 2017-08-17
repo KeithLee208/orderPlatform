@@ -64,14 +64,14 @@
         </div>
       </el-form-item>
       <el-form-item label="选择科室">
-        <el-select v-model="form.ksmc"  placeholder="请选择">
-          <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
+        <el-select v-model="form.ksmc" filterable  placeholder="请选择" @change="handlerDepartChange">
+          <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form.ysmc" :placeholder='form.ysmc'>
-          <el-option v-for="item in formOptions.doctor.list" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
+        <el-select v-model="form.ysdm"  :placeholder='form.ysdm'>
+          <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择病种">
@@ -119,15 +119,27 @@
     data() {
       return {
         form:{
+          cbrqlx: '',
+          cbzt: 'ZC',
+          czdz: '',
+          czry: 'EMP.20000000.00',
+          fscj: '',
           fwlxdm:'',
-          ysmc:'',
-          disease:'',
+          ghfdm:'',
+          hxzs:'',
+          jssj:'',
+          ksdm:'',
           ksmc:'',
-          cbrqlx:'',
-          time:'',
+          kssj:'',
+          lrsj:'',
+          mbdm:'',
+          mxxh:'',
           sjddm:'',
-          czdz:'',
-          note:''
+          ysdm:'',
+          ysmc:'',
+          yxzt:'',
+          zbxh:'',
+          zlfdm:''
         },
         formOptions:{
           serviceType:{
@@ -236,10 +248,18 @@
       //获取各种字典数据
       getDicData(){
           this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-          this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
+//          this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
           this.formOptions.department.list = this.$store.state.scheduling.departmentList;
           this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
           this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //科室选择不同医生
+      handlerDepartChange(val){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm:'20000000.2.2.3202'}).then(data => {
+          this.formOptions.doctor.list = data;
+        }).catch(err => {
+          console.log(err);
+        });
       },
       //获取医生出班模板列表
       getDocScheduleList(){
@@ -298,7 +318,7 @@
         //修改添加/保存状态
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
-        this.singleSchedule = item;
+        this.form = item;
         this.setForm(item);
       },
       //表单填充策略
@@ -311,29 +331,45 @@
         //修改添加/保存状态
         this.isAdd = true;
         let _data = {
-          cbrqlx: '',
-          cbzt: '',
-          czdz: '',
-          czry: '',
-          fscj: '',
-          fwlxdm:'',
-          ghfdm:'',
-          hxzs:'',
-          jssj:'',
-          ksdm:'',
-          ksmc:'',
-          kssj:'',
-          lrsj:'',
-          mbdm:'',
+          cbrqlx: '',//必填:表单获取
+          cbzt: 'ZC',//必填:默认值
+          czdz: '',//必填:表单获取
+          czry: 'EMP.20000000.00',//必填:登录信息
+          yxzt:'YX',//必填:默认值
+          mbdm:this.$store.state.scheduling.currentTemplateSet.mbdm,//必填
+
+          fwlxdm:'',//必填:表单获取
+          ghfdm:'',//必填:服务类型列表 数据转换
+          zlfdm:'',//必填:服务类型列表 数据转换
+
+          sjddm:'',//必填:表单获取
+          kssj:'8:00',//必填:时间段列表 数据转换
+          jssj:'12:00',//必填:时间段列表 数据转换
+
+          ysdm:'',//必填:医生列表 数据转换
+          ysmc:'',//必填:表单获取
+
+          ksdm: '',//必填:科室列表 数据转换
+          ksmc:'',//必填:表单获取
+
           mxxh:'',
-          sjddm:'',
-          ysdm:'',
-          ysmc:'',
-          yxzt:'',
+          hxzs:'',
+          fscj: '',
+          lrsj:'',
           zbxh:'',
-          zlfdm:''
         };
         this.setForm(_data);
+      },
+      //数据转换
+      formDataFormat(){
+        this.form.ghfdm = this.formOptions.serviceType.list
+                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
+                          .filter(item => item.lx == 'GHF')[0].mxxh;
+        this.form.zlfdm = this.formOptions.serviceType.list
+                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
+                          .filter(item => item.lx == 'ZLF')[0].mxxh;
+        this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
+        this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
       },
       MsgSuccess() {
         this.SubmitVisible = false;
@@ -349,10 +385,14 @@
         });
       },
       selection(index) {
+        this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         this.formOptions.serviceType.activeIndex = index;
       },
       //保存/新增接口
       save(){
+        console.log('入参 %o',this.form);
+        console.log('医生列表 %o',this.formOptions.doctor.list);
+        return false;
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.singleSchedule],isCover:false}).then(data => {
           this.$message('保存成功');
         }).catch(err => {
@@ -362,6 +402,7 @@
           //2. 网络错误，本地网络断开、超时等
         });
       },
+
       //删除
       delSchedule(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: {mxxh:'0001'}}).then(data => {

@@ -8,6 +8,9 @@ const state = {
     yydm:'001',
     ksdm:'20000000.2.2.3202'
   },//登录信息
+  userAuth:{
+    type:'科室'
+  }
 };
 
 // state 中派生出一些状态
