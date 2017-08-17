@@ -14,13 +14,13 @@
           <div class="type-filter in-model">
             <span><i class="el-icon-menu all"></i>全部</span>
             <span v-for="(item,index) in formOptions.serviceType.list">
-                <i @click="formOptions.serviceType.activeIndex = index"  :class="[item.fwlxdm,{active:formOptions.serviceType.activeIndex==index}]"></i>
+                <i @click="formOptions.serviceType.activeIndex = index"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
           </div>
         </el-form-item>
         <el-form-item label="选择科室">
-          <el-select v-model="form.ksdmList" multiple  placeholder="请选择">
+          <el-select v-model="form.ksdmList" multiple filterable placeholder="请选择">
             <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.ksbm">
             </el-option>
           </el-select>
@@ -206,63 +206,22 @@
             num:5,
             type:'default',
             edit:false,
-            children:
-              [
-                {
-                  name:88,
-                },
-                {
-                  name:89
-                },
-                {
-                  name:90
-                },
-                {
-                  name:91
-                },
-                {
-                  name:92
-                },
-              ]
+            children:[]
+
           },
           {
             name:'院内预约',
             num:3,
             type:'hospital',
             edit:false,
-            children:
-              [
-                {
-                  name:1
-                },
-                {
-                  name:2
-                },
-                {
-                  name:3
-                }
-              ]
+            children: []
           },
           {
             name:'官微预约',
             num:4,
             type:'wechat',
             edit:false,
-            children:
-              [
-                {
-                  name:78
-                },
-                {
-                  name:79
-                },
-                {
-                  name:60
-                },
-                {
-                  name:81
-                }
-              ]
+            children:[]
           },
           {
             name:'挂号网预约',
@@ -270,14 +229,7 @@
             type:'web',
             edit:false,
             children:
-              [
-                {
-                  name:18
-                },
-                {
-                  name:19
-                }
-              ]
+              []
           },
           {
             name:'官网预约',
@@ -285,11 +237,7 @@
             type:'official',
             edit:false,
             children:
-              [
-                {
-                  name:1
-                }
-              ]
+              []
           }
         ],
         ball:false,
@@ -468,12 +416,12 @@
     background: rgb(192, 229, 255);
   }
 
-  .type-filter > span > .disease {
+  .type-filter > span > .ZB {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
   }
 
-  .type-filter > span > .disease.active {
+  .type-filter > span > .ZB.active {
     background: rgb(188, 241, 212);
   }
 

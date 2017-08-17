@@ -2,7 +2,6 @@
   <div class="Scheduling-body">
    <div class="filter-warrper">
       <div class="Scheduling-tab">
-
         <!--<router-link to="/scheduling/department/worktable" exact tag="span">科室出班表</router-link>-->
         <!--<router-link to="/scheduling/department/templatesetting" tag="span">科室排班模板</router-link>-->
         <!--<router-link to="/scheduling/medical/wordtable" exact tag="span">医务科出班表</router-link>-->
@@ -66,7 +65,7 @@
       },
         //获取医院所有预约科室
         getDepartmentList(){
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm: '20000000.1.1.0320',yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
             console.log(err);
@@ -74,7 +73,7 @@
         },
         //获取医生列表
       getDocList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm: '20000000.1.1.0320',yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {
           console.log('Q04 %o', data);
           this.$store.commit('scheduling/SET_DOCTORLIST',data)
         }).catch(err => {

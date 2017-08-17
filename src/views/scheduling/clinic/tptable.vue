@@ -41,11 +41,8 @@
                               content="导出" placement="bottom">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
                   </el-tooltip>
-                   <el-tooltip  v-if="$store.state.login.userInfo.type === '科室'" @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
-                                content="设置出班模板" placement="bottom">
-                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
-                  </el-tooltip>
-                  <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark"
+
+                  <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
                               content="提交至门办" placement="bottom">
                       <router-link tag="span"  to="/scheduling/clinic/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
@@ -214,7 +211,13 @@
         this.getTimeSlot();
         //获取已选科室列表
         this.getCheckList();
-        this.dataInit();
+        if(this.$store.state.login.userInfo.type === '门办'){
+          this.mbdataInit();
+        }
+        else if(this.$store.state.login.userInfo.type === '科室'){
+          this.ksdataInit();
+        }
+
       },
       //获取面包屑
       getCrumbs(){
@@ -233,10 +236,10 @@
         this.checkList = this.$store.state.scheduling.curSelDepartList;
 
       },
-      //数据初始化
-      dataInit(){
+      //科室数据初始化
+      ksdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.checkList[0].ksbm ||'20000000.2.2.3202',
+          ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
@@ -252,6 +255,29 @@
           }
 
       }).catch(err => {
+          console.log(err);
+        });
+      },
+      //门办数据初始化
+      mbdataInit(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
+          ksdm: this.checkList[0].ksbm ||'20000000.2.2.3202',
+
+          mbdm: this.$store.state.scheduling.mbdm || '001',
+          yydm: this.$store.state.login.userInfo.yydm || '001'
+        }).then(data => {
+          if(data==''){
+            this.loading = false;
+          }
+          else{
+            this.TpCard = data;
+            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+            console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
+            console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
+            this.loading = false;
+          }
+
+        }).catch(err => {
           console.log(err);
         });
       },
