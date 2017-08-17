@@ -48,7 +48,7 @@
     },
     methods: {
       init(){
-
+        cardlistInit();
       },
 
       handleLinkTo(card){
@@ -65,7 +65,6 @@
             key:'tplist',
             val:[card.mbmc]
           })
-          this.$store.commit('scheduling/POST_MBDM',[card.mbdm])
         }
 
       },
@@ -87,18 +86,19 @@
           mbmc:this.form.name
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S00", params).then(data => {
-          console.log(data);
           this.creatVisible = false;
           this.$message({
             message: '创建成功！',
             type: 'success'
           });
+
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
         });
+        this.cardlistInit();
       }
     }
   }
@@ -111,7 +111,7 @@
     width: 100%;
   }
   .page-main{
-    height: calc(100vh - 250px);
+    min-height: calc(100vh - 250px);
   }
   .page-head {
     box-sizing: border-box;

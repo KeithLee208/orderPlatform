@@ -6,21 +6,21 @@
                      exact tag="span">
       <div v-if="CardShow" class="tp-card">
         <div class="tp-card-head">
-          <p v-if="$store.state.login.userInfo.type === '医务科'">
-            <span class="tp-card-title">{{card.mbmc}}</span>
-            <span v-if="card.shzt==='TG'" class="pull-right">
-           <span class="start">审核通过</span>
-         </span>
-            <span v-if="card.shzt==='BG'" class="pull-right">
-           <span class="unstart">不通过</span>
-         </span>
-            <span v-if="card.shzt==='WS'" class="pull-right">
-           <span class="unstart">未审核</span>
-         </span>
-            <span v-if="card.shzt==='SZ'" class="pull-right">
-           <span class="unstart">审核中</span>
-         </span>
-          </p>
+          <!--<p v-if="$store.state.login.userInfo.type === '医务科'">-->
+            <!--<span class="tp-card-title">{{card.mbmc}}</span>-->
+            <!--<span v-if="card.shzt==='TG'" class="pull-right">-->
+           <!--<span class="start">审核通过</span>-->
+         <!--</span>-->
+            <!--<span v-if="card.shzt==='BG'" class="pull-right">-->
+           <!--<span class="unstart">不通过</span>-->
+         <!--</span>-->
+            <!--<span v-if="card.shzt==='WS'" class="pull-right">-->
+           <!--<span class="unstart">未审核</span>-->
+         <!--</span>-->
+            <!--<span v-if="card.shzt==='SZ'" class="pull-right">-->
+           <!--<span class="unstart">审核中</span>-->
+         <!--</span>-->
+          <!--</p>-->
           <p v-if="$store.state.login.userInfo.type === '科室'">
             <span class="tp-card-title">{{card.mbmc}}</span>
             <span v-if="card.shzt==='TG'" class="pull-right">
@@ -41,7 +41,7 @@
         </div>
         <div class="tp-card-body">
           <p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">
-            <span>科室数量：</span>
+            <span>已提交科室数量：</span>
             <span>{{card.DepartmentNum}}</span>
           </p>
           <p v-for="template in card.fwlxtj">
@@ -49,7 +49,7 @@
             <span class="tp-num pull-right">{{template.fwlxsl}}</span>
           </p>
           <transition name="el-fade-in-linear">
-            <div v-on:click.stop="deleteCard()" class="tp-card-close">
+            <div v-if="$store.state.login.userInfo.type != '科室'" v-on:click.stop="deleteCard()" class="tp-card-close">
               <i class="el-icon-close"></i>
             </div>
           </transition>

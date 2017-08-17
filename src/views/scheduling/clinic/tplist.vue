@@ -389,13 +389,14 @@
         let newArr = listArray.classifyCheckArr(data, 'sjksbm');
         let selcetArr = [];
         this.attList = newArr;
+        console.log( this.attList);
         this.loading=false;
         for (var i = 0; i < data.length; i++) {
           selcetArr.push({
             ksbm: data[i].ksbm,
             ksmc: data[i].ksmc
           });
-          this.checkList.push(data[i].ksmc);
+          this.checkList.push({ksmc:data[i].ksmc,ksbm:data[i].ksmc});
         }
         this.form.DepartOptions = selcetArr;
       }).catch(err => {

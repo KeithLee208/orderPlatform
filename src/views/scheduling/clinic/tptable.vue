@@ -37,13 +37,17 @@
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
-                  <el-tooltip v-if="$store.state.login.userInfo.type === '门办'" class="item" effect="dark"
-                              content="设置出班模板" placement="bottom">
+                  <el-tooltip  v-if="$store.state.login.userInfo.type === '门办'"  class="item" effect="dark"
+                              content="导出" placement="bottom">
+                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
+                  </el-tooltip>
+                   <el-tooltip  v-if="$store.state.login.userInfo.type === '科室'" @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
+                                content="设置出班模板" placement="bottom">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
                   </el-tooltip>
                   <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" class="item" effect="dark"
                               content="提交至门办" placement="bottom">
-                      <router-link tag="span" @click.native="clearCurrentDocSchedule()" to="/scheduling/clinic/tpset">
+                      <router-link tag="span"  to="/scheduling/clinic/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
                            </router-link>
                   </el-tooltip>
@@ -231,10 +235,12 @@
       //获取已选科室列表
       getCheckList(){
         this.checkList = this.$store.state.scheduling.curSelDepartList;
+
       },
       //数据初始化
       dataInit(){
         console.log('模板代码 %o',this.$store.state.scheduling.mbdm)
+        console.log('可是代码 %o',this.$store.state.scheduling.ksdm)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
@@ -248,7 +254,6 @@
             this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
             this.loading = false;
           }
-          console.log(arr.classifyArr(data, 'ysdm'))
 
       }).catch(err => {
           console.log(err);
@@ -312,6 +317,25 @@
       },
       selection(index) {
         this.checkLIstActive = index;
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
+          ksdm: this.checkList[index].ksdm,
+          mbdm: this.$store.state.scheduling.mbdm || '001',
+          yydm: this.$store.state.login.userInfo.yydm || '001',
+        }).then(data => {
+          if(data==''){
+            this.$message('暂无数据');
+            this.loading = false;
+          }
+          else{
+            this.TpCard = data;
+            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+            this.loading = false;
+          }
+
+        }).catch(err => {
+          console.log(err);
+        });
+
       },
       selectDel(index){
         if(this.checkList.length==1)

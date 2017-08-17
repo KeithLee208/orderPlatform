@@ -71,6 +71,7 @@ const mutations = {
   //更新当前选择科室列表
   SET_CURSELDEPARTLIST(state,data){
     state.curSelDepartList =  data;
+    console.log( state.curSelDepartList)
   },
   //卡片页点击传递科室代码
   POST_MBDM(state,data){
