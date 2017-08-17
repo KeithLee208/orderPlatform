@@ -56,13 +56,14 @@
             key:'tptable',
             val:[card.mbmc,'科室']
           })
-          this.$store.commit('scheduling/POST_MBDM',[card.mbdm])
+          this.$store.commit('scheduling/POST_MBDM',card.mbdm)
         }
         else if(this.$store.state.login.userInfo.type === '门办'){
           this.$store.commit('scheduling/SET_CRUMBS',{
             key:'tplist',
             val:[card.mbmc]
           })
+          this.$store.commit('scheduling/POST_MBDM',[card.mbdm])
         }
       },
       cardlistInit() {
