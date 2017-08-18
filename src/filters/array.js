@@ -48,6 +48,7 @@ export function classifyArr (arr,key){
     }));
   arr.map(item => {
     newArr.map(newItem => {
+      newItem = clone(item);
       if(item[key] === newItem.name){
         // newItem.children.push({item});
         newItem.children[newItem.children.length] = item;

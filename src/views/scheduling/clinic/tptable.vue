@@ -43,7 +43,7 @@
                   </el-tooltip>
 
                   <el-tooltip v-if="$store.state.login.userInfo.type === '科室'" @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
-                              content="提交至门办" placement="bottom">
+                              content="设置出班模板" placement="bottom">
                       <router-link tag="span"  to="/scheduling/clinic/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
                            </router-link>
