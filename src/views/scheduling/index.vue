@@ -30,6 +30,7 @@
       this.$nextTick(() => {
           this.login().then(() => {
             this.init();
+            console.log('test in home.')
           });
       })
     },
