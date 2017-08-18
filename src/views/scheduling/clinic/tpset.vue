@@ -238,6 +238,7 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
+        console.log('医生',this.$store.state.scheduling.currentTemplateSet.ysmc);
         if(this.$store.state.scheduling.currentTemplateSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
@@ -335,8 +336,7 @@
           czdz: '',//必填:表单获取
           czry: 'EMP.20000000.00',//必填:登录信息
           yxzt:'YX',//必填:默认值
-          mbdm:this.$store.state.scheduling.currentTemplateSet.mbdm,//必填
-
+          mbdm:this.$store.state.scheduling.mbdm,//必填
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
@@ -344,13 +344,10 @@
           sjddm:'',//必填:表单获取
           kssj:'8:00',//必填:时间段列表 数据转换
           jssj:'12:00',//必填:时间段列表 数据转换
-
           ysdm:'',//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-
-          ksdm: '',//必填:科室列表 数据转换
+          ksdm: this.$store.state.login.userInfo.mbdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
-
           mxxh:'',
           hxzs:'',
           fscj: '',
@@ -369,7 +366,6 @@
                           .filter(item => item.lx == 'ZLF')[0].mxxh;
         this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
         this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
-
         this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
         this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
       },
