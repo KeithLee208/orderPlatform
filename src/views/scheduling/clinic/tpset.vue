@@ -40,10 +40,9 @@
                     <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule(week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
-                      <i v-on:click.stop="delSchedule()" class="icon iconfont icon-shanchu"></i>
+                      <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
                     <span v-else :class="['ordered']" @click="setNewSchedule()">
-
                     </span>
               </span>
             </div>
@@ -238,7 +237,6 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        console.log('医生',this.$store.state.scheduling.currentTemplateSet.ysmc);
         if(this.$store.state.scheduling.currentTemplateSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
@@ -389,9 +387,10 @@
       //保存/新增接口
       save(){
         this.formDataFormat();
-        console.log('入参 %o',this.form);
+        console.log(this.form);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:false}).then(data => {
           this.$message('保存成功');
+          this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
@@ -401,10 +400,10 @@
       },
 
       //删除
-      delSchedule(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: {mxxh:'0001'}}).then(data => {
+      delSchedule(item){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
           this.$message('已删除');
-        console.log(data);
+          this.getDocScheduleList();//获取医生出班模板列表
       }).catch(err => {
           console.log(err);
         //这里错误有2种错误
@@ -644,6 +643,7 @@
     padding: 10px 0 10px 0;
     box-sizing: border-box;
     position: relative;
+    cursor: pointer;
   }
 .ordered:hover{
   background: #eef6ff;

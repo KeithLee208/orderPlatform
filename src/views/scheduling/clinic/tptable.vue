@@ -343,7 +343,7 @@
         }).then(data => {
           if(data==''){
             this.$message('暂无数据');
-            this.loading = false;
+            this.loading = true;
           }
           else{
             this.TpCard = data;
