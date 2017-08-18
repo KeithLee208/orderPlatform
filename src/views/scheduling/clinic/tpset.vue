@@ -255,7 +255,7 @@
       },
       //科室选择不同医生
       handlerDepartChange(val){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm:'20000000.2.2.3202'}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm:val}).then(data => {
           this.formOptions.doctor.list = data;
         }).catch(err => {
           console.log(err);
@@ -268,7 +268,6 @@
           mbdm : this.$store.state.scheduling.currentTemplateSet.mbdm,
           ysdm : this.$store.state.scheduling.currentTemplateSet.ysdm,
         };
-        console.log(params);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
         }).catch(err => {
