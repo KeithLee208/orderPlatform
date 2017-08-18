@@ -259,7 +259,7 @@
       //门办数据初始化
       mbdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.checkList[0].ksbm ||'20000000.2.2.3202',
+          ksdm: this.checkList[0].kstybm ||'20000000.2.2.3202',
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
@@ -335,10 +335,9 @@
       },
       selection(index) {
         this.checkLIstActive = index;
-        console.log(this.checkList[index].ksbm);
+        console.log(this.checkList[index].kstybm);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-//            this.checkList[index].ksbm ||
-          ksdm: '20000000.2.2.3202',
+          ksdm: this.checkList[index].kstybm,
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001',
         }).then(data => {

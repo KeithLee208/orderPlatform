@@ -442,6 +442,7 @@
       });
       }, //出诊时间
       postCheckList(){
+          console.log('绑定的数组 %o',this.checkedAttlist);
         this.$store.commit('scheduling/SET_CURSELDEPARTLIST', this.checkedAttlist)
       }
     }
