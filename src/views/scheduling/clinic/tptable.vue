@@ -229,17 +229,14 @@
       //获取已选科室列表
       getCheckList(){
         this.checkList = this.$store.state.scheduling.curSelDepartList;
-
       },
       //科室数据初始化
       ksdataInit(){
-
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ,
           mbdm: this.$store.state.scheduling.mbdm ,
           yydm: this.$store.state.login.userInfo.yydm
         }).then(data => {
-          console.log(data);
           if(data==''){
             this.loading = false;
           }
