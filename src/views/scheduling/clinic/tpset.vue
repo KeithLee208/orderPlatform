@@ -109,6 +109,17 @@
       <el-button>取消</el-button>
       <el-button type="primary" @click="save()">保存并继续</el-button>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      size="tiny"
+      :before-close="handleClose">
+      <span>是否确认覆盖?</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="handleCancel">取 消</el-button>
+    <el-button type="primary" @click="handleConfirm">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </div>
 </template>
@@ -224,7 +235,9 @@
         timeSlot:[],//时间段列表
         templateData:[],//排版模板数据
         isAdd:false,//添加或修改操作
-        loading:true//数据读取状态
+        loading:true,//数据读取状态
+        isCover:false,//是否覆盖
+        dialogVisible: false//确认覆盖弹窗显示
       };
     },
     created() {
@@ -387,12 +400,15 @@
       //保存/新增接口
       save(){
         this.formDataFormat();
-        console.log(this.form);
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:false}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
           this.$message('保存成功');
+          this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
+          if(err.data.Response.Head.AckCode.indexOf('400')>-1){
+            this.dialogVisible = true;
+          }
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
@@ -404,13 +420,29 @@
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
-      }).catch(err => {
-          console.log(err);
-        //这里错误有2种错误
-        //1. 服务端业务错误，错误码邮件中有
-        //2. 网络错误，本地网络断开、超时等
-      });
+        }).catch(err => {
+            console.log(err);
+          //这里错误有2种错误
+          //1. 服务端业务错误，错误码邮件中有
+          //2. 网络错误，本地网络断开、超时等
+        });
       },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
+      handleCancel(){
+        this.dialogVisible = false;
+        this.isCover = false;
+      },
+      handleConfirm(){
+        this.dialogVisible = false;
+        this.isCover = true;
+        this.save();
+      }
     },
     filters: {
       timeFormat: function (time) {
