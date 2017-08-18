@@ -59,7 +59,6 @@
             sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
             resolve();
           }).catch(error => {
-            alert('登录')
             reject(error);
           });
         });
@@ -69,7 +68,6 @@
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
-            alert('获取医院所有预约科室');
             console.log(err);
           });
         },
@@ -79,7 +77,6 @@
           console.log('Q04 %o', data);
           this.$store.commit('scheduling/SET_DOCTORLIST',data)
         }).catch(err => {
-          alert('获取医生列表');
           console.log(err);
         });
       },
@@ -89,7 +86,6 @@
           console.log('Q05 %o', data);
           this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
         }).catch(err => {
-          alert('获取服务类型');
           console.log(err);
         });
       },
@@ -99,7 +95,6 @@
           console.log('Q06 %o', data);
           this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
         }).catch(err => {
-          alert('获取时间段列表');
           console.log(err);
         });
       },
@@ -109,7 +104,6 @@
           console.log('Q07 %o', data);
           this.$store.commit('scheduling/SET_SPECDISEASELIST',data)
         }).catch(err => {
-          alert('获取专病信息');
           console.log(err);
         });
       }

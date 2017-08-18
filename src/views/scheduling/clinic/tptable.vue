@@ -233,7 +233,7 @@
       },
       //科室数据初始化
       ksdataInit(){
-        alert(this.$store.state.scheduling.mbdm)
+
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ,
           mbdm: this.$store.state.scheduling.mbdm ,
