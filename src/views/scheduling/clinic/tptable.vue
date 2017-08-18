@@ -91,7 +91,7 @@
               <span>周六</span>
               <span>周日</span>
             </div>
-            <router-link to="/scheduling/clinic/tpset">
+            <router-link tag="span" to="/scheduling/clinic/tpset">
             <div @click="selectDoc(item)" v-for="item in templateData" class="AdTable">
               <div class="AdTableLeft">
                 <div>
@@ -135,11 +135,6 @@
                             <span class="fixed-label">医生名称：</span>
                             <span>{{week.ysmc}}</span>
                           </p>
-                        </div>
-                        <div class="fixed-footer">
-                           <router-link @click.native="selectDoc(week)" to="/scheduling/clinic/tpset">
-                                <el-button type="text" size="small">查看详情</el-button>
-                             </router-link>
                         </div>
                       </div>
                       <div slot="reference" class="ordered" :class="[week.fwlxdm]">
@@ -238,11 +233,13 @@
       },
       //科室数据初始化
       ksdataInit(){
+        alert(this.$store.state.scheduling.mbdm)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.$store.state.login.userInfo.ksdm ||'20000000.2.2.3202',
-          mbdm: this.$store.state.scheduling.mbdm || '001',
-          yydm: this.$store.state.login.userInfo.yydm || '001'
+          ksdm: this.$store.state.login.userInfo.ksdm ,
+          mbdm: this.$store.state.scheduling.mbdm ,
+          yydm: this.$store.state.login.userInfo.yydm
         }).then(data => {
+          console.log(data);
           if(data==''){
             this.loading = false;
           }
@@ -262,7 +259,6 @@
       mbdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.checkList[0].ksbm ||'20000000.2.2.3202',
-
           mbdm: this.$store.state.scheduling.mbdm || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
@@ -505,6 +501,7 @@
     width: 100%;
     transition:all .2s;
     box-shadow: 0 0 15px rgba(63,81,181, 0);
+    cursor: pointer;
   }
  .AdTable:hover{
    box-shadow: 0 0 15px rgba(63,81,181, 0.5);
@@ -692,7 +689,6 @@
   }
 
   .fixed-body {
-    border-bottom: 1px dashed #e0e0e0;
     padding-bottom: 10px;
   }
 
