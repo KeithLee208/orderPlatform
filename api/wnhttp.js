@@ -47,7 +47,7 @@ export default {
                             } else {
                                 //失败
                                 this.$message({
-                                    message: resHead.AckDesc,
+                                    message: tranCode + ':' + resHead.AckDesc,
                                     type: 'error',
                                     duration: 5 * 1000
                                 });
