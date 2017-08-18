@@ -91,8 +91,8 @@
               <span>周六</span>
               <span>周日</span>
             </div>
-            <router-link tag="span" to="/scheduling/clinic/tpset">
-            <div @click="selectDoc(item)" v-for="item in templateData" class="AdTable">
+
+            <div v-for="item in templateData" class="AdTable">
               <div class="AdTableLeft">
                 <div>
                   <i></i>
@@ -136,6 +136,11 @@
                             <span>{{week.ysmc}}</span>
                           </p>
                         </div>
+                        <class class="fixed-footer">
+                            <router-link tag="span" to="/scheduling/clinic/tpset">
+                          <span @click="selectDoc(item)">查看详情</span>
+                            </router-link>
+                        </class>
                       </div>
                       <div slot="reference" class="ordered" :class="[week.fwlxdm]">
                         <p>{{week.kssj }}-{{week.jssj}}</p>
@@ -147,7 +152,6 @@
                 </div>
               </div>
             </div>
-            </router-link>
           </div>
         </div>
       </div>
@@ -688,6 +692,7 @@
 
   .fixed-body {
     padding-bottom: 10px;
+    border-bottom: 1px dashed #e0e0e0;
   }
 
   .fixed-body > p {
@@ -714,8 +719,12 @@
 
   .fixed-footer {
     margin-top: 15px;
+    display: inline-block;
   }
-
+  .fixed-footer>span>span{
+    cursor: pointer;
+    color:#50bfff;
+  }
   .btn-blue {
     background: #fff;
     border-color: #50bfff;
@@ -813,7 +822,6 @@
     color: #fff;
     background: rgb(84, 106, 199);
     cursor: pointer;
-
   }
   .page-body {
     height: calc(90vh - 300px);
