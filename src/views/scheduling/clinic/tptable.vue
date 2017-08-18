@@ -136,11 +136,11 @@
                             <span>{{week.ysmc}}</span>
                           </p>
                         </div>
-                        <class class="fixed-footer">
+                        <div class="fixed-footer">
                             <router-link tag="span" to="/scheduling/clinic/tpset">
                           <span @click="selectDoc(week)">查看详情</span>
                             </router-link>
-                        </class>
+                        </div>
                       </div>
                       <div slot="reference" class="ordered" :class="[week.fwlxdm]">
                         <p>{{week.kssj }}-{{week.jssj}}</p>
