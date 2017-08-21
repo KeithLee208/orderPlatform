@@ -13,6 +13,7 @@ import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
 import timetable from '../views/scheduling/clinic/timetable'
 import tpset from '../views/scheduling/clinic/tpset'
+/*科室出班模板*/
 import sortcostset from '../views/scheduling/clinic/sortcostset'
 import orderdetail from '../views/order/orderdetail'
 import orderlist from '../views/order/orderlist'
@@ -21,6 +22,7 @@ import orderlist from '../views/order/orderlist'
 /**
  * Created by sven on 2017/8/21.
  */
+// 科室出班模板
 import dTemplateList from 'views/scheduling/department/templatelist'
 import dTemplateTable from 'views/scheduling/department/tptable.vue'
 import dTempalteSet from 'views/scheduling/department/tpset.vue'
@@ -62,9 +64,10 @@ export default new Router({
         { path: '/scheduling/clinic/tplist', component: ctplist},
         { path: '/scheduling/clinic/tpset', component: tpset},
         { path: '/scheduling/clinic/sortcostset', component: sortcostset},
-
+        /*门办*/
         {path:'/scheduling/department/templateList',component: dTemplateList},
-        {path:'/scheduling/department/tptable',component: dTemplateTable}
+        {path:'/scheduling/department/tptable',component: dTemplateTable},
+        {path:'/scheduling/department/tpset',component: dTempalteSet}
 
       ]
     },

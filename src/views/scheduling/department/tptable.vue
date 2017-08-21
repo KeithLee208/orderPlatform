@@ -93,7 +93,7 @@
                           </p>
                         </div>
                         <div class="fixed-footer">
-                            <router-link tag="span" to="/scheduling/clinic/tpset">
+                            <router-link tag="span" to="/scheduling/department/tpset">
                           <span @click="selectDoc(week)">查看详情</span>
                             </router-link>
                         </div>
