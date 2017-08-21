@@ -5,7 +5,7 @@ import cworklist from '../views/scheduling/clinic/worklist'
 import cworktable from '../views/scheduling/clinic/worktable'
 import ctptable from '../views/scheduling/clinic/tptable.vue'
 import ctplist from '../views/scheduling/clinic/tplist.vue'
-import dcard from '../views/scheduling/department/tpcard'
+// import dcard from '../views/scheduling/department/tpcard'
 import attendacncelist from '../views/scheduling/Medical/attendacncelist'
 import count from '../views/count/index'
 import RegistrationClassification from '../views/count/registrationclassification'
@@ -22,6 +22,8 @@ import orderlist from '../views/order/orderlist'
  * Created by sven on 2017/8/21.
  */
 import dTemplateList from 'views/scheduling/department/templatelist'
+import dTemplateTable from 'views/scheduling/department/tptable.vue'
+import dTempalteSet from 'views/scheduling/department/tpset.vue'
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
@@ -51,7 +53,7 @@ export default new Router({
       component: scheduling,
       children:[
         { path: '/scheduling/department/timetable', component: timetable},
-        { path: '/scheduling/department/tpcard', component: dcard},
+        // { path: '/scheduling/department/tpcard', component: dcard},
         { path: '/scheduling/attendacncelist', component: attendacncelist},
         { path: '/scheduling/clinic/worklist', component: cworklist},
         { path: '/scheduling/clinic/timetable', component: timetable},
@@ -61,7 +63,9 @@ export default new Router({
         { path: '/scheduling/clinic/tpset', component: tpset},
         { path: '/scheduling/clinic/sortcostset', component: sortcostset},
 
-        {path:'/scheduling/department/templateList',component: dTemplateList}
+        {path:'/scheduling/department/templateList',component: dTemplateList},
+        {path:'/scheduling/department/tptable',component: dTemplateTable}
+
       ]
     },
     {
