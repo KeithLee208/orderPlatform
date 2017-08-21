@@ -488,7 +488,6 @@
     display: inline-block;
     cursor: default;
   }
-
   .type-filter > span > .all {
     border: 1px solid transparent;
     margin-top: 15px;
@@ -502,47 +501,37 @@
     border: 1px solid #e0e0e0;
     background: #fff;
   }
-
   .type-filter > span > .PT.active {
     background: #e0e0e0;
   }
-
   .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
-
   .type-filter > span > .ZJ.active {
     background: rgb(192, 229, 255);
   }
-
   .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
   }
-
   .type-filter > span > .disease.active {
     background: rgb(188, 241, 212);
   }
-
   .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
-
   .type-filter > span > .LH.active {
     background: rgb(254, 235, 195);
   }
-
   .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
   }
-
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
   }
-
   .type-filter > span > i {
     width: 16px;
     height: 16px;
@@ -564,7 +553,6 @@
     padding-left: 170px;
     box-sizing: border-box;
   }
-
   .table-time > span {
     width: 12.5%;
     height: 45px;
@@ -575,44 +563,38 @@
     text-align: center;
     box-sizing: border-box;
   }
-
+  .AdTable {
+    position: relative;
+    margin: 0 0 10px 0;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .AdTable > .AdTableLeft,
   .AdTable > .AdTableRight {
     box-sizing: border-box;
     float: left;
   }
-
   .AdTable > .AdTableLeft {
     width: 160px;
     height: 166px;
     position: absolute;
     left: 0;
   }
-
   .AdTable > .AdTableRight {
     width: 100%;
     padding-left: 160px;
     box-sizing: border-box;
   }
-
   .table-body {
     width: 100%;
     display: inline-block;
     border-right: 1px solid #e0e0e0;
   }
-
-  .AdTable {
-    position: relative;
-    margin: 0 0 10px 0;
-    display: inline-block;
-    width: 100%;
-  }
-
   .AdTableLeft > div {
     height: 166px;
     line-height: 166px;
   }
-
   .AdTableLeft > div > i {
     width: 60px;
     height: 60px;
@@ -620,7 +602,6 @@
     margin: 60px 0px;
     background: url("../../../../static/img/man.png") center center no-repeat;
   }
-
   .AdTableLeft > div > p {
     float: left;
     width: 100px;
@@ -629,7 +610,6 @@
     padding: 70px 0;
     box-sizing: border-box;
   }
-
   .AdTableLeft > div > p > span {
     height: 20px;
     line-height: 20px;
@@ -650,11 +630,9 @@
     display: inline-block;
     float: left;
   }
-
   .table-body > .border-top-1 {
     border-top: 1px solid #D4DEED;
   }
-
   .table-body > div > span {
     width: 12.5%;
     height: 60px;
@@ -677,7 +655,7 @@
     position: relative;
     cursor: pointer;
   }
-.ordered:hover{
+  .ordered:hover{
   background: #eef6ff;
 }
   .ordered:hover>i{
@@ -697,38 +675,25 @@
     line-height: 20px;
   }
   /*default,expert,disease,union,VIP*/
-
-  .ordered.PT,
-  .ordered.ZJ,
-  .ordered.disease,
-  .ordered.LH,
-  .ordered.TX {
-    cursor: pointer;
-  }
   .ordered.active{
     background: red;
   }
-
   .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
-
   .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
-
   .ordered.disease {
     color: rgb(12, 175, 148);
     background: rgb(231, 250, 240);
   }
-
   .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
-
   .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
@@ -745,6 +710,5 @@
     border-left: 6px solid #3f51b5;
     margin-bottom: 10px;
   }
-
 </style>
 
