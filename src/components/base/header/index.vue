@@ -41,8 +41,7 @@
     data(){
         return{
             userInfo:{
-                type:'科室',
-                yydm:'001'
+                type:'科室'
             }
         }
     },
