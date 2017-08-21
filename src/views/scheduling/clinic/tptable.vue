@@ -91,7 +91,6 @@
               <span>周六</span>
               <span>周日</span>
             </div>
-
             <div v-for="item in templateData" class="AdTable">
               <div class="AdTableLeft">
                 <div>
