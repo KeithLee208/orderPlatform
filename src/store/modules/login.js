@@ -22,7 +22,7 @@ const getters = {
 const mutations = {
   //更新登录信息
   SET_USERINFO (state, userInfo){
-    state.userInfo = userInfo;
+    Object.assign(state.userInfo,userInfo);
   }
 };
 

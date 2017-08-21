@@ -6,21 +6,6 @@
                      exact tag="span">
       <div v-if="CardShow" class="tp-card">
         <div class="tp-card-head">
-          <!--<p v-if="$store.state.login.userInfo.type === '医务科'">-->
-            <!--<span class="tp-card-title">{{card.mbmc}}</span>-->
-            <!--<span v-if="card.shzt==='TG'" class="pull-right">-->
-           <!--<span class="start">审核通过</span>-->
-         <!--</span>-->
-            <!--<span v-if="card.shzt==='BG'" class="pull-right">-->
-           <!--<span class="unstart">不通过</span>-->
-         <!--</span>-->
-            <!--<span v-if="card.shzt==='WS'" class="pull-right">-->
-           <!--<span class="unstart">未审核</span>-->
-         <!--</span>-->
-            <!--<span v-if="card.shzt==='SZ'" class="pull-right">-->
-           <!--<span class="unstart">审核中</span>-->
-         <!--</span>-->
-          <!--</p>-->
           <p v-if="$store.state.login.userInfo.type === '科室'">
             <span class="tp-card-title">{{card.mbmc}}</span>
             <span v-if="card.shzt==='TG'" class="pull-right">

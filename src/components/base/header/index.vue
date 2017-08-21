@@ -54,7 +54,6 @@
     methods:{
       setUserInfo(type){
           this.userInfo.type = type;
-          this.userInfo.yydm = '001';
           this.$store.commit('login/SET_USERINFO',this.userInfo);
       }
     }
