@@ -29,8 +29,10 @@ import dTempalteSet from 'views/scheduling/department/tpset.vue'//模板设置
 
 //门办出班模板
 import hTemplateList from 'views/scheduling/headoffice/templatelist'//模板列表
-import departmentlist from 'views/scheduling/headoffice/departmentlist' //科室列表
-
+import hDepartmentlist from 'views/scheduling/headoffice/departmentlist' //科室列表
+import hTptable from 'views/scheduling/headoffice/tptable' //列表详情
+import hTpset from 'views/scheduling/headoffice/tpset' //单个实体详情
+import hSortset from  'views/scheduling/headoffice/sortcostset' //批量设置费用及号序
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
@@ -75,7 +77,10 @@ export default new Router({
         {path:'/scheduling/department/tpset',component: dTempalteSet},
 
         {path:'/scheduling/headoffice/templateList',component: hTemplateList},
-        {path:'/scheduling/headoffice/departmentlist',component: departmentlist}
+        {path:'/scheduling/headoffice/departmentlist',component: hDepartmentlist},
+        {path:'/scheduling/headoffice/tptable',component: hTptable},
+        {path:'/scheduling/headoffice/tpset',component: hTpset},
+        {path:'/scheduling/headoffice/sortcostset',component: hSortset}
 
       ]
     },

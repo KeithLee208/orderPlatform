@@ -21,11 +21,11 @@
       <div class="setting-main" v-loading="loading" element-loading-text="拼命加载中">
         <div class="page-head">
           <div class="type-filter">
-            <span><i class="el-icon-menu all"></i>全部</span>
-            <span class="submit"><i></i>已提交（10）</span>
-            <span class="unsubmit"><i></i>待提交（2）</span>
+            <!--<span><i class="el-icon-menu all"></i>全部</span>-->
+            <!--<span class="submit"><i></i>已提交（10）</span>-->
+            <!--<span class="unsubmit"><i></i>待提交（2）</span>-->
             <span class="pull-right">
-              <router-link tag="span" to="/scheduling/clinic/sortcostset">
+              <router-link tag="span" to="/scheduling/headoffice/sortcostset">
                 <el-button class="btn-blue"  type="primary">设置费用及号序</el-button>
                 </router-link>
               </span>
@@ -64,139 +64,14 @@
         box-shadow:0 -1px 5px 0 rgba(221,221,221,.5) ">
         <span class="pull-right">
           <el-button class="btn-blue"  type="primary">导出</el-button>
-          <router-link tag="span" to='/scheduling/clinic/tptable'>
+          <router-link tag="span" to='/scheduling/headoffice/tptable'>
              <el-button @click="postCheckList" class="btn-blue"  type="primary">设置出班</el-button>
           </router-link>
         </span>
         </div>
       </div>
     </div>
-    <el-dialog title="设置费用及号序" :visible.sync="SettingVisible" size="large" top="5%">
-      <!--<div class="Adjustment" style="">-->
-      <!--<a>调整记录</a>-->
-      <!--</div>-->
-      <div>
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="服务类型">
-            <div class="type-filter in-model">
-              <span><i class="el-icon-menu all"></i>全部</span>
-              <span v-for="(item,index) in form.Type.category">
-                <!--,{active:active==index}-->
-                <i @click="selection(index)"  :class="[item.type,{active:form.Type.active==index}]"></i>
-                {{item.text}}（{{item.num}}）
-              </span>
-            </div>
-          </el-form-item>
-          <el-form-item label="选择科室">
-            <el-select style="width: 30%" @change="SelectInit" v-model="form.DepartmentValue" multiple filterable placeholder="请选择">
-              <el-option v-for="item in form.DepartOptions" :key="item.ksbm" :label="item.ksmc" :value="item.ksmc">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="form.DocShow" label="选择医生">
-            <el-select v-model="form.DocValue" :disabled="form.DocDisabled" :placeholder='form.Doctext'>
-              <el-option v-for="item in form.DocOptions" :key="item.zgbm" :label="item.zgxm" :value="item.zgxm"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="form.DiseaseShow" label="选择病种">
-            <el-select v-model="form.DiseaseValue" placeholder="请选择病种">
-              <el-option v-for="item in form.Disease" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--<el-form-item label="选择院区">-->
-          <!--<el-radio-group v-model="form.radio">-->
-          <!--<el-radio :label="1">徐汇院区</el-radio>-->
-          <!--<el-radio :label="2">黄埔院区</el-radio>-->
-          <!--</el-radio-group>-->
-          <!--</el-form-item>-->
-          <el-form-item label="就诊时间">
-            <el-checkbox-group v-model="form.VisitTime">
-              <el-checkbox label="周一" value="周一" name="time"></el-checkbox>
-              <el-checkbox label="周二" value="周二" name="time"></el-checkbox>
-              <el-checkbox label="周三" value="周三" name="time"></el-checkbox>
-              <el-checkbox label="周四" value="周四" name="time"></el-checkbox>
-              <el-checkbox label="周五" value="周五" name="time"></el-checkbox>
-              <el-checkbox label="周六" value="周六" name="time"></el-checkbox>
-              <el-checkbox label="周日" value="周日" name="time"></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="出诊时间">
-            <el-col :span="14">
-              <el-radio-group v-model="form.OutTimeValue" >
-                <el-radio v-for="item in form.OutTime" :label="item.sjdmc+item.kssj+'-'+item.jssj" :value="item.sjddm"></el-radio>
-              </el-radio-group>
-            </el-col>
-            <el-col :span="10">
-              <el-form-item label="时间段">
-                <el-time-picker is-range v-model="form.Times" placeholder="选择时间范围">
-                </el-time-picker>
-              </el-form-item>
-            </el-col>
-          </el-form-item>
-          <el-form-item label="服务费用">
-            <el-radio-group v-model="form.cost" @change="CostChange">
-              <el-radio label="1">按号序设置费用</el-radio>
-              <el-radio label="2">不按号序设置费用</el-radio>
-            </el-radio-group>
-            <span class="cost">服务总费用</span>
-            <el-input class="cost-input"></el-input>元
-          </el-form-item>
-          <div class="source" v-if="form.Source">
-            <div class="source-card" @mouseenter="SourceMouseOver()" @mouseleave="SourceMouseLeave()">
-              <el-form label-width="45px">
-                <el-form-item label="号段">
-                  <el-col :span="10">
-                    <el-input></el-input>
-                  </el-col>
-                  <el-col class="line" style="text-align: center" :span="4">-</el-col>
-                  <el-col :span="10">
-                    <el-input></el-input>
-                  </el-col>
-                </el-form-item>
-                <el-form-item label="费用">
-                  <el-input placeholder="元"></el-input>
-                </el-form-item>
-              </el-form>
-              <i v-if="form.CloseShow" @click="DelCard()" class="card-close el-icon-close"></i>
-            </div>
-            <div @click="AddCard()" class="source-plus">
-              <i class="el-icon-plus"></i>
-            </div>
-          </div>
-          <div class="unsource" v-if="form.UnSource">
-            <el-form label-width="100px">
-              <el-form-item label="设置总号源数">
-                <el-input style="width: 170px"></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-          <div class="form-line"></div>
-          <el-form-item label="配置号序">
-            <span class="num-info">(当前号源数18)</span>
-          </el-form-item>
-          <div class="Channel">
-            <el-radio-group v-model="form.channel" @change="ChannelChange">
-              <el-radio label="1">区分渠道</el-radio>
-              <el-radio label="2">不区分渠道</el-radio>
-            </el-radio-group>
-            <channeldrag v-if="form.Channel"></channeldrag>
-            <div class="UnChannel" v-if="form.UnChannel">
-              <el-form label-width="100px">
-                <el-form-item label="设置总号源数">
-                  <el-input style="width: 170px"></el-input>
-                </el-form-item>
-              </el-form>
-            </div>
-          </div>
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="SettingVisible = false">取消</el-button>
-        <el-button @click="MsgSuccess" type="primary">保存</el-button>
-        <el-button type="success">保存并设置下一位</el-button>
-      </div>
-    </el-dialog>
+
   </div>
 </template>
 
@@ -208,84 +83,16 @@
     data() {
       return {
         crumbs:[],//面包屑数据
-        SettingVisible: false,
         loading:true,
         attList: [],
         checkList:[],//用于全选的科室列表
         checkedAttlist:[],//已选中的科室value数组
-        form: {
-          //        服务类型
-          Type: {
-            active: 0,
-            category: [
-              {
-                type: 'default',
-                text: '普通',
-                num: 10,
-              },
-              {
-                type: 'expert',
-                text: '专家',
-                num: 2
-              },
-              {
-                type: 'disease',
-                text: '专病',
-                num: 3
-              },
-              {
-                type: 'union',
-                text: '联合',
-                num: 4
-              },
-              {
-                type: 'VIP',
-                text: '特需',
-                num: 5
-              }
-            ]
-          },
-          //        科室
-          DepartOptions: [],
-          DepartmentValue: '',
-          //        医生
-          DocOptions: '',
-          DocDisabled: true,
-          Doctext: '请先选择科室',
-          DocShow: false,
-          DocValue: '',
-          //        专病
-          Disease: [],
-          DiseaseValue: '',
-          DiseaseShow: false,
-          //        出诊时间
-          radio: '1',
-          radio2: '1',
-          //        出诊时间
-          OutTimeValue: '',
-          OutTime: [],
-          //        出诊时间
-          VisitTime: [],
-          //        时间段
-          Times: [new Date(2017, 1, 1, 0), new Date(2017, 1, 1, 23)],
-          desc: '',
-          cost: '',
-          channel: '',
-          Source: false,
-          UnSource: false,
-          CloseShow: false,
-          Channel: false,
-          UnChannel: false,
-        },
       }
     },
     created() {
       this.$nextTick(() => {
         this.getCrumbs();//获取面包屑数据
         this.TpListInit(); //科室列表
-        this.DiseaseInit(); //专病病种
-        this.OutTimeInit(); //出诊时间
-
     })
     },
     methods: {
@@ -304,62 +111,6 @@
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tplist;
       },
-      MsgSuccess() {
-        this.SubmitVisible = false;
-        this.$message({
-          message: '提交成功！',
-          type: 'success'
-        });
-      }, //提交消息提示
-      TemSuccess() {
-        this.$message({
-          message: '成功！',
-          type: 'success'
-        });
-      }, //保存消息提示
-      CostChange(value) {
-        if (value == '1') {
-          this.form.Source = true;
-          this.form.UnSource = false;
-        } else if (value == '2') {
-          this.form.Source = false;
-          this.form.UnSource = true;
-
-        }
-      }, //服务费用Dom切换
-      ChannelChange(value) {
-        if (value == '1') {
-          this.form.Channel = true;
-          this.form.UnChannel = false;
-        } else if (value == '2') {
-          this.form.Channel = false;
-          this.form.UnChannel = true;
-
-        }
-      }, //配置号序Dom切换
-      SourceMouseOver() {
-        this.form.CloseShow = true;
-      }, //服务类型卡片关闭按钮显示
-      SourceMouseLeave() {
-        this.form.CloseShow = false;
-      }, //服务类型卡片关闭按钮显示
-      DelCard() {
-        alert('卡片删除事件.');
-      }, //删除服务类型卡片
-      AddCard() {
-        alert('增加卡片事件.');
-      }, //添加服务类型卡片
-      selection(index) {
-        this.form.Type.active = index;
-        this.form.DocShow = false;
-        this.form.DiseaseShow = false;
-        if (this.form.Type.category[index].text !== '普通') {
-          this.form.DocShow = true;
-        }
-        if (this.form.Type.category[index].text == '专病') {
-          this.form.DiseaseShow = true;
-        }
-      }, //服务类型筛选表单
       DiseaseInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
           kstybm: '20000000.1.1.0320',
@@ -397,7 +148,7 @@
           });
           this.checkList.push({ksmc:data[i].ksmc,ksbm:data[i].ksmc});
         }
-        this.form.DepartOptions = selcetArr;
+
       }).catch(err => {
           console.log(err);
         //这里错误有2种错误
@@ -405,46 +156,10 @@
         //2. 网络错误，本地网络断开、超时等
       });
       }, //科室列表
-      SelectInit() {
-        if (this.form.DepartmentValue != '') {
-          this.form.DocDisabled = false;
-          this.form.Doctext = '请选择对应科室的医生';
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-            yydm:this.$store.state.login.userInfo.yydm,
-            kstybm: this.form.DepartmentValue
-          }).then(data => {
-            this.form.DocOptions = data;
-        }).catch(err => {
-            console.log(err);
-          //这里错误有2种错误
-          //1. 服务端业务错误，错误码邮件中有
-          //2. 网络错误，本地网络断开、超时等
-        });
-        } else {
-          this.form.DocValue = '';
-          this.form.DocDisabled = true;
-          this.form.Doctext = '请先选择科室';
-        }
-
-      }, //选择科室根据所选筛选医生
-      OutTimeInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {
-          yydm:this.$store.state.login.userInfo.yydm,
-          kstybm: '20000000.1.1.0320'
-        }).then(data => {
-          this.form.OutTime = data;
-        console.log(this.form.OutTime);
-      }).catch(err => {
-          console.log(err);
-        //这里错误有2种错误
-        //1. 服务端业务错误，错误码邮件中有
-        //2. 网络错误，本地网络断开、超时等
-      });
-      }, //出诊时间
       postCheckList(){
           console.log('绑定的数组 %o',this.checkedAttlist);
         this.$store.commit('scheduling/SET_CURSELDEPARTLIST', this.checkedAttlist)
-      }
+      }//已选科室传值
     }
   };
 </script>
