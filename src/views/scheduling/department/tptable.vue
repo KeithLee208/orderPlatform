@@ -171,17 +171,12 @@
           mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] ,
           yydm: this.$store.state.login.userInfo.yydm
         }).then(data => {
-          if(data==''){
-            this.loading = false;
-          }
-          else{
-            this.TpCard = data;
-            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-            console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
-            console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
-            this.loading = false;
-          }
-
+          if(data=='')this.loading = false;
+          this.TpCard = data;
+          this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+          console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
+          console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
+          this.loading = false;
       }).catch(err => {
           console.log(err);
         });
@@ -228,19 +223,6 @@
       selectDoc(item){
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item)
       },
-      MsgSuccess() {
-        this.SettingVisible = false;
-        this.$message({
-          message: '提交成功！',
-          type: 'success'
-        });
-      },
-      TemSuccess(){
-        this.$message({
-          message: '成功！',
-          type: 'success'
-        });
-      },
       selection(index) {
         this.checkLIstActive = index;
         console.log(this.checkList[index].kstybm);
@@ -263,18 +245,6 @@
           console.log(err);
         });
 
-      },
-      selectDel(index){
-        if(this.checkList.length==1)
-        {
-          alert('已是最后一个科室');
-          return
-        }
-        this.checkList.splice(index,1);
-      },
-      //门办设置出班模板，清空vuex的医生模板信息
-      clearCurrentDocSchedule(){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {})
       }
     },
     filters: {
