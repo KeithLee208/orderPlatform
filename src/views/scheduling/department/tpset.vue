@@ -2,7 +2,7 @@
 <div class="setting-wraaper">
   <div class="setting-header">
     <router-link
-      to="/scheduling/clinic/tptable" class="pull-right">
+      to="/scheduling/department/tptable" class="pull-right">
       <i class="el-icon-close"></i>
     </router-link>
     <span>设置出班信息</span>
