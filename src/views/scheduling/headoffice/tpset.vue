@@ -73,29 +73,15 @@
           <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择病种">
-        <el-select v-model="form.disease" placeholder="请选择病种">
-          <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="就诊时间">
-        <el-radio-group v-model="form.cbrqlx">
-          <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
-        </el-radio-group>
+        <el-checkbox-group v-model="form.cbrqlx">
+          <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="出诊时间">
-        <el-col :span="8">
-          <el-radio-group v-model="form.sjddm">
-            <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
-          </el-radio-group>
-        </el-col>
-        <el-col :span="10">
-          <el-form-item label="时间段">
-            <el-time-picker is-range v-model="form.time" placeholder="选择时间范围">
-            </el-time-picker>
-          </el-form-item>
-        </el-col>
+          <el-checkbox-group v-model="form.sjddm">
+            <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+          </el-checkbox-group>
       </el-form-item>
       <el-form-item label="就诊地址">
         <el-input type="input" v-model="form.czdz"></el-input>
@@ -379,19 +365,6 @@
         this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
         this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
         this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
-      },
-      MsgSuccess() {
-        this.SubmitVisible = false;
-        this.$message({
-          message: '提交成功！',
-          type: 'success'
-        });
-      },
-      TemSuccess() {
-        this.$message({
-          message: '成功！',
-          type: 'success'
-        });
       },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
