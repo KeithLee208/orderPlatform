@@ -13,7 +13,7 @@ const state = {
   },//面包屑对象集合
   currentsSelectTemplate:{},//当前所选出班模板
   channalList:[],//预约渠道列表
-  SelDepartListKsdm:[],//门办已选科室列表进入详情页科室代码
+  selDepartListKsdm:[],//门办已选科室列表进入详情页科室代码
   mbdm:[],//点击卡片传递所选科室代码
   curSelDepartList:[],//当前选择科室列表
   currentDocSchedule:{},//当前所选医生出班表

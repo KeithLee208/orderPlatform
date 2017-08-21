@@ -168,7 +168,7 @@
       ksdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ,
-          mbdm: this.$store.state.scheduling.mbdm ,
+          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] ,
           yydm: this.$store.state.login.userInfo.yydm
         }).then(data => {
           if(data==''){
