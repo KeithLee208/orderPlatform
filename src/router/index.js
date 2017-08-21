@@ -23,9 +23,14 @@ import orderlist from '../views/order/orderlist'
  * Created by sven on 2017/8/21.
  */
 // 科室出班模板
-import dTemplateList from 'views/scheduling/department/templatelist'
-import dTemplateTable from 'views/scheduling/department/tptable.vue'
-import dTempalteSet from 'views/scheduling/department/tpset.vue'
+import dTemplateList from 'views/scheduling/department/templatelist'//模板列表
+import dTemplateTable from 'views/scheduling/department/tptable.vue'//模板详情
+import dTempalteSet from 'views/scheduling/department/tpset.vue'//模板设置
+
+//门办出班模板
+import hTemplateList from 'views/scheduling/headoffice/templatelist'//模板列表
+import departmentlist from 'views/scheduling/headoffice/departmentlist' //科室列表
+
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
@@ -64,10 +69,13 @@ export default new Router({
         { path: '/scheduling/clinic/tplist', component: ctplist},
         { path: '/scheduling/clinic/tpset', component: tpset},
         { path: '/scheduling/clinic/sortcostset', component: sortcostset},
-        /*门办*/
+
         {path:'/scheduling/department/templateList',component: dTemplateList},
         {path:'/scheduling/department/tptable',component: dTemplateTable},
-        {path:'/scheduling/department/tpset',component: dTempalteSet}
+        {path:'/scheduling/department/tpset',component: dTempalteSet},
+
+        {path:'/scheduling/headoffice/templateList',component: hTemplateList},
+        {path:'/scheduling/headoffice/departmentlist',component: departmentlist}
 
       ]
     },

@@ -11,12 +11,14 @@ const state = {
   crumbs:{
     tptable:[]
   },//面包屑对象集合
-  mbdm:[],//点击卡片传递所选科室代码
-  currentDocSchedule:{},//当前所选医生出班表
-  currentTemplateSet:{},//当前出班模板设置
+  currentsSelectTemplate:{},//当前所选出班模板
   channalList:[],//预约渠道列表
+  SelDepartListKsdm:[],//门办已选科室列表进入详情页科室代码
+  mbdm:[],//点击卡片传递所选科室代码
   curSelDepartList:[],//当前选择科室列表
-  SelDepartListKsdm:[]//门办已选科室列表进入详情页科室代码
+  currentDocSchedule:{},//当前所选医生出班表
+
+  currentSchedulingSet:{}//当前排班设置
 };
 
 // state 中派生出一些状态
@@ -53,13 +55,17 @@ const mutations = {
       state.crumbs[payload.key].push(item)
     });
   },
+  //更新当前所选出班模板
+  SET_CURRENTSELECTTEMPLATE(state, data){
+    state.currentsSelectTemplate = data;
+  },
   //更新当前所选医生出班表
   SET_CURRENTDOCSCHEDULE(state,data){
     state.currentDocSchedule =  data;
   },
-  //更新当前出班模板设置
-  SET_CURRENTTEMPLATESET(state,data){
-    state.currentTemplateSet = data;
+  //更新当前排班设置CURRENTSCHEDULING
+  SET_CURRENTSCHEDULING(state,data){
+    state.currentSchedulingSet = data;
   },
   //更新预约渠道
   SET_CHANNALLIST(state,data){

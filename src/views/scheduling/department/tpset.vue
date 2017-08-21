@@ -250,7 +250,7 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        if(this.$store.state.scheduling.currentTemplateSet['ysdm']){
+        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
           this.$message('无医生信息');
@@ -276,9 +276,9 @@
       //获取医生出班模板列表
       getDocScheduleList(){
         let params = {
-          ksdm : this.$store.state.scheduling.currentTemplateSet.ksdm,
-          mbdm : this.$store.state.scheduling.currentTemplateSet.mbdm,
-          ysdm : this.$store.state.scheduling.currentTemplateSet.ysdm,
+          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
+          ysdm : this.$store.state.scheduling.currentSchedulingSet.ysdm,
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];

@@ -4,7 +4,7 @@
       <div class="Scheduling-tab">
         <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/timetable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
         <router-link v-if="$store.state.login.userInfo.type === '科室'" to="/scheduling/department/templateList" tag="span">出班模板(科室)</router-link>
-        <router-link v-if="$store.state.login.userInfo.type === '门办'" to="/scheduling/department/templateList" tag="span">出班模板(门办)</router-link>
+        <router-link v-if="$store.state.login.userInfo.type === '门办'" to="/scheduling/headoffice/templateList" tag="span">出班模板(门办)</router-link>
       </div>
     </div>
     <div class="pagebody">
@@ -33,7 +33,6 @@
     methods:{
         init(){
           this.getDepartmentList();
-          this.getDocList();
           this.getServiceTypeList();
           this.getTimeSlotList();
           this.getSpecDiseaseList();
@@ -65,24 +64,16 @@
         //获取医院所有预约科室
         getDepartmentList(){
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+            console.log('Q01科室列表 %o', data);
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
             console.log(err);
           });
         },
-//        //获取医生列表
-      getDocList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", { kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('Q04 %o', data);
-          this.$store.commit('scheduling/SET_DOCTORLIST',data)
-        }).catch(err => {
-          console.log(err);
-        });
-      },
         //获取服务类型
       getServiceTypeList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q05", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('Q05 %o', data);
+          console.log('Q05服务类型列表 %o', data);
           this.$store.commit('scheduling/SET_SERVICETYPELIST',data)
         }).catch(err => {
           console.log(err);
@@ -91,7 +82,7 @@
       //获取时间段列表
       getTimeSlotList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q06", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('Q06 %o', data);
+          console.log('Q06时间段列表 %o', data);
           this.$store.commit('scheduling/SET_TIMESLOTLIST',data)
         }).catch(err => {
           console.log(err);
@@ -100,7 +91,7 @@
       //获取专病信息
       getSpecDiseaseList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('Q07 %o', data);
+          console.log('Q07专病列表 %o', data);
           this.$store.commit('scheduling/SET_SPECDISEASELIST',data)
         }).catch(err => {
           console.log(err);
