@@ -90,18 +90,9 @@
             <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
           </el-radio-group>
         </el-col>
-        <el-col :span="10">
-          <el-form-item label="时间段">
-            <el-time-picker is-range v-model="form.time" placeholder="选择时间范围">
-            </el-time-picker>
-          </el-form-item>
-        </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
         <el-input type="input" v-model="form.czdz"></el-input>
-      </el-form-item>
-      <el-form-item label="备注信息">
-        <el-input type="input" v-model="form.note"></el-input>
       </el-form-item>
     </el-form>
 
@@ -245,6 +236,10 @@
         setTimeout(_ => {
           this.init();
         },0);
+        //监听获取医生排班列表事件
+        this.$root.eventHub.$on('dtpset_getDocScheduleList', data => {
+          this.getDocScheduleList(data);
+        });
       })
     },
     methods: {
@@ -254,13 +249,12 @@
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
           this.$message('无医生信息');
-          this.loading=false;
+          this.loading = false;
         }
       },
       //获取各种字典数据
       getDicData(){
           this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-//          this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
           this.formOptions.department.list = this.$store.state.scheduling.departmentList;
           this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
           this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
@@ -274,7 +268,7 @@
         });
       },
       //获取医生出班模板列表
-      getDocScheduleList(){
+      getDocScheduleList(){console.log(this.$store.state.scheduling.currentSchedulingSet);
         let params = {
           ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
           mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
@@ -282,9 +276,17 @@
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+          this.setDefaultInfo();
         }).catch(err => {
           console.log(err);
         });
+      },
+      //获取默认信息:有医生信息，科室、医生会被自动拉取
+      setDefaultInfo(){
+        //科室默认
+        this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
+        //医生默认
+        this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
       },
       //数据处理
       formatData(list){
@@ -345,7 +347,7 @@
           cbrqlx: '',//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
-          czry: 'EMP.20000000.00',//必填:登录信息
+          czry: this.$store.state.login.userInfo.userId,//必填:登录信息
           yxzt:'YX',//必填:默认值
           mbdm:this.$store.state.scheduling.mbdm,//必填
           fwlxdm:'',//必填:表单获取

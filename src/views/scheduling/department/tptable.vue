@@ -30,8 +30,8 @@
                   <el-tooltip class="item" effect="dark"
                               content="设置出班模板" placement="bottom">
                       <router-link tag="span"  to="/scheduling/department/tpset">
-                     <i  class="icon iconfont icon iconfont icon-shezhi_"></i>
-                           </router-link>
+                         <i @click="handleSetClick" class="icon iconfont icon iconfont icon-shezhi_"></i>
+                       </router-link>
                   </el-tooltip>
                 </span>
               </span>
@@ -94,7 +94,7 @@
                         </div>
                         <div class="fixed-footer">
                             <router-link tag="span" to="/scheduling/department/tpset">
-                          <span @click="selectDoc(week)">查看详情</span>
+                                <span @click="selectDoc(week)">查看详情</span>
                             </router-link>
                         </div>
                       </div>
@@ -227,7 +227,11 @@
       },
       //选择医生进入排班设置页
       selectDoc(item){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item)
+        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item);
+      },
+      //点击设置按钮进入设置页，默认请求获取当前科室普通排班
+      handleSetClick(){
+          alert(321);
       }
     },
     filters: {
