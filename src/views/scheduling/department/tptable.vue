@@ -73,7 +73,7 @@
                           </p>
                           <p>
                             <span class="fixed-label">服务类型：</span>
-                            <span>{{week.fwlxdm}}</span>
+                            <span>{{week.mzlx}}</span>
                           </p>
                           <p>
                             <span class="fixed-label">出诊时间：</span>
@@ -98,7 +98,7 @@
                             </router-link>
                         </div>
                       </div>
-                      <div slot="reference" class="ordered" :class="[week.fwlxdm]">
+                      <div slot="reference" class="ordered" :class="[week.mzlx]">
                         <p>{{week.kssj }}-{{week.jssj}}</p>
                         <p>{{week.ksmc}}</p>
                       </div>
