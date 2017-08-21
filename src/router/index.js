@@ -17,9 +17,12 @@ import sortcostset from '../views/scheduling/clinic/sortcostset'
 import orderdetail from '../views/order/orderdetail'
 import orderlist from '../views/order/orderlist'
 
-const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
-// const attendacnce = r => require.ensure([], () => r(require('../views/scheduling/department/attendance')), 'scheduling');
 
+/**
+ * Created by sven on 2017/8/21.
+ */
+import dTemplateList from 'views/scheduling/department/templatelist'
+const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
 Vue.use(Router)
@@ -57,6 +60,8 @@ export default new Router({
         { path: '/scheduling/clinic/tplist', component: ctplist},
         { path: '/scheduling/clinic/tpset', component: tpset},
         { path: '/scheduling/clinic/sortcostset', component: sortcostset},
+
+        {path:'/scheduling/department/templateList',component: dTemplateList}
       ]
     },
     {
