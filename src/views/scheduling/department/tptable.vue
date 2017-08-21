@@ -22,7 +22,7 @@
               <span>服务类型</span>
               <span><i class="el-icon-menu all"></i>全部</span>
               <span v-for="(item,index) in serviceTypeList">
-                <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.sfxm.length}}）
+                <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
@@ -142,11 +142,12 @@
         this.getCrumbs();
         //获取服务类型
         this.getServiceType();
+        this.setServieNumber();
         //获取时间段
         this.getTimeSlot();
         //获取已选科室列表
         this.getCheckList();
-        this.ksdataInit();
+        this.dataInit();
       },
       //获取面包屑
       getCrumbs(){
@@ -155,6 +156,13 @@
       //获取服务类型
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+      },
+      //获取统计接口
+      setServieNumber(){
+        let fwlxtj = this.$store.state.scheduling.currentsSelectTemplate.fwlxtj;
+        this.serviceTypeList.map(item => {
+            item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length ? fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm)[0].fwlxsl:0;
+        })
       },
       //获取时间段列表
       getTimeSlot(){
@@ -165,7 +173,7 @@
         this.checkList = this.$store.state.scheduling.curSelDepartList;
       },
       //科室数据初始化
-      ksdataInit(){
+      dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ,
           mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] ,
@@ -174,8 +182,6 @@
           if(data=='')this.loading = false;
           this.TpCard = data;
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-          console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
-          console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
           this.loading = false;
       }).catch(err => {
           console.log(err);
@@ -222,29 +228,6 @@
       //选择医生进入排班设置页
       selectDoc(item){
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item)
-      },
-      selection(index) {
-        this.checkLIstActive = index;
-        console.log(this.checkList[index].kstybm);
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.checkList[index].kstybm,
-          mbdm: this.$store.state.scheduling.mbdm || '001',
-          yydm: this.$store.state.login.userInfo.yydm || '001',
-        }).then(data => {
-          if(data==''){
-            this.$message('暂无数据');
-            this.loading = true;
-          }
-          else{
-            this.TpCard = data;
-            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-            this.loading = false;
-          }
-
-        }).catch(err => {
-          console.log(err);
-        });
-
       }
     },
     filters: {
