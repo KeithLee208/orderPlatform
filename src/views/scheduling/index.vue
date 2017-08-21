@@ -3,7 +3,8 @@
    <div class="filter-warrper">
       <div class="Scheduling-tab">
         <router-link  :to="$store.state.login.userInfo.type === '科室'?'/scheduling/clinic/timetable':'/scheduling/clinic/worklist'"  exact tag="span">出班表</router-link>
-        <router-link v-if="$store.state.login.userInfo.type === '科室'" to="/scheduling/department/templateList" tag="span">出班模板</router-link>
+        <router-link v-if="$store.state.login.userInfo.type === '科室'" to="/scheduling/department/templateList" tag="span">出班模板(科室)</router-link>
+        <router-link v-if="$store.state.login.userInfo.type === '门办'" to="/scheduling/department/templateList" tag="span">出班模板(门办)</router-link>
       </div>
     </div>
     <div class="pagebody">
@@ -53,6 +54,8 @@
             }
           }).then(res => {
             sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
+            this.$store.commit('login/SET_USERINFO',res.data.Response.Body.employeeUser);
+            console.log('登录信息 %o',this.$store.state.login.userInfo);
             resolve();
           }).catch(error => {
             reject(error);
