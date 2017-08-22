@@ -25,6 +25,7 @@
     created(){
       this.$nextTick(() => {
           this.login().then(() => {
+            this.getUserInfo();
             this.init();
             console.log('test in home.')
           });
@@ -37,30 +38,38 @@
           this.getTimeSlotList();
           this.getSpecDiseaseList();
         },
-      login(){
-        return new Promise((resolve, reject) => {
-          let target = 'http://172.16.0.131:8888/auth/login';
-          axios({
-            url: target,
-            method: 'get',
-            params:{
-              p:111111,
-              u:'00'
-            },
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest',
-              'Content-Type': 'application/json;charset=UTF-8'
-            }
-          }).then(res => {
-            sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
-            this.$store.commit('login/SET_USERINFO',res.data.Response.Body.employeeUser);
-            console.log('登录信息 %o',this.$store.state.login.userInfo);
-            resolve();
-          }).catch(error => {
-            reject(error);
+        login(){
+          return new Promise((resolve, reject) => {
+            let target = 'http://172.16.0.131:8888/auth/login';
+            axios({
+              url: target,
+              method: 'get',
+              params:{
+                p:111111,
+                u:'00'
+              },
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }).then(res => {
+              sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
+              this.$store.commit('login/SET_USERINFO',res.data.Response.Body.employeeUser);
+              console.log('登录信息 %o',this.$store.state.login.userInfo);
+              resolve();
+            }).catch(error => {
+              reject(error);
+            });
           });
-        });
-      },
+        },
+        getUserInfo(){
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q10", {zgtybm:this.$store.state.login.userInfo.zgtybm}).then(data => {
+            this.$store.commit('login/SET_USERINFO',data);
+            console.log('职工信息 %o',this.$store.state.login.userInfo);
+          }).catch(err => {
+            console.log(err);
+          });
+        },
         //获取医院所有预约科室
         getDepartmentList(){
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm}).then(data => {

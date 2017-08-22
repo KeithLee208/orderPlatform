@@ -53,10 +53,6 @@
                 </el-popover>
                 </span>
               </el-checkbox-group>
-            <!--<span v-for="(att,index) in item.children">-->
-              <!--&lt;!&ndash;<router-link to="/scheduling/clinic/tptable">&ndash;&gt;-->
-                 <!---->
-            <!--</span>-->
             </div>
           </div>
         </div>
@@ -111,7 +107,7 @@
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tplist;
       },
-      DiseaseInit() {
+      diseaseInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
           kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm

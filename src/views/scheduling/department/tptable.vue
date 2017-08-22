@@ -231,7 +231,11 @@
       },
       //点击设置按钮进入设置页，默认请求获取当前科室普通排班
       handleSetClick(){
-          alert(321);
+        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
+            ysdm:'',
+            mbdm:this.$store.state.scheduling.currentsSelectTemplate.mbdm,
+            ksdm:this.$store.state.login.userInfo.ksdm
+        });
       }
     },
     filters: {

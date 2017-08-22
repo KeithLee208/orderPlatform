@@ -69,16 +69,16 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form.ysdm"  :placeholder='form.ysdm'>
+        <el-select v-model="form.ysdm" filterable  :placeholder='form.ysdm'>
           <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择病种">
-        <el-select v-model="form.disease" placeholder="请选择病种">
-          <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-          </el-option>
-        </el-select>
-      </el-form-item>
+      <!--<el-form-item label="选择病种">-->
+        <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
+          <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
       <el-form-item label="就诊时间">
         <el-radio-group v-model="form.cbrqlx">
           <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
@@ -245,12 +245,13 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
-          this.getDocScheduleList();//获取医生出班模板列表
-        }else{
-          this.$message('无医生信息');
-          this.loading = false;
-        }
+        this.getDocScheduleList();//获取医生出班模板列表
+//        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
+//          this.getDocScheduleList();//获取医生出班模板列表
+//        }else{
+//          this.$message('无医生信息');
+//          this.loading = false;
+//        }
       },
       //获取各种字典数据
       getDicData(){
@@ -268,7 +269,7 @@
         });
       },
       //获取医生出班模板列表
-      getDocScheduleList(){console.log(this.$store.state.scheduling.currentSchedulingSet);
+      getDocScheduleList(){
         let params = {
           ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
           mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
