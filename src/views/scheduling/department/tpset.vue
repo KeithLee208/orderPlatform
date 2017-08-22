@@ -34,15 +34,15 @@
         </div>
         <div class="AdTableRight">
           <div class="table-body">
-            <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
+            <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
-              <span v-for="week in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule(week)">
+              <span v-for="(week,indexJ) in slot.weekday">
+                    <span v-if="week.cbrqlx" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else :class="['ordered']" @click="setNewSchedule()">
+                    <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
             </div>
@@ -119,6 +119,7 @@
   export default{
     data() {
       return {
+        schedulingSelectIndex:[-1,-1],
         form:{
           cbrqlx: '',
           cbzt: 'ZC',
@@ -328,19 +329,22 @@
         return newArr;
       },
       //获取单次出班信息
-      getSingleSchedule(item){
+      getSingleSchedule(i,j,item){
+        this.schedulingSelectIndex = [i,j];
         //修改添加/保存状态
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
-        this.form = item;
-        this.setForm(item);
+        this.form = arr.clone(item);
+        this.setForm(this.form);
       },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
+        console.log(this.form);
       },
       //设置新的排班信息
-      setNewSchedule(){
+      setNewSchedule(i,j){
+        this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         //修改添加/保存状态
         this.isAdd = true;
@@ -350,17 +354,17 @@
           czdz: '',//必填:表单获取
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
           yxzt:'YX',//必填:默认值
-          mbdm:this.$store.state.scheduling.mbdm,//必填
+          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
 
           sjddm:'',//必填:表单获取
-          kssj:'8:00',//必填:时间段列表 数据转换
-          jssj:'12:00',//必填:时间段列表 数据转换
+          kssj:'',//必填:时间段列表 数据转换
+          jssj:'',//必填:时间段列表 数据转换
           ysdm:'',//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-          ksdm: this.$store.state.login.userInfo.mbdm,//必填:科室列表 数据转换
+          ksdm: '',//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
@@ -445,6 +449,12 @@
         this.dialogVisible = false;
         this.isCover = true;
         this.save();
+      },
+      equalsArray(array1,array2) {
+        if(array1[0] != array2[0] || array1[1] != array2[1]){
+          return false;
+        }
+        return true;
       }
     },
     filters: {
@@ -452,6 +462,7 @@
         if(!time)return;
         return time.split(' ')[1]
       },
+
     },
   }
 </script>
@@ -700,6 +711,9 @@
   .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
+  }
+  .select{
+    border:1px solid red !important;
   }
   .box-title{
     width: 100%;
