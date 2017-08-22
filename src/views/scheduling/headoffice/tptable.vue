@@ -208,28 +208,6 @@
       getCheckList(){
         this.checkList = this.$store.state.scheduling.curSelDepartList;
       },
-      //科室数据初始化
-      ksdataInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.$store.state.login.userInfo.ksdm ,
-          mbdm: this.$store.state.scheduling.mbdm ,
-          yydm: this.$store.state.login.userInfo.yydm
-        }).then(data => {
-          if(data==''){
-            this.loading = false;
-          }
-          else{
-            this.TpCard = data;
-            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-            console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
-            console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
-            this.loading = false;
-          }
-
-      }).catch(err => {
-          console.log(err);
-        });
-      },
       //门办数据初始化
       mbdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {

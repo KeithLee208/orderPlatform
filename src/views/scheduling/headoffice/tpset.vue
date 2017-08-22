@@ -73,29 +73,15 @@
           <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="选择病种">
-        <el-select v-model="form.disease" placeholder="请选择病种">
-          <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="就诊时间">
         <el-radio-group v-model="form.cbrqlx">
           <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="出诊时间">
-        <el-col :span="8">
           <el-radio-group v-model="form.sjddm">
             <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
           </el-radio-group>
-        </el-col>
-        <el-col :span="10">
-          <el-form-item label="时间段">
-            <el-time-picker is-range v-model="form.time" placeholder="选择时间范围">
-            </el-time-picker>
-          </el-form-item>
-        </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
         <el-input type="input" v-model="form.czdz"></el-input>
@@ -103,6 +89,75 @@
       <el-form-item label="备注信息">
         <el-input type="input" v-model="form.note"></el-input>
       </el-form-item>
+      <div class="box-title">
+        <span>设置费用及号序</span>
+      </div>
+      <el-form-item label="配置号序">
+        <span class="num-info">(当前号源数18)</span>
+      </el-form-item>
+      <div class="Channel">
+        <el-radio-group v-model="formOptions.channel" @change="channelChange">
+          <el-radio label="1">区分渠道</el-radio>
+          <el-radio label="2">不区分渠道</el-radio>
+        </el-radio-group>
+        <div v-if="formOptions.Channel">
+          <div class="Channel-Warrper">
+            <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
+              <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
+                <p  class="top">{{item.num}}</p>
+                <p class="footer">{{item.qdmc}}</p>
+              </div>
+            </draggable>
+          </div>
+          <div class="production">
+            <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
+          </div>
+          <div v-if="ball">
+            <div class="ball-row">
+                     <span v-for="(item,index) in ballList" :key="item.hx">
+                      <el-popover
+                       placement="top"
+                       width="260"
+                       trigger="click"
+                       :open-delay="500">
+                        <div class="changeType">
+                          <p class="title">配置号序渠道</p>
+                          <p>
+                            <span class="typename">当前号源渠道：非预约</span>
+                            <span class="price pull-right">服务费用：10元</span>
+                          </p>
+                          <p>
+                            <span>更换服务类型</span>
+                            <span class="typeselect">
+                              <el-select  size="small"  placeholder="请选择">
+                              </el-select>
+                            </span>
+                          </p>
+                        </div>
+                       <i slot="reference" :class="item.qddm" :style="item.style">
+                         <p class="num">{{item.hx}}</p>
+                         <p class="price">
+                           <span class="ball-price pull-left" v-if="!item.edit">{{item.je}}</span>
+                            <input v-if="item.edit"  @blur="ballList[index].edit = false" v-model="item.je"  v-focus class="ball-edit" :style="{background:item.style.background,color:item.style.color}" type="text">
+                           <span class="pull-left">¥</span>
+                         </p>
+                        </i>
+                       </el-popover>
+                     </span>
+              <span>
+                 <i class="plus el-icon-plus"></i>
+               </span>
+            </div>
+          </div>
+        </div>
+        <div class="UnChannel" v-if="formOptions.UnChannel">
+          <el-form label-width="100px">
+            <el-form-item label="设置总号源数">
+              <el-input style="width: 170px"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
     </el-form>
 
     <div slot="footer"  class="dialog-footer">
@@ -125,6 +180,8 @@
 </template>
 <script>
   import * as arr from '../../../filters/array'
+  import channeldrag from '../../../components/base/drag/channel-drag.vue'
+  import draggable from 'vuedraggable'
   export default{
     data() {
       return {
@@ -149,7 +206,8 @@
           ysmc:'',
           yxzt:'',
           zbxh:'',
-          zlfdm:''
+          zlfdm:'',
+          hxmbList:''
         },
         formOptions:{
           serviceType:{
@@ -189,18 +247,19 @@
               {name:"周六",val:"星期六"},
               {name:"周日",val:"星期日"}]
           },
-          time:{
-            isShow:true,
-            isEdit:true,
-            list:[]
-          },
           slotTime:{
             isShow:true,
             isEdit:true,
             list:[]
           },
           address:'',
-          note:''
+          note:'',
+          channel: '1',
+          Source: false,
+          UnSource: false,
+          CloseShow: false,
+          Channel: true,
+          UnChannel: false,
         },//表单控制
         currentDocSchedule:{
           ysmc:"默认",
@@ -237,7 +296,18 @@
         isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
         isCover:false,//是否覆盖
-        dialogVisible: false//确认覆盖弹窗显示
+        dialogVisible: false,//确认覆盖弹窗显示
+        channalList:[],
+        channal:[],
+        ball:false,
+        ballList:[],
+        styleArr:[
+          {border:'1px solid #e0e0e0',background: '#fff',color: '#666'},
+          {border:'1px solid #c0e5ff',background: '#e9f6ff',color: '#20a0ff'},
+          {border: '1px solid #bcf1d4',background: '#bcf1d4',color: '#0caf4e'},
+          {border: '1px solid #feebc3',background: '#fff8ea',color: '#e8a623'},
+          {border: '1px solid #ffcccc',background: '#ffeded',color: '#ff4949'}
+        ]
       };
     },
     created() {
@@ -250,6 +320,7 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
+        this.getChannalList();//获取号序列表
         if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
@@ -380,19 +451,6 @@
         this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
         this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
       },
-      MsgSuccess() {
-        this.SubmitVisible = false;
-        this.$message({
-          message: '提交成功！',
-          type: 'success'
-        });
-      },
-      TemSuccess() {
-        this.$message({
-          message: '成功！',
-          type: 'success'
-        });
-      },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         this.formOptions.serviceType.activeIndex = index;
@@ -401,6 +459,7 @@
       save(){
         this.formDataFormat();
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
+          console.log('保存',data);
           this.$message('保存成功');
           this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
@@ -414,7 +473,6 @@
           //2. 网络错误，本地网络断开、超时等
         });
       },
-
       //删除
       delSchedule(item){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
@@ -442,6 +500,48 @@
         this.dialogVisible = false;
         this.isCover = true;
         this.save();
+      },
+      //配置号序Dom切换
+      getChannalList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {
+          yydm: this.$store.state.login.userInfo.yydm
+        }).then(data => {
+          console.log(data);
+          data.map((item, index) => {
+            item.edit = false;
+            item.num = 1;
+            item.style = this.styleArr[index]
+          });
+
+          this.$store.commit('scheduling/SET_CHANNALLIST',data);
+          this.channalList = data;
+          console.log(data)
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //配置号序Dom切换
+      channelChange(value) {
+        if (value == '1') {
+          this.formOptions.Channel = true;
+          this.formOptions.UnChannel = false;
+        } else if (value == '2') {
+          this.formOptions.Channel = false;
+          this.formOptions.UnChannel = true;
+        }
+      },
+      getSortList(){
+        this.ball=true;
+        let newArr = [];
+        var mynum = 0;
+        for(var x = 0;x < this.channalList.length;x++){
+          for(var y=0;y<this.channalList[x].num;y++){
+            newArr.push({hx:y+mynum+1,qddm:this.channalList[x].qddm,je:50,edit:false,style:this.channalList[x].style});
+          }
+          mynum+=y;
+        }
+        this.ballList = newArr;
+        this.form.hxmbList=this.ballList;
       }
     },
     filters: {
@@ -450,6 +550,17 @@
         return time.split(' ')[1]
       },
     },
+    components: {
+      draggable
+    },
+    directives: {
+      focus: {
+        inserted: function (el) {
+          // 聚焦元素
+          el.select()
+        }
+      }
+    }
   }
 </script>
 
@@ -710,5 +821,231 @@
     border-left: 6px solid #3f51b5;
     margin-bottom: 10px;
   }
+  /******************************号序配置*******************************/
+
+  .num-info {
+    color: rgb(63, 169, 255);
+  }
+  .Channel {
+    margin-left: 80px;
+  }
+  .UnChannel {
+    margin-top: 20px;
+  }
+  .Channel-Warrper{
+    margin: 20px 0 20px 0;
+  }
+  .channel-box{
+    min-width: 130px;
+    width: 17.5%;
+    height: 84px;
+    display: inline-block;
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    margin-right: 2%;
+    cursor: move;
+    box-sizing: border-box;
+  }
+  .channel-box>.top{
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 32px;
+  }
+  .channel-box>.footer{
+    font-size: 12px;
+  }
+  .channel-box.default,.default>p>input[type=text]{
+    color: #666;
+  }
+  .channel-box.hospital,.hospital>p>input[type=text]{
+    color: #20a0ff;
+  }
+  .channel-box.wechat,.wechat>p>input[type=text]{
+    color: #0caf4e;
+  }
+  .channel-box.web,.web>p>input[type=text]{
+    color: #e8a623;
+  }
+  .channel-box.official,.official>p>input[type=text]{
+    color: #ff4949;
+  }
+  .channel-box>p{
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+  }
+
+  .ball-row{
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px dashed #e0e0e0;
+  }
+  .ball-row:last-child{
+    border-bottom: 1px transparent;
+  }
+  .ball-row>span:last-child{
+    border-right: 1px transparent;
+  }
+  .ball-row>span>span
+  {
+    display: inline-block;
+    width: 10%;
+    height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    padding: 10px;
+  }
+
+  .ball-row>span>span>i{
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+  }
+  .ball-row>span>span>i>p.num{
+    height:35px;
+    line-height: 35px
+  }
+  .ball-row>span>span>i>p.price{
+    height:14px;
+    line-height: 14px;
+    font-size: 14px;
+  }
+  .ball-row>span
+  {
+    display: inline-block;
+    width: 10%;
+    height: 80px;
+    text-align: center;
+    box-sizing: border-box;
+    float: left;
+    padding: 10px;
+  }
+  .ball-row>span>i{
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    font-size: 18px;
+
+  }
+
+  .ball-row>div>span>i.hospital{
+    border: 1px solid #c0e5ff;
+    background: #e9f6ff;
+    color: #20a0ff;
+  }
+  .ball-row>div>span>i.wechat{
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+    color: #0caf4e;
+  }
+  .ball-row>div>span>i.web{
+    border: 1px solid #feebc3;
+    background: #fff8ea;
+    color: #e8a623;
+  }
+  .ball-row>div>span>i.official{
+    border: 1px solid #ffcccc;
+    background: #ffeded;
+    color: #ff4949;
+  }
+  .ball-row>span>i.plus{
+    color: #e0e0e0;
+  }
+  .flip-list-move {
+    transition: transform 0.5s;
+  }
+
+  .no-move {
+    transition: transform 0s;
+  }
+  .production {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  .num-edit{
+    border: none;
+    text-align: center;
+    height: 35px;
+    line-height: 35px;
+    font-size: 32px;
+    width: 100%;
+    display: inline-block;
+    float: left;
+    margin-top: 3px;
+  }
+  .ball-price {
+    width: 30px;
+    margin: 0 0 0 9px;
+  }
+  .ball-row > div > span > i > p.num {
+    height: 33px;
+    line-height: 38px;
+    font-weight: bold;
+  }
+  .ball-edit {
+    border: none;
+    text-align: center;
+    height: 13px;
+    line-height: 13px;
+    font-size: 14px;
+    width: 30px;
+    display: inline-block;
+    float: left;
+    margin: 0 0 0 9px;
+  }
+  .default .ball-edit{
+    background: #fff;
+  }
+  .hospital .ball-edit{
+    background: #e9f6ff;
+  }
+  .wechat .ball-edit{
+    background: #e7faf0;
+  }
+  .web .ball-edit{
+    background: #fff8ea;
+  }
+  .official .ball-edit{
+    background: #ffeded;
+  }
+  .changeType{
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .changeType>p{
+    display: inline-block;
+    width: 100%;
+    height: 30px;
+  }
+  .changeType>.title{
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  .changeType>p>.typename{
+    color:#ffbf33 ;
+  }
+  .changeType>p>.price{
+    color: #999;
+    margin-right: 10px;
+  }
+  .changeType>p>.typeselect{
+    width: 146px;
+    margin-left: 10px;
+    display: inline-block;
+  }
+  /******************************号序配置*******************************/
 </style>
 

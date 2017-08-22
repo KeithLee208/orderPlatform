@@ -210,28 +210,7 @@
     box-sizing: border-box;
   }
 
-  .Adjustment {
-    height: 25px;
-    line-height: 25px;
-    position: absolute;
-    right: 40px;
-    top: 45px;
-  }
 
-  .Adjustment>a {
-    text-decoration: none;
-    color: rgb(32, 160, 255);
-  }
-
-  .setting-dialog-text {
-    padding-left: 20%;
-  }
-
-  .setting-dialog-text>p {
-    color: #999;
-    height: 30px;
-    line-height: 30px;
-  }
   /*-------------------------------*/
 
   .page-head > div {
@@ -244,96 +223,6 @@
     cursor: default;
   }
 
-  .type-filter > span > i {
-    width: 16px;
-    height: 16px;
-    float: left;
-    border-radius: 4px;
-    margin: 15px 5px 0 10px;
-    cursor: pointer;
-  }
-
-  .type-filter > span > .all {
-    border: 1px solid transparent;
-    margin-top: 15px;
-    color: #e0e0e0;
-    font-size: 16px;
-  }
-
-  .type-filter > span > .default {
-    border: 1px solid #e0e0e0;
-    background: #fff;
-  }
-
-  .type-filter > span > .default.active {
-    background: #e0e0e0;
-  }
-
-  .type-filter > span > .expert {
-    border: 1px solid rgb(192, 229, 255);
-    background: rgb(233, 246, 255);
-  }
-
-  .type-filter > span > .expert.active {
-    background: rgb(192, 229, 255);
-  }
-
-  .type-filter > span > .disease {
-    border: 1px solid rgb(188, 241, 212);
-    background: rgb(231, 250, 240);
-  }
-
-  .type-filter > span > .disease.active {
-    background: rgb(188, 241, 212);
-  }
-
-  .type-filter > span > .union {
-    border: 1px solid rgb(254, 235, 195);
-    background: rgb(255, 248, 234);
-  }
-
-  .type-filter > span > .union.active {
-    background: rgb(254, 235, 195);
-  }
-
-  .type-filter > span > .VIP {
-    border: 1px solid rgb(255, 204, 204);
-    background: rgb(255, 237, 237);
-  }
-
-  .type-filter > span > .VIP.active {
-    background: rgb(255, 204, 204);
-  }
-
-  .type-filter>.submit {
-    color: #3f51b5;
-  }
-
-  .type-filter>.unsubmit {
-    color: #e0e0e0;
-  }
-
-  .type-filter>.submit>i {
-    background: #3f51b5;
-  }
-
-  .type-filter>.unsubmit>i {
-    background: #e0e0e0;
-  }
-
-  .type-filter > span > i {
-    width: 16px;
-    height: 16px;
-    float: left;
-    border-radius: 4px;
-    margin: 16px 5px 0 10px;
-    cursor: pointer;
-  }
-
-  .in-model > span > i,
-  .in-model > span>.all {
-    margin: 10px 5px 0 10px;
-  }
 
   .setting-wraaper {
     position: absolute;
@@ -448,14 +337,6 @@
     color: #1d90e6;
   }
 
-
-  .form-line {
-    width: 100%;
-    float: left;
-    margin: 22px 0 22px 0;
-    display: inline-block;
-    border-bottom: 1px dashed #e0e0e0;
-  }
   .top-search {
     margin: 10px 15px 0 0 ;
     position: relative;
