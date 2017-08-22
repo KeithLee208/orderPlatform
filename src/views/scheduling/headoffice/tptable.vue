@@ -6,7 +6,7 @@
           <input class="top-searchinput pull-left" placeholder="搜索院区／科室／医生">
           <i class="iconfont icon-sousuo"></i>
         </div>
-        <router-link to='/scheduling/headoffice/templatelist'>
+        <router-link to='/scheduling/headoffice/departmentlist'>
           <i class="el-icon-close"></i>
         </router-link>
       </div>
@@ -139,7 +139,7 @@
                             </router-link>
                         </div>
                       </div>
-                      <div slot="reference" class="ordered" :class="[week.fwlxdm]">
+                      <div slot="reference" class="ordered" :class="[week.mzlx]">
                         <p>{{week.kssj }}-{{week.jssj}}</p>
                         <p>{{week.ksmc}}</p>
                       </div>

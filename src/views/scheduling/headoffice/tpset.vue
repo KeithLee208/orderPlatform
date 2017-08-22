@@ -34,15 +34,15 @@
         </div>
         <div class="AdTableRight">
           <div class="table-body">
-            <div v-for="(slot,index) in currentDocSchedule.slot"  :class="[index === 0 ? 'border-top-1':'']">
+            <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
-              <span v-for="week in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.fwlxdm]" @click="getSingleSchedule(week)">
+              <span v-for="(week,indexJ) in slot.weekday">
+                    <span v-if="week.cbrqlx" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else :class="['ordered']" @click="setNewSchedule()">
+                    <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
             </div>
@@ -54,7 +54,6 @@
       </div>
       <el-form-item label="服务类型">
         <div class="type-filter in-model">
-          <span><i class="el-icon-menu all"></i>全部</span>
               <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
@@ -104,7 +103,10 @@
           <div class="Channel-Warrper">
             <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
               <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
-                <p  class="top">{{item.num}}</p>
+                <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
+                <p v-else="item.edit" class="top">
+                  <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
+                </p>
                 <p class="footer">{{item.qdmc}}</p>
               </div>
             </draggable>
@@ -123,7 +125,7 @@
                         <div class="changeType">
                           <p class="title">配置号序渠道</p>
                           <p>
-                            <span class="typename">当前号源渠道：非预约</span>
+                            <span class="typename">当前服务类型：普通门诊</span>
                             <span class="price pull-right">服务费用：10元</span>
                           </p>
                           <p>
@@ -185,6 +187,7 @@
   export default{
     data() {
       return {
+        schedulingSelectIndex:[-1,-1],
         form:{
           cbrqlx: '',
           cbzt: 'ZC',
@@ -213,7 +216,7 @@
           serviceType:{
             isShow:true,
             list:[],
-            activeIndex:0
+            activeIndex:0,
           },
           doctor:{
             isShow:true,
@@ -295,7 +298,7 @@
         templateData:[],//排版模板数据
         isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
-        isCover:false,//是否覆盖
+        ifCover:false,//是否覆盖
         dialogVisible: false,//确认覆盖弹窗显示
         channalList:[],
         channal:[],
@@ -396,19 +399,23 @@
         return newArr;
       },
       //获取单次出班信息
-      getSingleSchedule(item){
+      //获取单次出班信息
+      getSingleSchedule(i,j,item){
+        this.schedulingSelectIndex = [i,j];
         //修改添加/保存状态
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
-        this.form = item;
-        this.setForm(item);
+        this.form = arr.clone(item);
+        this.setForm(this.form);
       },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
+        console.log(this.form);
       },
       //设置新的排班信息
-      setNewSchedule(){
+      setNewSchedule(i,j){
+        this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         //修改添加/保存状态
         this.isAdd = true;
@@ -416,19 +423,19 @@
           cbrqlx: '',//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
-          czry: 'EMP.20000000.00',//必填:登录信息
+          czry: this.$store.state.login.userInfo.userId,//必填:登录信息
           yxzt:'YX',//必填:默认值
-          mbdm:this.$store.state.scheduling.mbdm,//必填
+          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
 
           sjddm:'',//必填:表单获取
-          kssj:'8:00',//必填:时间段列表 数据转换
-          jssj:'12:00',//必填:时间段列表 数据转换
+          kssj:'',//必填:时间段列表 数据转换
+          jssj:'',//必填:时间段列表 数据转换
           ysdm:'',//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-          ksdm: this.$store.state.login.userInfo.mbdm,//必填:科室列表 数据转换
+          ksdm: '',//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
@@ -453,15 +460,17 @@
       },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
+        console.log(this.formOptions.serviceType.list[index])
         this.formOptions.serviceType.activeIndex = index;
+//        this.ghfdm:this.formOptions.serviceType.list[index].sfxm[0].)
       },
       //保存/新增接口
       save(){
         this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
           console.log('保存',data);
           this.$message('保存成功');
-          this.isCover = false;
+          this.ifCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
@@ -475,7 +484,7 @@
       },
       //删除
       delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
@@ -494,11 +503,11 @@
       },
       handleCancel(){
         this.dialogVisible = false;
-        this.isCover = false;
+        this.ifCover = false;
       },
       handleConfirm(){
         this.dialogVisible = false;
-        this.isCover = true;
+        this.ifCover = true;
         this.save();
       },
       //配置号序Dom切换
@@ -536,12 +545,27 @@
         var mynum = 0;
         for(var x = 0;x < this.channalList.length;x++){
           for(var y=0;y<this.channalList[x].num;y++){
-            newArr.push({hx:y+mynum+1,qddm:this.channalList[x].qddm,je:50,edit:false,style:this.channalList[x].style});
+            newArr.push(
+              {
+                fwlxdm:this.form.fwlxdm,
+                ghfdm:this.form.ghfdm,
+                hx:y+mynum+1,
+                qddm:this.channalList[x].qddm,
+                zlfdm:this.form.zlfdm,
+                zydm:'',
+                je:50,
+                style:this.channalList[x].style});
           }
           mynum+=y;
         }
         this.ballList = newArr;
         this.form.hxmbList=this.ballList;
+      },
+      equalsArray(array1,array2) {
+        if(array1[0] != array2[0] || array1[1] != array2[1]){
+          return false;
+        }
+        return true;
       }
     },
     filters: {
@@ -820,6 +844,9 @@
     margin-left: 12px;
     border-left: 6px solid #3f51b5;
     margin-bottom: 10px;
+  }
+  .select{
+    border:1px solid red !important;
   }
   /******************************号序配置*******************************/
 
