@@ -102,13 +102,9 @@
         </el-radio-group>
         <div v-if="formOptions.Channel">
           <div class="Channel-Warrper">
-            <draggable v-model="channalList"   @start="drag=true" @end="drag=false">
+            <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
               <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
-                <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
-                <p v-else="item.edit" class="top">
-                  <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
-                </p>
-                <!---->
+                <p  class="top">{{item.num}}</p>
                 <p class="footer">{{item.qdmc}}</p>
               </div>
             </draggable>
@@ -118,14 +114,12 @@
           </div>
           <div v-if="ball">
             <div class="ball-row">
-              <draggable v-model="ballList"  @start="drag=true" @end="drag=false">
-                <transition-group tag="div" :name="'flip-list'">
                      <span v-for="(item,index) in ballList" :key="item.hx">
                       <el-popover
                        placement="top"
                        width="260"
                        trigger="click"
-                       open-delay="800">
+                       :open-delay="500">
                         <div class="changeType">
                           <p class="title">配置号序渠道</p>
                           <p>
@@ -133,11 +127,9 @@
                             <span class="price pull-right">服务费用：10元</span>
                           </p>
                           <p>
-                            <span>选择渠道</span>
+                            <span>更换服务类型</span>
                             <span class="typeselect">
-                              <el-select  size="small" v-model="value6" placeholder="请选择">
-                                <el-option>1</el-option>
-                                <el-option>2</el-option>
+                              <el-select  size="small"  placeholder="请选择">
                               </el-select>
                             </span>
                           </p>
@@ -152,8 +144,6 @@
                         </i>
                        </el-popover>
                      </span>
-                </transition-group>
-              </draggable>
               <span>
                  <i class="plus el-icon-plus"></i>
                </span>
@@ -895,7 +885,7 @@
   .ball-row>span:last-child{
     border-right: 1px transparent;
   }
-  .ball-row>div>div>span>span
+  .ball-row>span>span
   {
     display: inline-block;
     width: 10%;
@@ -906,7 +896,7 @@
     padding: 10px;
   }
 
-  .ball-row>div>div>span>span>i{
+  .ball-row>span>span>i{
     cursor: pointer;
     display: inline-block;
     font-style: normal;
@@ -917,11 +907,11 @@
     border: 1px solid #e0e0e0;
     font-size: 18px;
   }
-  .ball-row>div>div>span>span>i>p.num{
+  .ball-row>span>span>i>p.num{
     height:35px;
     line-height: 35px
   }
-  .ball-row>div>div>span>span>i>p.price{
+  .ball-row>span>span>i>p.price{
     height:14px;
     line-height: 14px;
     font-size: 14px;
@@ -949,22 +939,22 @@
 
   }
 
-  .ball-row>div>div>span>i.hospital{
+  .ball-row>div>span>i.hospital{
     border: 1px solid #c0e5ff;
     background: #e9f6ff;
     color: #20a0ff;
   }
-  .ball-row>div>div>span>i.wechat{
+  .ball-row>div>span>i.wechat{
     border: 1px solid #bcf1d4;
     background: #e7faf0;
     color: #0caf4e;
   }
-  .ball-row>div>div>span>i.web{
+  .ball-row>div>span>i.web{
     border: 1px solid #feebc3;
     background: #fff8ea;
     color: #e8a623;
   }
-  .ball-row>div>div>span>i.official{
+  .ball-row>div>span>i.official{
     border: 1px solid #ffcccc;
     background: #ffeded;
     color: #ff4949;
@@ -999,7 +989,7 @@
     width: 30px;
     margin: 0 0 0 9px;
   }
-  .ball-row > div > div > span > i > p.num {
+  .ball-row > div > span > i > p.num {
     height: 33px;
     line-height: 38px;
     font-weight: bold;
@@ -1052,7 +1042,7 @@
     margin-right: 10px;
   }
   .changeType>p>.typeselect{
-    width: 170px;
+    width: 146px;
     margin-left: 10px;
     display: inline-block;
   }
