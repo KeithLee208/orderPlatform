@@ -239,22 +239,20 @@
         setTimeout(_ => {
           this.init();
         },0);
-        //监听获取医生排班列表事件
-        this.$root.eventHub.$on('dtpset_getDocScheduleList', data => {
-          this.getDocScheduleList(data);
-        });
       })
     },
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        this.getDocScheduleList();//获取医生出班模板列表
-//        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
-//          this.getDocScheduleList();//获取医生出班模板列表
-//        }else{
-//          this.$message('无医生信息');
-//          this.loading = false;
-//        }
+//        this.getDocScheduleList();//获取医生出班模板列表
+        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
+          this.getDocScheduleList();//获取医生出班模板列表
+        }else{
+          this.$message('无医生信息');
+          //获取医生出班模板列表缺省信息
+          this.getDocScheduleListDefault();
+          this.loading = false;
+        }
       },
       //获取各种字典数据
       getDicData(){
@@ -270,6 +268,23 @@
         }).catch(err => {
           console.log(err);
         });
+      },
+      //获取医生排班模板列表缺省信息
+      getDocScheduleListDefault(){
+        this.timeSlot.map((slot,index) => {
+          Object.assign(this.currentDocSchedule.slot[index],arr.clone(slot))
+        });
+        this.currentDocSchedule.slot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+          ];
+        })
       },
       //获取医生出班模板列表
       getDocScheduleList(){
@@ -345,6 +360,8 @@
         //修改添加/保存状态
         this.isAdd = false;
         this.form = arr.clone(item);
+        this.form.cbrqlx = [this.form.cbrqlx];
+        this.form.sjddm = [this.form.sjddm];
         this.setForm(this.form);
       },
       //表单填充策略
@@ -383,17 +400,39 @@
         this.setForm(_data);
       },
       //数据转换
-      formDataFormat(){
-        this.form.ghfdm = this.form.fwlxdm ? this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
+      formDataFormat(form){
+        let newForm = arr.clone(form);
+        newForm.ghfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+                          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
                           .filter(item => item.lx == 'GHF')[0].mxxh : '';
-        this.form.zlfdm = this.form.fwlxdm ? this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
+        newForm.zlfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+                          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
                           .filter(item => item.lx == 'ZLF')[0].mxxh : '';
-        this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
-        this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
-        this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
-        this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
+        newForm.sjddmList = [];
+        newForm.sjddm.map(sjddm => {
+          newForm.sjddmList.push({
+              sjddm:sjddm,
+              kssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
+              jssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
+          });
+        });
+        newForm.userList = [{
+          ksdm:newForm.ksdm,
+          ksmc:this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
+          ysdm:newForm.ysdm,
+          ysmc:this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
+        }];
+        newForm.hxmbList = [];
+        newForm.zydmList = [];
+        return newForm;
+      },
+      //按照出班日期转换保存数据模型
+      cbrqlxDataFormat(data){
+        let newData = [];
+        data.cbrqlx.map(() => {
+          newData.push(arr.clone(data));
+        })
+        return newData;
       },
       MsgSuccess() {
         this.SubmitVisible = false;
@@ -414,8 +453,10 @@
       },
       //保存/新增接口
       save(){
-        this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
+        let data = this.formDataFormat(this.form);
+        console.log('保存时的数据 %o',data);
+        return false;
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
           this.$message('保存成功');
           this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
