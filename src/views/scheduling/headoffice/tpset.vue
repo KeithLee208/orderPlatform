@@ -131,13 +131,13 @@
                           <p>
                             <span>更换服务类型</span>
                             <span class="typeselect">
-                              <el-select v-model="changeType" size="small"  placeholder="请选择">
-                                <el-option
-                                  v-for="(item,index) in formOptions.serviceType.list"
-                                  :lable="item.fwlxmc"
-                                  :key="item.fwlxdm"
-                                  :value="item.fwlxdm"></el-option>
-                              </el-select>
+                              <!--<el-select v-model="changeType" size="small"  placeholder="请选择">-->
+                                <!--<el-option-->
+                                  <!--v-for="(item,index) in formOptions.serviceType.list"-->
+                                  <!--:lable="item.fwlxmc"-->
+                                  <!--:key="item.fwlxdm"-->
+                                  <!--:value="item.fwlxdm"></el-option>-->
+                              <!--</el-select>-->
                             </span>
                           </p>
                         </div>

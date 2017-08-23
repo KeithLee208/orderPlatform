@@ -365,9 +365,8 @@
           yxzt:'YX',//必填:默认值
           mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
           fwlxdm:'',//必填:表单获取
-          ghfdm:'',//必填:服务类型列表 数据转换
-          zlfdm:'',//必填:服务类型列表 数据转换
-
+          ghfdm:'',//必填:挂号费 数据转换
+          zlfdm:'',//必填:诊疗费 数据转换
           sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
