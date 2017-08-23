@@ -208,8 +208,8 @@
           ysdm:'',
           ysmc:'',
           yxzt:'',
-          zbxh:'',
           zlfdm:'',
+          zbxh:'',
           hxmbList:''
         },
         formOptions:{
