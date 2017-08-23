@@ -353,7 +353,7 @@
       },
       //设置新的排班信息
       setNewSchedule(i,j){
-        this.schedulingSelectIndex = [i,j];console.log(this.currentDocSchedule);
+        this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         //修改添加/保存状态
         this.isAdd = true;
