@@ -37,12 +37,14 @@
             <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
+                    <span v-else class="ordered"
+                          :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"
+                          @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
             </div>
@@ -80,15 +82,15 @@
         <!--</el-select>-->
       <!--</el-form-item>-->
       <el-form-item label="就诊时间">
-        <el-radio-group v-model="form.cbrqlx">
-          <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
-        </el-radio-group>
+        <el-checkbox-group v-model="form.cbrqlx">
+          <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="出诊时间">
         <el-col :span="8">
-          <el-radio-group v-model="form.sjddm">
-            <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
-          </el-radio-group>
+          <el-checkbox-group v-model="form.sjddm">
+            <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+          </el-checkbox-group>
         </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
@@ -121,7 +123,7 @@
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
-          cbrqlx: '',
+          cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
           czry: 'EMP.20000000.00',
@@ -136,7 +138,7 @@
           lrsj:'',
           mbdm:'',
           mxxh:'',
-          sjddm:'',
+          sjddm:[],
           ysdm:'',
           ysmc:'',
           yxzt:'',
@@ -297,29 +299,38 @@
         list.map((item,index) => {
           newArr[index] = {"ysmc":item.name,"slot":[]};
           this.timeSlot.map(slot => {
-            slot.weekday = [{},{},{},{},{},{},{}];
+            slot.weekday = [
+              {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+            ];
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
-                slot.weekday[0] = week;
+              if(week.sjddm != slot.sjddm)return
+              if(week.cbrqlx === '星期一'){
+                Object.assign(slot.weekday[0],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
-                slot.weekday[1] = week;
+              if(week.cbrqlx === '星期二'){
+                Object.assign(slot.weekday[1],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
-                slot.weekday[2] = week;
+              if(week.cbrqlx === '星期三'){
+                Object.assign(slot.weekday[2],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
-                slot.weekday[3] = week;
+              if(week.cbrqlx === '星期四'){
+                Object.assign(slot.weekday[3],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
-                slot.weekday[4] = week;
+              if(week.cbrqlx === '星期五'){
+                Object.assign(slot.weekday[4],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
-                slot.weekday[5] = week;
+              if(week.cbrqlx === '星期六'){
+                Object.assign(slot.weekday[5],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
-                slot.weekday[6] = week;
+              if(week.cbrqlx === '星期日'){
+                Object.assign(slot.weekday[6],week)
               }
             })
             newArr[index].slot.push(slot);
@@ -333,23 +344,21 @@
         this.schedulingSelectIndex = [i,j];
         //修改添加/保存状态
         this.isAdd = false;
-        console.log('单次出班模板 %o',item);
         this.form = arr.clone(item);
         this.setForm(this.form);
       },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
-        console.log(this.form);
       },
       //设置新的排班信息
       setNewSchedule(i,j){
-        this.schedulingSelectIndex = [i,j];
+        this.schedulingSelectIndex = [i,j];console.log(this.currentDocSchedule);
         this.$message('设置新的出班信息');
         //修改添加/保存状态
         this.isAdd = true;
         let _data = {
-          cbrqlx: '',//必填:表单获取
+          cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
@@ -359,12 +368,12 @@
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
 
-          sjddm:'',//必填:表单获取
+          sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
-          ysdm:'',//必填:医生列表 数据转换
+          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-          ksdm: '',//必填:科室列表 数据转换
+          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
@@ -376,12 +385,12 @@
       },
       //数据转换
       formDataFormat(){
-        this.form.ghfdm = this.formOptions.serviceType.list
+        this.form.ghfdm = this.form.fwlxdm ? this.formOptions.serviceType.list
                           .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'GHF')[0].mxxh;
-        this.form.zlfdm = this.formOptions.serviceType.list
+                          .filter(item => item.lx == 'GHF')[0].mxxh : '';
+        this.form.zlfdm = this.form.fwlxdm ? this.formOptions.serviceType.list
                           .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'ZLF')[0].mxxh;
+                          .filter(item => item.lx == 'ZLF')[0].mxxh : '';
         this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
         this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
         this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
@@ -421,7 +430,6 @@
           //2. 网络错误，本地网络断开、超时等
         });
       },
-
       //删除
       delSchedule(item){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
