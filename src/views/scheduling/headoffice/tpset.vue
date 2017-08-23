@@ -202,7 +202,7 @@
           ksmc:'',
           kssj:'',
           lrsj:'',
-          mbdm:'',
+          mbdm:this.$store.state.scheduling.currentSchedulingSet.mbdm,
           mxxh:'',
           sjddm:'',
           ysdm:'',
@@ -298,11 +298,11 @@
         templateData:[],//排版模板数据
         isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
-        ifCover:false,//是否覆盖
+        isCover:false,//是否覆盖
         dialogVisible: false,//确认覆盖弹窗显示
         channalList:[],
         channal:[],
-        ball:false,
+        ball:true,
         ballList:[],
         styleArr:[
           {border:'1px solid #e0e0e0',background: '#fff',color: '#666'},
@@ -399,12 +399,17 @@
         return newArr;
       },
       //获取单次出班信息
-      //获取单次出班信息
       getSingleSchedule(i,j,item){
         this.schedulingSelectIndex = [i,j];
         //修改添加/保存状态
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
+          console.log(data);
+          this.ballList=data;
+        }).catch(err => {
+          console.log(err);
+        });
         this.form = arr.clone(item);
         this.setForm(this.form);
       },
@@ -467,10 +472,10 @@
       //保存/新增接口
       save(){
         this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
           console.log('保存',data);
           this.$message('保存成功');
-          this.ifCover = false;
+          this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
@@ -484,7 +489,7 @@
       },
       //删除
       delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
@@ -503,11 +508,11 @@
       },
       handleCancel(){
         this.dialogVisible = false;
-        this.ifCover = false;
+        this.isCover = false;
       },
       handleConfirm(){
         this.dialogVisible = false;
-        this.ifCover = true;
+        this.isCover = true;
         this.save();
       },
       //配置号序Dom切换
@@ -540,7 +545,6 @@
         }
       },
       getSortList(){
-        this.ball=true;
         let newArr = [];
         var mynum = 0;
         for(var x = 0;x < this.channalList.length;x++){
