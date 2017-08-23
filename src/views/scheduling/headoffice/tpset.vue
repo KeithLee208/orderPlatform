@@ -447,7 +447,7 @@
           ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
-          hxzs:'',
+          hxzs:5,
           fscj: '',
           lrsj:'',
           zbxh:'',

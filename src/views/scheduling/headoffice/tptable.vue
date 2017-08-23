@@ -305,7 +305,11 @@
       },
       //门办设置出班模板，清空vuex的医生模板信息
       clearCurrentDocSchedule(){
-        this.$store.commit('scheduling/SET_CURRENTTEMPLATESET', {})
+        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
+          ysdm:'',
+          mbdm:this.$store.state.scheduling.currentsSelectTemplate.mbdm,
+          ksdm:this.checkList[this.checkLIstActive].kstybm
+        });
       }
     },
     filters: {
