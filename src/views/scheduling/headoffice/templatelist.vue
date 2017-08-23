@@ -71,8 +71,8 @@
       },
       newTemplate(){
         let params = {
-          czry:'胡一刀',
-          yydm:'001',
+          czry:this.$store.state.login.userInfo.userName,
+          yydm:this.$store.state.login.userInfo.yydm,
           mbmc:this.form.name
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S00", params).then(data => {

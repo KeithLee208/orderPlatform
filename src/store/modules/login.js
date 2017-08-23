@@ -6,7 +6,7 @@ const state = {
   userInfo:{
     type:'科室',
     yydm:'001',
-    ksdm:'20000000.23.23.2180'
+    ksdm:'20000000.23.23.2180',
   },//登录信息
   userAuth:{
     type:'科室'

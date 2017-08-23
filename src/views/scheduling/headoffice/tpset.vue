@@ -131,7 +131,12 @@
                           <p>
                             <span>更换服务类型</span>
                             <span class="typeselect">
-                              <el-select  size="small"  placeholder="请选择">
+                              <el-select v-model="changeType" size="small"  placeholder="请选择">
+                                <el-option
+                                  v-for="(item,index) in formOptions.serviceType.list"
+                                  :lable="item.fwlxmc"
+                                  :key="item.fwlxdm"
+                                  :value="item.fwlxdm"></el-option>
                               </el-select>
                             </span>
                           </p>
@@ -298,7 +303,7 @@
         templateData:[],//排版模板数据
         isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
-        isCover:false,//是否覆盖
+        ifCover:false,//是否覆盖
         dialogVisible: false,//确认覆盖弹窗显示
         channalList:[],
         channal:[],
@@ -425,7 +430,7 @@
         //修改添加/保存状态
         this.isAdd = true;
         let _data = {
-          cbrqlx: '',//必填:表单获取
+          cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
@@ -434,13 +439,12 @@
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
-
-          sjddm:'',//必填:表单获取
+          sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
-          ysdm:'',//必填:医生列表 数据转换
+          ysdm:this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-          ksdm: '',//必填:科室列表 数据转换
+          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
@@ -472,10 +476,10 @@
       //保存/新增接口
       save(){
         this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],isCover:this.isCover}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
           console.log('保存',data);
           this.$message('保存成功');
-          this.isCover = false;
+          this.ifCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
@@ -489,7 +493,7 @@
       },
       //删除
       delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
@@ -508,11 +512,11 @@
       },
       handleCancel(){
         this.dialogVisible = false;
-        this.isCover = false;
+        this.ifCover = false;
       },
       handleConfirm(){
         this.dialogVisible = false;
-        this.isCover = true;
+        this.ifCover = true;
         this.save();
       },
       //配置号序Dom切换
