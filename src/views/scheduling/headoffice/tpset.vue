@@ -447,8 +447,8 @@
           ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
-          hxzs:5,
-          fscj: '',
+          hxzs:'',
+          fscj:'',
           lrsj:'',
           zbxh:'',
         };
@@ -566,6 +566,7 @@
           }
           mynum+=y;
         }
+        this.form.hxzs=newArr.length;
         this.ballList = newArr;
         this.form.hxmbList=this.ballList;
       },
