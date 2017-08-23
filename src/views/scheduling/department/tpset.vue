@@ -455,7 +455,6 @@
       save(){
         let data = this.formDataFormat(this.form);
         console.log('保存时的数据 %o',data);
-        return false;
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
           this.$message('保存成功');
           this.isCover = false;
