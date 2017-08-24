@@ -538,7 +538,7 @@
         this.formOptions.serviceType.activeIndex = index;
 //        this.ghfdm:this.formOptions.serviceType.list[index].sfxm[0].)
       },
-      //保存/新增接口
+      //保存
       save(){
         this.formDataFormat();
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
