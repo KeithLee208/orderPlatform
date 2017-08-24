@@ -424,15 +424,6 @@
         }];
         newForm.hxmbList = [];
         newForm.zydmList = [];
-        newForm.cbrqlxList = newForm.cbrqlx;
-        delete newForm['cbrqlx'];
-        delete newForm['sjddm'];
-        delete newForm['kssj'];
-        delete newForm['jssj'];
-        delete newForm['ysmc'];
-        delete newForm['ysdm'];
-        delete newForm['ksmc'];
-        delete newForm['ksdm'];
         return newForm;
       },
       //按照出班日期转换保存数据模型
