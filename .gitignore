@@ -3,6 +3,7 @@
 idea/
 idea
 .idea
+.idea/workspace.xml
 idea
 node_modules/
 dist/

@@ -548,7 +548,7 @@
       },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
-        console.log(this.formOptions.serviceType.list[index])
+        console.log('当前服务类型金额',this.formOptions.serviceType.list[index].sfxm[0].dj)
         this.formOptions.serviceType.activeIndex = index;
 //        this.ghfdm:this.formOptions.serviceType.list[index].sfxm[0].)
       },
