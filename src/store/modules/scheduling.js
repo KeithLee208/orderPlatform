@@ -3,6 +3,7 @@
  */
 const namespaced = true;
 const state = {
+  //----- 出班模板 ----//
   departmentList:[],//医院所有预约科室
   serviceTypeList:[],//服务类型
   doctorList:[],//医生列表
@@ -17,7 +18,14 @@ const state = {
   mbdm:[],//点击卡片传递所选科室代码
   curSelDepartList:[],//当前选择科室列表
   currentDocSchedule:{},//当前所选医生出班表
-  currentSchedulingSet:{}//当前排班设置
+  currentSchedulingSet:{},//当前排班设置
+  //----- 出班模板 ----//
+
+  //----- 出班表 ----//
+  departmentWorkMbdm:"20000000.E.E.101",//
+  departmentWorkKsrq:'2017-08-14',
+  departmentWorkJsrq:'2017-08-20',
+  //----- 出班表 ----//
 };
 
 // state 中派生出一些状态
