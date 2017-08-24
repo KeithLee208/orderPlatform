@@ -160,7 +160,7 @@
         <div class="UnChannel" v-if="formOptions.UnChannel">
           <el-form label-width="100px">
             <el-form-item label="设置总号源数">
-              <el-input style="width: 170px"></el-input>
+              <el-input v-model="form.hxzs" style="width: 170px"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -410,18 +410,46 @@
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          console.log(data);
-          this.ballList=data;
+          let _data= data.sort(this.hxCompare('hx'));
+          console.log('c',this.ballToChannal(_data,'qddm'));
         }).catch(err => {
           console.log(err);
         });
         this.form = arr.clone(item);
         this.setForm(this.form);
       },
+      //号序升序排序
+      hxCompare(prop){
+        return function(a,b){
+          var value1 = a[prop];
+          var value2 = b[prop];
+          return value1 - value2;
+        }
+      },
+      //号序反演
+      ballToChannal (arr,key){
+        let newArr = arr
+          .map(item => [item[key]])
+          .reduce((a,b) => a.concat(b))
+          .distinct()
+          .map(item => ({
+            qddm:item,
+            edit:false,
+            children:[]
+          }));
+        arr.map(item => {
+          newArr.map(newItem => {
+            if(item[key] === newItem.qddm){
+              // newItem.children.push({item});
+              newItem.children[newItem.children.length] = item;
+            }
+          })
+        });
+        return newArr
+      },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
-        console.log(this.form);
       },
       //设置新的排班信息
       setNewSchedule(i,j){
@@ -524,16 +552,15 @@
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {
           yydm: this.$store.state.login.userInfo.yydm
         }).then(data => {
-          console.log(data);
+          console.log('d',data);
           data.map((item, index) => {
             item.edit = false;
             item.num = 1;
             item.style = this.styleArr[index]
           });
-
           this.$store.commit('scheduling/SET_CHANNALLIST',data);
           this.channalList = data;
-          console.log(data)
+          console.log('大',data)
         }).catch(err => {
           console.log(err);
         });
@@ -581,7 +608,7 @@
       timeFormat: function (time) {
         if(!time)return;
         return time.split(' ')[1]
-      },
+      }
     },
     components: {
       draggable
@@ -920,16 +947,6 @@
   }
   .ball-row>span:last-child{
     border-right: 1px transparent;
-  }
-  .ball-row>span>span
-  {
-    display: inline-block;
-    width: 10%;
-    height: 80px;
-    text-align: center;
-    box-sizing: border-box;
-    float: left;
-    padding: 10px;
   }
 
   .ball-row>span>span>i{
