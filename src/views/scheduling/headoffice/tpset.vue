@@ -446,8 +446,8 @@
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          this.ballList= data.sort(this.hxCompare('hx'));
-          console.log('反演',this.ballToChannal(_data,'qddm'));
+          this.ballList= data.sort(this.hxCompare('hx'));console.log('号序列表 %o',this.ballList);
+          console.log('反演',this.ballToChannal(this.ballList,'qddm'));
         }).catch(err => {
           console.log(err);
         });
@@ -476,11 +476,11 @@
         arr.map(item => {
           newArr.map(newItem => {
             if(item[key] === newItem.qddm){
-              // newItem.children.push({item});
               newItem.children[newItem.children.length] = item;
             }
           })
         });
+        newArr.map(item => item.num = item.children.length || 0);
         return newArr
       },
       //表单填充策略
