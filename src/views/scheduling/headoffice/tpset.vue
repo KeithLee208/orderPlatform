@@ -520,17 +520,31 @@
         this.setForm(_data);
       },
       //数据转换
-      formDataFormat(){
-        this.form.ghfdm = this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'GHF')[0].mxxh;
-        this.form.zlfdm = this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'ZLF')[0].mxxh;
-        this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
-        this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
-        this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
-        this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
+      formDataFormat(form){
+        let newForm = arr.clone(form);
+        newForm.ghfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
+          .filter(item => item.lx == 'GHF')[0].mxxh : '';
+        newForm.zlfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
+          .filter(item => item.lx == 'ZLF')[0].mxxh : '';
+        newForm.sjddmList = [];
+        newForm.sjddm.map(sjddm => {
+          newForm.sjddmList.push({
+            sjddm:sjddm,
+            kssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
+            jssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
+          });
+        });
+        newForm.userList = [{
+          ksdm:newForm.ksdm,
+          ksmc:this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
+          ysdm:newForm.ysdm,
+          ysmc:this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
+        }];
+        newForm.hxmbList = [];
+        newForm.zydmList = [];
+        return newForm;
       },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
@@ -540,8 +554,8 @@
       },
       //保存/新增接口
       save(){
-        this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
+        let data = this.formDataFormat(this.form);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.ifCover}).then(data => {
           console.log('保存',data);
           this.$message('保存成功');
           this.ifCover = false;
