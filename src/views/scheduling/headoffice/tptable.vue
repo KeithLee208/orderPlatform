@@ -259,7 +259,7 @@
               if (week.sjddm === slot.sjddm && week.cbrqlx == '星期六') {
                 slot.weekday.splice(5,1,arr.clone(week));
               }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期天') {
+              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期日') {
                 slot.weekday.splice(6,1,arr.clone(week));
               }
             })
