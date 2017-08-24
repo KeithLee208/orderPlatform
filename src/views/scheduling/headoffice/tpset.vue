@@ -37,12 +37,14 @@
             <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
+                    <span v-else class="ordered"
+                          :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"
+                          @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
             </div>
@@ -73,20 +75,19 @@
         </el-select>
       </el-form-item>
       <el-form-item label="就诊时间">
-        <el-radio-group v-model="form.cbrqlx">
-          <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
-        </el-radio-group>
+        <el-checkbox-group v-model="form.cbrqlx">
+          <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="出诊时间">
-          <el-radio-group v-model="form.sjddm">
-            <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
-          </el-radio-group>
+        <el-col :span="8">
+          <el-checkbox-group v-model="form.sjddm">
+            <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+          </el-checkbox-group>
+        </el-col>
       </el-form-item>
       <el-form-item label="就诊地址">
         <el-input type="input" v-model="form.czdz"></el-input>
-      </el-form-item>
-      <el-form-item label="备注信息">
-        <el-input type="input" v-model="form.note"></el-input>
       </el-form-item>
       <div class="box-title">
         <span>设置费用及号序</span>
@@ -151,9 +152,9 @@
                         </i>
                        </el-popover>
                      </span>
-              <span>
-                 <i class="plus el-icon-plus"></i>
-               </span>
+              <!--<span>-->
+                 <!--<i class="plus el-icon-plus"></i>-->
+               <!--</span>-->
             </div>
           </div>
         </div>
@@ -333,8 +334,26 @@
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
           this.$message('无医生信息');
+          this.getDocScheduleListDefault();
           this.loading=false;
         }
+      },
+      //获取医生排班模板列表缺省信息
+      getDocScheduleListDefault(){
+        this.timeSlot.map((slot,index) => {
+          Object.assign(this.currentDocSchedule.slot[index],arr.clone(slot))
+        });
+        this.currentDocSchedule.slot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+          ];
+        })
       },
       //获取各种字典数据
       getDicData(){
@@ -361,9 +380,17 @@
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+          this.setDefaultInfo();
         }).catch(err => {
           console.log(err);
         });
+      },
+      //获取默认信息:有医生信息，科室、医生会被自动拉取
+      setDefaultInfo(){
+        //科室默认
+        this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
+        //医生默认
+        this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
       },
       //数据处理
       formatData(list){
@@ -372,29 +399,38 @@
         list.map((item,index) => {
           newArr[index] = {"ysmc":item.name,"slot":[]};
           this.timeSlot.map(slot => {
-            slot.weekday = [{},{},{},{},{},{},{}];
+            slot.weekday = [
+              {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+            ];
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
-                slot.weekday[0] = week;
+              if(week.sjddm != slot.sjddm)return
+              if(week.cbrqlx === '星期一'){
+                Object.assign(slot.weekday[0],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
-                slot.weekday[1] = week;
+              if(week.cbrqlx === '星期二'){
+                Object.assign(slot.weekday[1],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
-                slot.weekday[2] = week;
+              if(week.cbrqlx === '星期三'){
+                Object.assign(slot.weekday[2],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
-                slot.weekday[3] = week;
+              if(week.cbrqlx === '星期四'){
+                Object.assign(slot.weekday[3],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
-                slot.weekday[4] = week;
+              if(week.cbrqlx === '星期五'){
+                Object.assign(slot.weekday[4],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
-                slot.weekday[5] = week;
+              if(week.cbrqlx === '星期六'){
+                Object.assign(slot.weekday[5],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
-                slot.weekday[6] = week;
+              if(week.cbrqlx === '星期日'){
+                Object.assign(slot.weekday[6],week)
               }
             })
             newArr[index].slot.push(slot);
@@ -410,8 +446,8 @@
         this.isAdd = false;
         console.log('单次出班模板 %o',item);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          let _data= data.sort(this.hxCompare('hx'));
-          console.log('c',this.ballToChannal(_data,'qddm'));
+          this.ballList= data.sort(this.hxCompare('hx'));
+          console.log('反演',this.ballToChannal(_data,'qddm'));
         }).catch(err => {
           console.log(err);
         });
@@ -480,6 +516,7 @@
           lrsj:'',
           zbxh:'',
         };
+        this.ballList=[];
         this.setForm(_data);
       },
       //数据转换
