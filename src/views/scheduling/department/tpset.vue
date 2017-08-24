@@ -228,7 +228,6 @@
         singleSchedule:{},
         timeSlot:[],//时间段列表
         templateData:[],//排版模板数据
-        isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
         isCover:false,//是否覆盖
         dialogVisible: false//确认覆盖弹窗显示
@@ -244,7 +243,6 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-//        this.getDocScheduleList();//获取医生出班模板列表
         if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
@@ -357,8 +355,6 @@
       //获取单次出班信息
       getSingleSchedule(i,j,item){
         this.schedulingSelectIndex = [i,j];
-        //修改添加/保存状态
-        this.isAdd = false;
         this.form = arr.clone(item);
         this.form.cbrqlx = [this.form.cbrqlx];
         this.form.sjddm = [this.form.sjddm];
@@ -373,7 +369,6 @@
         this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         //修改添加/保存状态
-        this.isAdd = true;
         let _data = {
           cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
           cbzt: 'ZC',//必填:默认值
@@ -434,14 +429,6 @@
         delete newForm['ksmc'];
         delete newForm['ksdm'];
         return newForm;
-      },
-      //按照出班日期转换保存数据模型
-      cbrqlxDataFormat(data){
-        let newData = [];
-        data.cbrqlx.map(() => {
-          newData.push(arr.clone(data));
-        })
-        return newData;
       },
       MsgSuccess() {
         this.SubmitVisible = false;

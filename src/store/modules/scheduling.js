@@ -17,7 +17,6 @@ const state = {
   mbdm:[],//点击卡片传递所选科室代码
   curSelDepartList:[],//当前选择科室列表
   currentDocSchedule:{},//当前所选医生出班表
-
   currentSchedulingSet:{}//当前排班设置
 };
 
