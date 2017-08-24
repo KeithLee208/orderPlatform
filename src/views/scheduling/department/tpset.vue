@@ -1,200 +1,129 @@
 <template>
-<div class="setting-wraaper">
-  <div class="setting-header">
-    <router-link
-      to="/scheduling/headoffice/tptable" class="pull-right">
-      <i class="el-icon-close"></i>
-    </router-link>
-    <span>设置出班信息</span>
-  </div>
-  <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
-    <div class="box-title">
-      <span>出班预览</span>
+  <div class="setting-wraaper">
+    <div class="setting-header">
+      <router-link
+        to="/scheduling/department/tptable" class="pull-right">
+        <i class="el-icon-close"></i>
+      </router-link>
+      <span>设置出班信息</span>
     </div>
-    <el-form  ref="form" :model="form" label-width="80px">
-      <div class="table-time">
-        <span></span>
-        <span>周一</span>
-        <span>周二</span>
-        <span>周三</span>
-        <span>周四</span>
-        <span>周五</span>
-        <span>周六</span>
-        <span>周日</span>
+    <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
+      <div class="box-title">
+        <span>出班预览</span>
       </div>
-      <div class="AdTable">
-        <div class="AdTableLeft">
-          <div>
-            <i></i>
-            <p>
-              <span class="name">{{currentDocSchedule.ysmc}}</span>
-              <span class="position">主治医师</span>
-            </p>
-          </div>
+      <el-form  ref="form" :model="form" label-width="80px">
+        <div class="table-time">
+          <span></span>
+          <span>周一</span>
+          <span>周二</span>
+          <span>周三</span>
+          <span>周四</span>
+          <span>周五</span>
+          <span>周六</span>
+          <span>周日</span>
         </div>
-        <div class="AdTableRight">
-          <div class="table-body">
-            <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
-              <span>{{slot.sjdmc}}</span>
-              <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.cbrqlx" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+        <div class="AdTable">
+          <div class="AdTableLeft">
+            <div>
+              <i></i>
+              <p>
+                <span class="name">{{currentDocSchedule.ysmc}}</span>
+                <span class="position">主治医师</span>
+              </p>
+            </div>
+          </div>
+          <div class="AdTableRight">
+            <div class="table-body">
+              <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
+                <span>{{slot.sjdmc}}</span>
+                <span v-for="(week,indexJ) in slot.weekday">
+                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
+                    <span v-else class="ordered"
+                          :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"
+                          @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="box-title">
-        <span>编辑出班信息</span>
-      </div>
-      <el-form-item label="服务类型">
-        <div class="type-filter in-model">
-              <span v-for="(item,index) in formOptions.serviceType.list">
+        <div class="box-title">
+          <span>编辑出班信息</span>
+        </div>
+        <el-form-item label="服务类型">
+          <div class="type-filter in-model">
+            <span><i class="el-icon-menu all"></i>全部</span>
+            <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
-        </div>
-      </el-form-item>
-      <el-form-item label="选择科室">
-        <el-select v-model="form.ksdm" filterable  placeholder="请选择" @change="handlerDepartChange">
-          <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择医生">
-        <el-select v-model="form.ysdm"  :placeholder='form.ysdm'>
-          <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="就诊时间">
-        <el-radio-group v-model="form.cbrqlx">
-          <el-radio v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="出诊时间">
-          <el-radio-group v-model="form.sjddm">
-            <el-radio v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-radio>
-          </el-radio-group>
-      </el-form-item>
-      <el-form-item label="就诊地址">
-        <el-input type="input" v-model="form.czdz"></el-input>
-      </el-form-item>
-      <el-form-item label="备注信息">
-        <el-input type="input" v-model="form.note"></el-input>
-      </el-form-item>
-      <div class="box-title">
-        <span>设置费用及号序</span>
-      </div>
-      <el-form-item label="配置号序">
-        <span class="num-info">(当前号源数18)</span>
-      </el-form-item>
-      <div class="Channel">
-        <el-radio-group v-model="formOptions.channel" @change="channelChange">
-          <el-radio label="1">区分渠道</el-radio>
-          <el-radio label="2">不区分渠道</el-radio>
-        </el-radio-group>
-        <div v-if="formOptions.Channel">
-          <div class="Channel-Warrper">
-            <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
-              <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
-                <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
-                <p v-else="item.edit" class="top">
-                  <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
-                </p>
-                <p class="footer">{{item.qdmc}}</p>
-              </div>
-            </draggable>
           </div>
-          <div class="production">
-            <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
-          </div>
-          <div v-if="ball">
-            <div class="ball-row">
-                     <span v-for="(item,index) in ballList" :key="item.hx">
-                      <el-popover
-                       placement="top"
-                       width="260"
-                       trigger="click"
-                       :open-delay="500">
-                        <div class="changeType">
-                          <p class="title">配置号序渠道</p>
-                          <p>
-                            <span class="typename">当前服务类型：普通门诊</span>
-                            <span class="price pull-right">服务费用：10元</span>
-                          </p>
-                          <p>
-                            <span>更换服务类型</span>
-                            <span class="typeselect">
-                              <!--<el-select v-model="changeType" size="small"  placeholder="请选择">-->
-                                <!--<el-option-->
-                                  <!--v-for="(item,index) in formOptions.serviceType.list"-->
-                                  <!--:lable="item.fwlxmc"-->
-                                  <!--:key="item.fwlxdm"-->
-                                  <!--:value="item.fwlxdm"></el-option>-->
-                              <!--</el-select>-->
-                            </span>
-                          </p>
-                        </div>
-                       <i slot="reference" :class="item.qddm" :style="item.style">
-                         <p class="num">{{item.hx}}</p>
-                         <p class="price">
-                           <span class="ball-price pull-left" v-if="!item.edit">{{item.je}}</span>
-                            <input v-if="item.edit"  @blur="ballList[index].edit = false" v-model="item.je"  v-focus class="ball-edit" :style="{background:item.style.background,color:item.style.color}" type="text">
-                           <span class="pull-left">¥</span>
-                         </p>
-                        </i>
-                       </el-popover>
-                     </span>
-              <span>
-                 <i class="plus el-icon-plus"></i>
-               </span>
-            </div>
-          </div>
-        </div>
-        <div class="UnChannel" v-if="formOptions.UnChannel">
-          <el-form label-width="100px">
-            <el-form-item label="设置总号源数">
-              <el-input style="width: 170px"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="选择科室">
+          <el-select v-model="form.ksdm" filterable  placeholder="请选择" @change="handlerDepartChange">
+            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择医生">
+          <el-select v-model="form.ysdm" filterable  :placeholder='form.ysdm'>
+            <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--<el-form-item label="选择病种">-->
+        <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
+        <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
+        <!--</el-option>-->
+        <!--</el-select>-->
+        <!--</el-form-item>-->
+        <el-form-item label="就诊时间">
+          <el-checkbox-group v-model="form.cbrqlx">
+            <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="出诊时间">
+          <el-col :span="8">
+            <el-checkbox-group v-model="form.sjddm">
+              <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+            </el-checkbox-group>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="就诊地址">
+          <el-input type="input" v-model="form.czdz"></el-input>
+        </el-form-item>
+      </el-form>
 
-    <div slot="footer"  class="dialog-footer">
-      <el-button>取消</el-button>
-      <el-button type="primary" @click="save()">保存并继续</el-button>
-    </div>
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      size="tiny"
-      :before-close="handleClose">
-      <span>是否确认覆盖?</span>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer"  class="dialog-footer">
+        <el-button>取消</el-button>
+        <el-button type="primary" @click="save()">保存并继续</el-button>
+      </div>
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        size="tiny"
+        :before-close="handleClose">
+        <span>是否确认覆盖?</span>
+        <span slot="footer" class="dialog-footer">
     <el-button @click="handleCancel">取 消</el-button>
     <el-button type="primary" @click="handleConfirm">确 定</el-button>
   </span>
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
-</div>
 </template>
 <script>
   import * as arr from '../../../filters/array'
-  import channeldrag from '../../../components/base/drag/channel-drag.vue'
-  import draggable from 'vuedraggable'
   export default{
     data() {
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
-          cbrqlx: '',
+          cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
           czry: 'EMP.20000000.00',
@@ -207,21 +136,20 @@
           ksmc:'',
           kssj:'',
           lrsj:'',
-          mbdm:this.$store.state.scheduling.currentSchedulingSet.mbdm,
+          mbdm:'',
           mxxh:'',
-          sjddm:'',
+          sjddm:[],
           ysdm:'',
           ysmc:'',
           yxzt:'',
-          zlfdm:'',
           zbxh:'',
-          hxmbList:''
+          zlfdm:''
         },
         formOptions:{
           serviceType:{
             isShow:true,
             list:[],
-            activeIndex:0,
+            activeIndex:0
           },
           doctor:{
             isShow:true,
@@ -255,19 +183,18 @@
               {name:"周六",val:"星期六"},
               {name:"周日",val:"星期日"}]
           },
+          time:{
+            isShow:true,
+            isEdit:true,
+            list:[]
+          },
           slotTime:{
             isShow:true,
             isEdit:true,
             list:[]
           },
           address:'',
-          note:'',
-          channel: '1',
-          Source: false,
-          UnSource: false,
-          CloseShow: false,
-          Channel: true,
-          UnChannel: false,
+          note:''
         },//表单控制
         currentDocSchedule:{
           ysmc:"默认",
@@ -303,19 +230,8 @@
         templateData:[],//排版模板数据
         isAdd:false,//添加或修改操作
         loading:true,//数据读取状态
-        ifCover:false,//是否覆盖
-        dialogVisible: false,//确认覆盖弹窗显示
-        channalList:[],
-        channal:[],
-        ball:true,
-        ballList:[],
-        styleArr:[
-          {border:'1px solid #e0e0e0',background: '#fff',color: '#666'},
-          {border:'1px solid #c0e5ff',background: '#e9f6ff',color: '#20a0ff'},
-          {border: '1px solid #bcf1d4',background: '#bcf1d4',color: '#0caf4e'},
-          {border: '1px solid #feebc3',background: '#fff8ea',color: '#e8a623'},
-          {border: '1px solid #ffcccc',background: '#ffeded',color: '#ff4949'}
-        ]
+        isCover:false,//是否覆盖
+        dialogVisible: false//确认覆盖弹窗显示
       };
     },
     created() {
@@ -328,21 +244,22 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        this.getChannalList();//获取号序列表
+//        this.getDocScheduleList();//获取医生出班模板列表
         if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
           this.$message('无医生信息');
-          this.loading=false;
+          //获取医生出班模板列表缺省信息
+          this.getDocScheduleListDefault();
+          this.loading = false;
         }
       },
       //获取各种字典数据
       getDicData(){
-          this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-//          this.formOptions.doctor.list = this.$store.state.scheduling.doctorList;
-          this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
-          this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
+        this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+        this.formOptions.department.list = this.$store.state.scheduling.departmentList;
+        this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
+        this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //科室选择不同医生
       handlerDepartChange(val){
@@ -351,6 +268,23 @@
         }).catch(err => {
           console.log(err);
         });
+      },
+      //获取医生排班模板列表缺省信息
+      getDocScheduleListDefault(){
+        this.timeSlot.map((slot,index) => {
+          Object.assign(this.currentDocSchedule.slot[index],arr.clone(slot))
+        });
+        this.currentDocSchedule.slot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+          ];
+        })
       },
       //获取医生出班模板列表
       getDocScheduleList(){
@@ -361,9 +295,17 @@
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+          this.setDefaultInfo();
         }).catch(err => {
           console.log(err);
         });
+      },
+      //获取默认信息:有医生信息，科室、医生会被自动拉取
+      setDefaultInfo(){
+        //科室默认
+        this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
+        //医生默认
+        this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
       },
       //数据处理
       formatData(list){
@@ -372,29 +314,38 @@
         list.map((item,index) => {
           newArr[index] = {"ysmc":item.name,"slot":[]};
           this.timeSlot.map(slot => {
-            slot.weekday = [{},{},{},{},{},{},{}];
+            slot.weekday = [
+              {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+            ];
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期一'){
-                slot.weekday[0] = week;
+              if(week.sjddm != slot.sjddm)return
+              if(week.cbrqlx === '星期一'){
+                Object.assign(slot.weekday[0],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期二'){
-                slot.weekday[1] = week;
+              if(week.cbrqlx === '星期二'){
+                Object.assign(slot.weekday[1],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期三'){
-                slot.weekday[2] = week;
+              if(week.cbrqlx === '星期三'){
+                Object.assign(slot.weekday[2],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期四'){
-                slot.weekday[3] = week;
+              if(week.cbrqlx === '星期四'){
+                Object.assign(slot.weekday[3],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期五'){
-                slot.weekday[4] = week;
+              if(week.cbrqlx === '星期五'){
+                Object.assign(slot.weekday[4],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期六'){
-                slot.weekday[5] = week;
+              if(week.cbrqlx === '星期六'){
+                Object.assign(slot.weekday[5],week)
               }
-              if(week.sjddm === slot.sjddm && week.cbrqlx === '星期天'){
-                slot.weekday[6] = week;
+              if(week.cbrqlx === '星期日'){
+                Object.assign(slot.weekday[6],week)
               }
             })
             newArr[index].slot.push(slot);
@@ -408,20 +359,14 @@
         this.schedulingSelectIndex = [i,j];
         //修改添加/保存状态
         this.isAdd = false;
-        console.log('单次出班模板 %o',item);
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          console.log(data);
-          this.ballList=data;
-        }).catch(err => {
-          console.log(err);
-        });
         this.form = arr.clone(item);
+        this.form.cbrqlx = [this.form.cbrqlx];
+        this.form.sjddm = [this.form.sjddm];
         this.setForm(this.form);
       },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
-        console.log(this.form);
       },
       //设置新的排班信息
       setNewSchedule(i,j){
@@ -437,49 +382,91 @@
           yxzt:'YX',//必填:默认值
           mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
           fwlxdm:'',//必填:表单获取
-          ghfdm:'',//必填:服务类型列表 数据转换
-          zlfdm:'',//必填:服务类型列表 数据转换
+          ghfdm:'',//必填:挂号费 数据转换
+          zlfdm:'',//必填:诊疗费 数据转换
           sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
-          ysdm:this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
+          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
           ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
-          fscj:'',
+          fscj: '',
           lrsj:'',
           zbxh:'',
         };
         this.setForm(_data);
       },
       //数据转换
-      formDataFormat(){
-        this.form.ghfdm = this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'GHF')[0].mxxh;
-        this.form.zlfdm = this.formOptions.serviceType.list
-                          .filter(item => item.fwlxdm == this.form.fwlxdm)[0].sfxm
-                          .filter(item => item.lx == 'ZLF')[0].mxxh;
-        this.form.kssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].kssj;
-        this.form.jssj = this.formOptions.slotTime.list.filter(item => item.sjddm == this.form.sjddm)[0].jssj;
-        this.form.ysmc = this.formOptions.doctor.list.filter(item => item.zgtybm == this.form.ysdm)[0].zgxm;
-        this.form.ksmc = this.formOptions.department.list.filter(item => item.kstybm == this.form.ksdm)[0].ksmc;
+      formDataFormat(form){
+        let newForm = arr.clone(form);
+        newForm.ghfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
+          .filter(item => item.lx == 'GHF')[0].mxxh : '';
+        newForm.zlfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
+          .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
+          .filter(item => item.lx == 'ZLF')[0].mxxh : '';
+        newForm.sjddmList = [];
+        newForm.sjddm.map(sjddm => {
+          newForm.sjddmList.push({
+            sjddm:sjddm,
+            kssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
+            jssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
+          });
+        });
+        newForm.userList = [{
+          ksdm:newForm.ksdm,
+          ksmc:this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
+          ysdm:newForm.ysdm,
+          ysmc:this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
+        }];
+        newForm.hxmbList = [];
+        newForm.zydmList = [];
+        newForm.cbrqlxList = newForm.cbrqlx;
+        delete newForm['cbrqlx'];
+        delete newForm['sjddm'];
+        delete newForm['kssj'];
+        delete newForm['jssj'];
+        delete newForm['ysmc'];
+        delete newForm['ysdm'];
+        delete newForm['ksmc'];
+        delete newForm['ksdm'];
+        return newForm;
+      },
+      //按照出班日期转换保存数据模型
+      cbrqlxDataFormat(data){
+        let newData = [];
+        data.cbrqlx.map(() => {
+          newData.push(arr.clone(data));
+        })
+        return newData;
+      },
+      MsgSuccess() {
+        this.SubmitVisible = false;
+        this.$message({
+          message: '提交成功！',
+          type: 'success'
+        });
+      },
+      TemSuccess() {
+        this.$message({
+          message: '成功！',
+          type: 'success'
+        });
       },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
-        console.log(this.formOptions.serviceType.list[index])
         this.formOptions.serviceType.activeIndex = index;
-//        this.ghfdm:this.formOptions.serviceType.list[index].sfxm[0].)
       },
       //保存/新增接口
       save(){
-        this.formDataFormat();
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: [this.form],ifCover:this.ifCover}).then(data => {
-          console.log('保存',data);
+        let data = this.formDataFormat(this.form);
+        console.log('保存时的数据 %o',data);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
           this.$message('保存成功');
-          this.ifCover = false;
+          this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
@@ -493,11 +480,11 @@
       },
       //删除
       delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
-            console.log(err);
+          console.log(err);
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
@@ -512,63 +499,12 @@
       },
       handleCancel(){
         this.dialogVisible = false;
-        this.ifCover = false;
+        this.isCover = false;
       },
       handleConfirm(){
         this.dialogVisible = false;
-        this.ifCover = true;
+        this.isCover = true;
         this.save();
-      },
-      //配置号序Dom切换
-      getChannalList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q08", {
-          yydm: this.$store.state.login.userInfo.yydm
-        }).then(data => {
-          console.log(data);
-          data.map((item, index) => {
-            item.edit = false;
-            item.num = 1;
-            item.style = this.styleArr[index]
-          });
-
-          this.$store.commit('scheduling/SET_CHANNALLIST',data);
-          this.channalList = data;
-          console.log(data)
-        }).catch(err => {
-          console.log(err);
-        });
-      },
-      //配置号序Dom切换
-      channelChange(value) {
-        if (value == '1') {
-          this.formOptions.Channel = true;
-          this.formOptions.UnChannel = false;
-        } else if (value == '2') {
-          this.formOptions.Channel = false;
-          this.formOptions.UnChannel = true;
-        }
-      },
-      getSortList(){
-        let newArr = [];
-        var mynum = 0;
-        for(var x = 0;x < this.channalList.length;x++){
-          for(var y=0;y<this.channalList[x].num;y++){
-            newArr.push(
-              {
-                fwlxdm:this.form.fwlxdm,
-                ghfdm:this.form.ghfdm,
-                hx:y+mynum+1,
-                qddm:this.channalList[x].qddm,
-                zlfdm:this.form.zlfdm,
-                zydm:'',
-                je:50,
-                style:this.channalList[x].style});
-          }
-          mynum+=y;
-        }
-        this.form.hxzs=newArr.length;
-        this.ballList = newArr;
-        this.form.hxmbList=this.ballList;
       },
       equalsArray(array1,array2) {
         if(array1[0] != array2[0] || array1[1] != array2[1]){
@@ -582,18 +518,8 @@
         if(!time)return;
         return time.split(' ')[1]
       },
+
     },
-    components: {
-      draggable
-    },
-    directives: {
-      focus: {
-        inserted: function (el) {
-          // 聚焦元素
-          el.select()
-        }
-      }
-    }
   }
 </script>
 
@@ -800,8 +726,8 @@
     cursor: pointer;
   }
   .ordered:hover{
-  background: #eef6ff;
-}
+    background: #eef6ff;
+  }
   .ordered:hover>i{
     display: inline-block;
   }
@@ -842,6 +768,9 @@
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }
+  .select{
+    border:1px solid red !important;
+  }
   .box-title{
     width: 100%;
     height: 20px;
@@ -854,234 +783,5 @@
     border-left: 6px solid #3f51b5;
     margin-bottom: 10px;
   }
-  .select{
-    border:1px solid red !important;
-  }
-  /******************************号序配置*******************************/
-
-  .num-info {
-    color: rgb(63, 169, 255);
-  }
-  .Channel {
-    margin-left: 80px;
-  }
-  .UnChannel {
-    margin-top: 20px;
-  }
-  .Channel-Warrper{
-    margin: 20px 0 20px 0;
-  }
-  .channel-box{
-    min-width: 130px;
-    width: 17.5%;
-    height: 84px;
-    display: inline-block;
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    margin-right: 2%;
-    cursor: move;
-    box-sizing: border-box;
-  }
-  .channel-box>.top{
-    border-bottom: 1px solid #e0e0e0;
-    font-size: 32px;
-  }
-  .channel-box>.footer{
-    font-size: 12px;
-  }
-  .channel-box.default,.default>p>input[type=text]{
-    color: #666;
-  }
-  .channel-box.hospital,.hospital>p>input[type=text]{
-    color: #20a0ff;
-  }
-  .channel-box.wechat,.wechat>p>input[type=text]{
-    color: #0caf4e;
-  }
-  .channel-box.web,.web>p>input[type=text]{
-    color: #e8a623;
-  }
-  .channel-box.official,.official>p>input[type=text]{
-    color: #ff4949;
-  }
-  .channel-box>p{
-    height: 42px;
-    line-height: 42px;
-    text-align: center;
-  }
-
-  .ball-row{
-    width: 100%;
-    display: inline-block;
-    border-bottom: 1px dashed #e0e0e0;
-  }
-  .ball-row:last-child{
-    border-bottom: 1px transparent;
-  }
-  .ball-row>span:last-child{
-    border-right: 1px transparent;
-  }
-  .ball-row>span>span
-  {
-    display: inline-block;
-    width: 10%;
-    height: 80px;
-    text-align: center;
-    box-sizing: border-box;
-    float: left;
-    padding: 10px;
-  }
-
-  .ball-row>span>span>i{
-    cursor: pointer;
-    display: inline-block;
-    font-style: normal;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    border: 1px solid #e0e0e0;
-    font-size: 18px;
-  }
-  .ball-row>span>span>i>p.num{
-    height:35px;
-    line-height: 35px
-  }
-  .ball-row>span>span>i>p.price{
-    height:14px;
-    line-height: 14px;
-    font-size: 14px;
-  }
-  .ball-row>span
-  {
-    display: inline-block;
-    width: 10%;
-    height: 80px;
-    text-align: center;
-    box-sizing: border-box;
-    float: left;
-    padding: 10px;
-  }
-  .ball-row>span>i{
-    cursor: pointer;
-    display: inline-block;
-    font-style: normal;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    border: 1px solid #e0e0e0;
-    font-size: 18px;
-
-  }
-
-  .ball-row>div>span>i.hospital{
-    border: 1px solid #c0e5ff;
-    background: #e9f6ff;
-    color: #20a0ff;
-  }
-  .ball-row>div>span>i.wechat{
-    border: 1px solid #bcf1d4;
-    background: #e7faf0;
-    color: #0caf4e;
-  }
-  .ball-row>div>span>i.web{
-    border: 1px solid #feebc3;
-    background: #fff8ea;
-    color: #e8a623;
-  }
-  .ball-row>div>span>i.official{
-    border: 1px solid #ffcccc;
-    background: #ffeded;
-    color: #ff4949;
-  }
-  .ball-row>span>i.plus{
-    color: #e0e0e0;
-  }
-  .flip-list-move {
-    transition: transform 0.5s;
-  }
-
-  .no-move {
-    transition: transform 0s;
-  }
-  .production {
-    width: 100%;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
-  .num-edit{
-    border: none;
-    text-align: center;
-    height: 35px;
-    line-height: 35px;
-    font-size: 32px;
-    width: 100%;
-    display: inline-block;
-    float: left;
-    margin-top: 3px;
-  }
-  .ball-price {
-    width: 30px;
-    margin: 0 0 0 9px;
-  }
-  .ball-row > div > span > i > p.num {
-    height: 33px;
-    line-height: 38px;
-    font-weight: bold;
-  }
-  .ball-edit {
-    border: none;
-    text-align: center;
-    height: 13px;
-    line-height: 13px;
-    font-size: 14px;
-    width: 30px;
-    display: inline-block;
-    float: left;
-    margin: 0 0 0 9px;
-  }
-  .default .ball-edit{
-    background: #fff;
-  }
-  .hospital .ball-edit{
-    background: #e9f6ff;
-  }
-  .wechat .ball-edit{
-    background: #e7faf0;
-  }
-  .web .ball-edit{
-    background: #fff8ea;
-  }
-  .official .ball-edit{
-    background: #ffeded;
-  }
-  .changeType{
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  .changeType>p{
-    display: inline-block;
-    width: 100%;
-    height: 30px;
-  }
-  .changeType>.title{
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-  }
-  .changeType>p>.typename{
-    color:#ffbf33 ;
-  }
-  .changeType>p>.price{
-    color: #999;
-    margin-right: 10px;
-  }
-  .changeType>p>.typeselect{
-    width: 146px;
-    margin-left: 10px;
-    display: inline-block;
-  }
-  /******************************号序配置*******************************/
 </style>
 
