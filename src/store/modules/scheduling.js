@@ -64,7 +64,7 @@ const mutations = {
   },
   //更新当前排班设置CURRENTSCHEDULING
   SET_CURRENTSCHEDULING(state,data){
-    state.currentSchedulingSet = data;
+    Object.assign(state.currentSchedulingSet,data)
   },
   //更新预约渠道
   SET_CHANNALLIST(state,data){

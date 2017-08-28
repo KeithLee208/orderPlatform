@@ -104,7 +104,7 @@
                   <div  v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                     <span>{{slot.sjdmc}}</span>
                   <span v-for="week in slot.weekday" key="week.zbxh">
-                    <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
+                    <el-popover :open-delay="500" v-if="week.fwlxdm" placement="bottom" width="200" trigger="hover">
                       <div class="fixed-info">
                         <div class="fixed-body">
                           <div class="fixed-title">出班信息</div>
@@ -215,17 +215,10 @@
           mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] || '001',
           yydm: this.$store.state.login.userInfo.yydm || '001'
         }).then(data => {
-          if(data==''){
-            this.loading = false;
-          }
-          else{
+          if(data=='')this.loading = false;
             this.TpCard = data;
             this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-            console.log('分组的数据 %o',arr.classifyArr(data, 'ysdm'));
-            console.log('处理的数据 %o',this.formatData(arr.classifyArr(data, 'ysdm')));
             this.loading = false;
-          }
-
         }).catch(err => {
           console.log(err);
         });
@@ -233,39 +226,51 @@
       //数据处理
       formatData(list){
         //医生→时间段→日期
-        let newArr = [];
-        list.map((item, index) => {
-          newArr[index] = arr.clone(item);
-          newArr[index].slot = [];
-          this.timeSlot.map((slot) => {
-            slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
-            item.children.map((week) => {
-              newArr[index].ysmc = week.ysmc;
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期一') {
-                slot.weekday.splice(0,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期二') {
-                slot.weekday.splice(1,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期三') {
-                slot.weekday.splice(2,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期四') {
-                slot.weekday.splice(3,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期五') {
-                slot.weekday.splice(4,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期六') {
-                slot.weekday.splice(5,1,arr.clone(week));
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx == '星期日') {
-                slot.weekday.splice(6,1,arr.clone(week));
-              }
-            })
-            newArr[index].slot.push(slot);
-          });
-      });
+        let newArr = arr.clone(list);
+        let timeSlot = arr.clone(this.timeSlot);
+        timeSlot.map(slot => {
+          slot.weekday = [
+              {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+              {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+            ];
+        });
+        newArr.map(item => {
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+              let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
+              weekTemp.map(week => {
+                  item.ysmc = week.ysmc;
+                  switch (week.cbrqlx) {
+                        case '星期一':
+                          Object.assign(slot.weekday[0],week);
+                          break;
+                        case '星期二':
+                          Object.assign(slot.weekday[1],week);
+                          break;
+                        case '星期三':
+                          Object.assign(slot.weekday[2],week);
+                          break;
+                        case '星期四':
+                          Object.assign(slot.weekday[3],week);
+                          break;
+                        case '星期五':
+                          Object.assign(slot.weekday[4],week);
+                          break;
+                        case '星期六':
+                          Object.assign(slot.weekday[5],week);
+                          break;
+                        case '星期日':
+                          Object.assign(slot.weekday[6],week);
+                          break;
+                      }
+              })
+          })
+        });
         return newArr;
       },
       //选择医生进入排班设置页

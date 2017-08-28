@@ -467,7 +467,7 @@
       },
       //删除
       delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],isCover:true }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
           this.$message('已删除');
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {

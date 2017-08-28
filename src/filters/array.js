@@ -49,7 +49,6 @@ export function classifyArr (arr,key){
   arr.map(item => {
     newArr.map(newItem => {
       if(item[key] === newItem.name){
-        // newItem.children.push({item});
         newItem.children[newItem.children.length] = item;
       }
     })

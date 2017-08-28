@@ -70,7 +70,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form.ysdm"  :placeholder='form.ysdm'>
+        <el-select v-model="form.ysdm"  :placeholder='form.ysdm' @change="handleDocChange">
           <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
@@ -97,13 +97,13 @@
       </el-form-item>
       <div class="Channel">
         <el-radio-group v-model="formOptions.channel" @change="channelChange">
-          <el-radio label="1">区分渠道</el-radio>
-          <el-radio label="2">不区分渠道</el-radio>
+          <el-radio label="channel">区分渠道</el-radio>
+          <el-radio label="unchannel">不区分渠道</el-radio>
         </el-radio-group>
-        <div v-if="formOptions.Channel">
-          <div class="Channel-Warrper">
+        <div>
+          <div class="Channel-Warrper" v-if="formOptions.channel == 'channel'">
             <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
-              <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="'color:'+item.style.color">
+              <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="{color:item.style ? item.style.color: ''}">
                 <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
                 <p v-else="item.edit" class="top">
                   <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
@@ -111,13 +111,21 @@
                 <p class="footer">{{item.qdmc}}</p>
               </div>
             </draggable>
+            <div class="production">
+              <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
+            </div>
           </div>
-          <div class="production">
-            <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
+          <div class="UnChannel" v-if="formOptions.channel == 'unchannel'">
+            <el-form label-width="100px">
+              <el-form-item label="设置总号源数">
+                <el-input v-model="form.hxzs" style="width: 170px"></el-input>
+              </el-form-item>
+            </el-form>
           </div>
-          <div v-if="ball">
+
+          <div v-if="ball && formOptions.channel == 'channel'">
             <div class="ball-row">
-                     <span v-for="(item,index) in ballList" :key="item.hx">
+                     <span v-for="(item,index) in ballList">
                       <el-popover
                        placement="top"
                        width="260"
@@ -131,7 +139,7 @@
                           </p>
                           <p>
                             <span>更换服务类型</span>
-                            <span class="typeselect">
+                            <!--<span class="typeselect">-->
                               <!--<el-select v-model="changeType" size="small"  placeholder="请选择">-->
                                 <!--<el-option-->
                                   <!--v-for="(item,index) in formOptions.serviceType.list"-->
@@ -139,15 +147,15 @@
                                   <!--:key="item.fwlxdm"-->
                                   <!--:value="item.fwlxdm"></el-option>-->
                               <!--</el-select>-->
-                            </span>
+                            <!--</span>-->
                           </p>
                         </div>
                        <i slot="reference" :class="item.qddm" :style="item.style">
                          <p class="num">{{item.hx}}</p>
                          <p class="price">
-                           <span class="ball-price pull-left" v-if="!item.edit">{{item.je}}</span>
-                            <input v-if="item.edit"  @blur="ballList[index].edit = false" v-model="item.je"  v-focus class="ball-edit" :style="{background:item.style.background,color:item.style.color}" type="text">
                            <span class="pull-left">¥</span>
+                           <span class="ball-price pull-left" v-if="!item.edit">{{item.money}}</span>
+                            <input v-if="item.edit"  @blur="ballList[index].edit = false" v-model="item.money"  v-focus class="ball-edit" :style="{background:item.style.background,color:item.style.color}" type="text">
                          </p>
                         </i>
                        </el-popover>
@@ -157,13 +165,6 @@
                <!--</span>-->
             </div>
           </div>
-        </div>
-        <div class="UnChannel" v-if="formOptions.UnChannel">
-          <el-form label-width="100px">
-            <el-form-item label="设置总号源数">
-              <el-input v-model="form.hxzs" style="width: 170px"></el-input>
-            </el-form-item>
-          </el-form>
         </div>
       </div>
     </el-form>
@@ -188,6 +189,7 @@
 </template>
 <script>
   import * as arr from '../../../filters/array'
+  import * as validator from '../../../filters/validator'
   import channeldrag from '../../../components/base/drag/channel-drag.vue'
   import draggable from 'vuedraggable'
   export default{
@@ -264,12 +266,8 @@
           },
           address:'',
           note:'',
-          channel: '1',
-          Source: false,
-          UnSource: false,
+          channel: '',
           CloseShow: false,
-          Channel: true,
-          UnChannel: false,
         },//表单控制
         currentDocSchedule:{
           ysmc:"默认",
@@ -406,6 +404,7 @@
         list.map((item,index) => {
           newArr[index] = {"ysmc":item.name,"slot":[]};
           this.timeSlot.map(slot => {
+            slot.weekday = [{},{},{},{},{},{},{}];
             this.formOptions.visitTime.list.map((item,index) => {
               slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
             });
@@ -448,12 +447,17 @@
         this.form = arr.clone(item);
         this.form.cbrqlx = [this.form.cbrqlx];//处理多选出班日期
         this.form.sjddm = [this.form.sjddm];//处理多选时间段
+        this.form.money = this.getServiceMoney(this.form.fwlxdm);
         this.setForm(this.form);
         //根据明细获取号序列表
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          this.ballList= data.sort((a,b) => a['hx']*1 > b['hx']*1);//号源升序
+          this.ballList= data;
+          this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
+                        .map(item => {
+                          item.money = this.getServiceMoney(item.fwlxdm);
+                          item.style = this.getBallStyle(item.qddm);
+                        });//号源升序,整合金额,整合样式
           this.ballToChannal();//根据号序列表更新渠道信息
-          console.log('渠道列表 %o',this.channalList);
         }).catch(err => {
           console.log(err);
         });
@@ -472,6 +476,7 @@
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
+        console.log(this.form);
       },
       //设置新的排班信息
       setNewSchedule(i,j){
@@ -535,22 +540,20 @@
       },
       //表单完整性验证
       formValid(){
-        let formValidArr = [
-            {type:'fwlxdm',msg:'请选择服务类型'},
-            {type:'ksdm',msg:'请选择科室'},
-            {type:'ysdm',msg:'请选择医生'},
-            {type:'cbrqlx',msg:'请选择就诊时间'},
-            {type:'sjddm',msg:'请选择出诊时间'}
-        ];
-        let msg = null;
-        formValidArr.map(item => {
-            if(!this.form[item.type]){
-                msg = item.msg;
-                return false;
-            }
-
-        });
-        return msg;
+        let _validator = new validator.Validator();
+        _validator.add(this.form.czdz, [{
+          strategy: 'isNonEmpty',
+          errorMsg: '请选择就诊地址'
+        },{
+          strategy: 'isNonSpace',
+          errorMsg: '就诊地址有空格'
+        }]);
+        _validator.add(this.form.fwlxdm, [{
+          strategy: 'isNonEmpty',
+          errorMsg: '请选择服务类型'
+        }]);
+        var errorMsg = _validator.start();
+        return errorMsg;
       },
       //保存
       save(){
@@ -561,7 +564,6 @@
         }
         let insert = this.formDataFormat(this.form);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: insert,ifCover:this.ifCover}).then(data => {
-          console.log('保存',data);
           this.$message('保存成功');
           this.ifCover = false;
           this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
@@ -593,13 +595,22 @@
         });
       },
       //处理服务类型click事件
-      selection(index) {console.log(this.formOptions.serviceType.list);
+      selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         let selectService = this.form.fwlxdm ? this.formOptions.serviceType.list.filter(item => item.fwlxdm == this.form.fwlxdm)[0]:{};
         this.form.ghfdm = selectService.sfxm.filter(item => item.lx == 'GHF')[0].mxxh;
         this.form.zlfdm = selectService.sfxm.filter(item => item.lx == 'ZLF')[0].mxxh;
-        this.form.money = selectService.sfxm.filter(item => item.lx == 'GHF')[0].dj*1 + selectService.sfxm.filter(item => item.lx == 'ZLF')[0].dj*1
+        this.form.money = this.getServiceMoney(this.form.fwlxdm);
         this.formOptions.serviceType.activeIndex = index;
+      },
+      getServiceMoney(fwlxdm){
+        let selectService = fwlxdm ? this.formOptions.serviceType.list.filter(item => item.fwlxdm == fwlxdm)[0]:{};
+        let money = selectService.sfxm ? selectService.sfxm.filter(item => item.lx == 'GHF')[0].dj*1 + selectService.sfxm.filter(item => item.lx == 'ZLF')[0].dj*1 : 0;
+        return money;
+      },
+      getBallStyle(qddm){
+        let _style = qddm ? this.channalList.filter(item => item.qddm == qddm)[0].style : {};
+        return _style;
       },
       //科室选择不同医生
       handlerDepartChange(val){
@@ -608,6 +619,13 @@
         }).catch(err => {
           console.log(err);
         });
+      },
+      //选择不同医生刷新当前排班模板信息
+      handleDocChange(val){
+        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
+            ysdm:val
+        });
+        this.getDocScheduleList();//获取医生出班模板列表
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -626,14 +644,8 @@
         this.save();
       },
       //配置号序Dom切换
-      channelChange(value) {
-        if (value == '1') {
-          this.formOptions.Channel = true;
-          this.formOptions.UnChannel = false;
-        } else if (value == '2') {
-          this.formOptions.Channel = false;
-          this.formOptions.UnChannel = true;
-        }
+      channelChange(value) {console.log(value);
+        this.formOptions.channel = value;
       },
       getSortList(){
         let newArr = [];
@@ -655,7 +667,6 @@
         }
         this.form.hxzs=newArr.length;
         this.ballList = newArr;
-//        this.form.hxmbList=this.ballList;
       },
       equalsArray(array1,array2) {
         if(array1[0] != array2[0] || array1[1] != array2[1]){
