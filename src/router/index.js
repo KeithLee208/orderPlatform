@@ -33,6 +33,13 @@ import hDepartmentlist from 'views/scheduling/headoffice/departmentlist' //科�
 import hTptable from 'views/scheduling/headoffice/tptable' //列表详情
 import hTpset from 'views/scheduling/headoffice/tpset' //单个实体详情
 import hSortset from  'views/scheduling/headoffice/sortcostset' //批量设置费用及号序
+
+//科室出班表
+import dWorkTable from  'views/scheduling/department/worktable' //批量设置费用及号序
+//门办出班表
+import hWorkList from  'views/scheduling/headoffice/worklist' //批量设置费用及号序
+import hWorkTable from  'views/scheduling/headoffice/worktable' //批量设置费用及号序
+
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
 
@@ -71,17 +78,21 @@ export default new Router({
         { path: '/scheduling/clinic/tplist', component: ctplist},
         { path: '/scheduling/clinic/tpset', component: tpset},
         { path: '/scheduling/clinic/sortcostset', component: sortcostset},
-
+        //科室出班模板
         {path:'/scheduling/department/templateList',component: dTemplateList},
         {path:'/scheduling/department/tptable',component: dTemplateTable},
         {path:'/scheduling/department/tpset',component: dTempalteSet},
-
+        //科室出班表
+        {path:'/scheduling/department/worktable',component: dWorkTable},
+        //门办出班模板
         {path:'/scheduling/headoffice/templateList',component: hTemplateList},
         {path:'/scheduling/headoffice/departmentlist',component: hDepartmentlist},
         {path:'/scheduling/headoffice/tptable',component: hTptable},
         {path:'/scheduling/headoffice/tpset',component: hTpset},
-        {path:'/scheduling/headoffice/sortcostset',component: hSortset}
-
+        {path:'/scheduling/headoffice/sortcostset',component: hSortset},
+        //门办出班表
+        {path:'/scheduling/headoffice/worklist',component: hWorkList},
+        {path:'/scheduling/headoffice/worktable',component: hWorkTable},
       ]
     },
     {
