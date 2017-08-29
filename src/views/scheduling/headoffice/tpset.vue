@@ -96,7 +96,7 @@
         <span class="num-info">(当前服务费用: {{form.money}}元 当前号源数: {{ballList.length}})</span>
       </el-form-item>
       <div class="Channel">
-        <el-radio-group v-model="formOptions.channel" @change="channelChange">
+        <el-radio-group v-model="formOptions.channel">
           <el-radio label="channel">区分渠道</el-radio>
           <el-radio label="unchannel">不区分渠道</el-radio>
         </el-radio-group>
@@ -132,22 +132,20 @@
                        trigger="click"
                        :open-delay="500">
                         <div class="changeType">
-                          <p class="title">配置号序渠道</p>
+                          <p class="title">配置服务费用</p>
                           <p>
-                            <span class="typename">当前服务类型：普通门诊</span>
-                            <span class="price pull-right">服务费用：10元</span>
+                            <span class="price">服务费用：{{item.money}}元</span>
                           </p>
                           <p>
                             <span>更换服务类型</span>
-                            <!--<span class="typeselect">-->
-                              <!--<el-select v-model="changeType" size="small"  placeholder="请选择">-->
-                                <!--<el-option-->
-                                  <!--v-for="(item,index) in formOptions.serviceType.list"-->
-                                  <!--:lable="item.fwlxmc"-->
-                                  <!--:key="item.fwlxdm"-->
-                                  <!--:value="item.fwlxdm"></el-option>-->
-                              <!--</el-select>-->
-                            <!--</span>-->
+                            <span class="typeselect">
+                              <el-select  @change="ballChangeType(item)" v-model="item.fwlxdm" size="small"  placeholder="请选择">
+                                <el-option
+                                  v-for="(type,index) in formOptions.serviceType.list"
+                                  :label="type.fwlxmc"
+                                  :value="type.fwlxdm"></el-option>
+                              </el-select>
+                            </span>
                           </p>
                         </div>
                        <i slot="reference" :class="item.qddm" :style="item.style">
@@ -266,7 +264,7 @@
           },
           address:'',
           note:'',
-          channel: '',
+          channel: 'channel',
           CloseShow: false,
         },//表单控制
         currentDocSchedule:{
@@ -314,7 +312,8 @@
           {border: '1px solid #bcf1d4',background: '#bcf1d4',color: '#0caf4e'},
           {border: '1px solid #feebc3',background: '#fff8ea',color: '#e8a623'},
           {border: '1px solid #ffcccc',background: '#ffeded',color: '#ff4949'}
-        ]
+        ],
+        changeType:[]
       };
     },
     created() {
@@ -441,6 +440,10 @@
         });
         return newArr;
       },
+      ballChangeType(item){
+        let changePrice=this.getServiceMoney(item.fwlxdm);
+        item.money=changePrice;
+      },
       //获取单次出班信息
       getSingleSchedule(i,j,item){
         this.schedulingSelectIndex = [i,j];//更新所选格子
@@ -457,6 +460,7 @@
                           item.money = this.getServiceMoney(item.fwlxdm);
                           item.style = this.getBallStyle(item.qddm);
                         });//号源升序,整合金额,整合样式
+          console.log(this.ballList);
           this.ballToChannal();//根据号序列表更新渠道信息
         }).catch(err => {
           console.log(err);
@@ -563,6 +567,7 @@
           return false;
         }
         let insert = this.formDataFormat(this.form);
+        console.log('保存的数据',insert)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: insert,ifCover:this.ifCover}).then(data => {
           this.$message('保存成功');
           this.ifCover = false;
@@ -598,6 +603,7 @@
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         let selectService = this.form.fwlxdm ? this.formOptions.serviceType.list.filter(item => item.fwlxdm == this.form.fwlxdm)[0]:{};
+        console.log(selectService)
         this.form.ghfdm = selectService.sfxm.filter(item => item.lx == 'GHF')[0].mxxh;
         this.form.zlfdm = selectService.sfxm.filter(item => item.lx == 'ZLF')[0].mxxh;
         this.form.money = this.getServiceMoney(this.form.fwlxdm);
@@ -660,13 +666,14 @@
                 qddm:this.channalList[x].qddm,
                 zlfdm:this.form.zlfdm,
                 zydm:'',
-                je:this.form.money,
+                money:this.form.money,
                 style:this.channalList[x].style});
           }
           mynum+=y;
         }
         this.form.hxzs=newArr.length;
         this.ballList = newArr;
+        console.log('号序',this.ballList)
       },
       equalsArray(array1,array2) {
         if(array1[0] != array2[0] || array1[1] != array2[1]){
@@ -976,7 +983,7 @@
     display: inline-block;
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    margin-right: 2%;
+    margin:0 2% 15px 0;
     cursor: move;
     box-sizing: border-box;
   }

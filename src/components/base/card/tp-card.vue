@@ -25,38 +25,26 @@
 
         </div>
         <div class="tp-card-body">
-          <p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">
-            <span>已提交科室数量：</span>
-            <span>{{card.DepartmentNum}}</span>
-          </p>
+          <!--<p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">-->
+            <!--<span>已提交科室数量：</span>-->
+            <!--<span>{{card.DepartmentNum}}</span>-->
+          <!--</p>-->
           <p v-for="template in card.fwlxtj">
             <span>{{template.fwlxmc}}：</span>
             <span class="tp-num pull-right">{{template.fwlxsl}}</span>
           </p>
-          <transition name="el-fade-in-linear">
-            <div v-if="$store.state.login.userInfo.type != '科室'" v-on:click.stop="deleteCard()" class="tp-card-close">
-              <i class="el-icon-close"></i>
-            </div>
-          </transition>
+          <!--<transition name="el-fade-in-linear">-->
+            <!--<div v-if="$store.state.login.userInfo.type != '科室'" v-on:click.stop="deleteCard()" class="tp-card-close">-->
+              <!--<i class="el-icon-close"></i>-->
+            <!--</div>-->
+          <!--</transition>-->
         </div>
-        <div v-if="$store.state.login.userInfo.type === '科室'" v-on:click.stop="SubmitVisible = true" class="tp-card-footer">
-          提交至门办
+        <div v-if="$store.state.login.userInfo.type === '门办'" v-on:click.stop="SubmitVisible = true" class="tp-card-footer">
+          停用模板
         </div>
       </div>
       </router-link>
     </transition>
-  <el-dialog title="当前已设置"  :close-on-click-modal="false" :visible.sync="SubmitVisible"  size="tiny">
-    <div class="infolist">
-      <p v-for="template in card.fwlxtj">
-        <span>{{template.fwlxmc}}：</span>
-        <span class="tp-num pull-right">{{template.fwlxsl}}</span>
-      </p>
-    </div>
-                <span slot="footer" class="dialog-footer">
-                <el-button v-on:click.stop="SubmitVisible= false">取 消</el-button>
-                <el-button type="primary" v-on:click.stop="SubMsg">提 交</el-button>
-              </span>
-  </el-dialog>
   </div>
 </template>
 
@@ -66,8 +54,7 @@
     props: ['card'],
     data(){
       return{
-      CardShow:true,
-        SubmitVisible:false
+      CardShow:true
       }
     },
     methods:{
@@ -92,6 +79,7 @@
   .tp-card{
     position: relative;
     height: 315px;
+    min-height: 315px;
     float: left;
     border:1px solid transparent;
     margin: 5px 1% 10px 0;
@@ -101,6 +89,15 @@
     cursor: default;
     background: #fff;
     border-radius:2px ;
+    overflow: hidden;
+    padding-bottom: 20px;
+  }
+  .tp-card:hover{
+    bottom: 3px;
+    border: 1px solid rgba(132, 166, 181,.6);
+    box-shadow: 0 0 15px rgba(63,81,181, 0.3);
+    min-height: 315px;
+    height: 100%;
   }
   @media screen and (max-width: 1440px) {
     .tp-card{
@@ -131,11 +128,7 @@
       width: 32%;
     }
   }
-  .tp-card:hover{
-    bottom: 3px;
-    border: 1px solid rgba(132, 166, 181,.6);
-    box-shadow: 0 0 15px rgba(63,81,181, 0.3);
-  }
+
   .tp-card:hover .tp-card-footer{
     height: 45px;
   }
