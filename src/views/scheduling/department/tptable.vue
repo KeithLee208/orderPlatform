@@ -20,8 +20,8 @@
           <div class="page-head">
             <div class="type-filter">
               <span>服务类型</span>
-              <span><i class="el-icon-menu all"></i>全部</span>
-              <span v-for="(item,index) in serviceTypeList">
+              <span @click="dataInit"><i class="el-icon-menu all"></i>全部</span>
+              <span @click="listTypeChange(item)" v-for="(item,index) in serviceTypeList">
                 <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
                <span class="pull-right">
@@ -176,16 +176,20 @@
       dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
           ksdm: this.$store.state.login.userInfo.ksdm ,
-          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] ,
-          yydm: this.$store.state.login.userInfo.yydm
+          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm']
         }).then(data => {
           if(data=='')this.loading = false;
           this.TpCard = data;
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+          console.log(JSON.stringify(this.templateData));
           this.loading = false;
       }).catch(err => {
           console.log(err);
         });
+      },
+      //服务类型筛选
+      listTypeChange(item){
+        console.log(JSON.stringify(item));
       },
       //数据处理
       formatData(list){

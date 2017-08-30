@@ -71,7 +71,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="选择医生">
-          <el-select v-model="form.ysdm" filterable  :placeholder='form.ysdm'>
+          <el-select @change="docChange(form.ysdm)" v-model="form.ysdm" filterable  :placeholder='form.ysdm'>
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
@@ -354,15 +354,27 @@
       },
       //获取单次出班信息
       getSingleSchedule(i,j,item){
-        this.schedulingSelectIndex = [i,j];
+        console.log(item);
+        for(let i=0;i<this.formOptions.serviceType.list.length;i++){
+         if(item.fwlxdm==this.formOptions.serviceType.list[i].fwlxdm){
+           this.formOptions.serviceType.activeIndex=i;
+         }
+        }
+        this.schedulingSelectIndex = [i,j];//更新所选格子
         this.form = arr.clone(item);
-        this.form.cbrqlx = [this.form.cbrqlx];
-        this.form.sjddm = [this.form.sjddm];
+        this.form.cbrqlx = [this.form.cbrqlx];//处理多选出班日期
+        this.form.sjddm = [this.form.sjddm];//处理多选时间段
         this.setForm(this.form);
       },
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
+      },
+      //
+      docChange(val){
+        if(val == '') return;
+        this.$store.state.scheduling.currentSchedulingSet.ysdm = val;
+        this.getDocScheduleList();
       },
       //设置新的排班信息
       setNewSchedule(i,j){
@@ -450,7 +462,7 @@
       //保存/新增接口
       save(){
         let data = this.formDataFormat(this.form);
-        console.log('保存时的数据 %o',data);
+        console.log('保存时的数据 %o',JSON.stringify(data));
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
           this.$message('保存成功');
           this.isCover = false;

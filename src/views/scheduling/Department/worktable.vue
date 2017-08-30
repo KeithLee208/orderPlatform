@@ -208,9 +208,9 @@
       //获取出报表数据
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
-          ksrq: this.$store.state.scheduling.departmentWorkKsrq,
+          ksrq: "2017-08-07",
           ksdmList: [this.$store.state.scheduling.departmentWorkMbdm],
-          jsrq:this.$store.state.scheduling.departmentWorkJsrq}).then(data => {
+          jsrq:"2017-08-13"}).then(data => {
           console.log('出班表明细列表 %o', data);
           this.tableList = this.formatData(arr.classifyArr(data, 'ysdm'));
           this.loading = false;

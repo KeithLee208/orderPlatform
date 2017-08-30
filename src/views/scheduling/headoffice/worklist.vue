@@ -4,28 +4,28 @@
               当前模版：<span class="name">春季模板</span>
               <span><i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
                <span class="setting-btn">
-                 <el-button v-if="$store.state.login.userInfo.type=== '门办'" class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
+                 <el-button class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
                </span>
               <el-dialog title="设置出班" :visible.sync="SettingVisible" size="tiny">
               <div>
                 <el-form ref="form" :model="form" label-width="80px">
                   <el-form-item label="选择模板">
-                    <el-select v-model="form.region" style="width: 100%" placeholder="请选择活动区域">
-                      <el-option label="春季模板" value="1"></el-option>
-                      <el-option label="国庆节模板" value="2"></el-option>
+                    <el-select v-model="settingForm.mbdm" style="width: 100%" placeholder="请选择模板">
+                      <el-option v-for="item in temList" :label="item.mbmc" :value="item.mbdm"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="开始时间">
-                      <el-date-picker type="date" placeholder="选择日期" style="width: 100%" v-model="form.date1"></el-date-picker>
+                    <el-date-picker v-model="settingForm.kssj" type="date" placeholder="选择日期" >
+                    </el-date-picker>
                   </el-form-item>
                   <el-form-item label="结束时间">
-                    <el-date-picker type="date" placeholder="选择日期" style="width: 100%" v-model="form.date2" ></el-date-picker>
+                    <el-date-picker v-model="settingForm.jssj" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker>
                   </el-form-item>
                 </el-form>
             </div>
                 <span slot="footer" class="dialog-footer">
                 <el-button @click="SettingVisible = false">取 消</el-button>
-                <el-button type="primary" @click="SettingVisible = false">确定</el-button>
+                <el-button type="primary" @click="settingFormPost">确定</el-button>
               </span>
               </el-dialog>
             </div>
@@ -38,7 +38,7 @@
             <span v-for="(att,index) in item.children">
                <router-link to="/scheduling/clinic/timetable" exact tag="span">
                <el-popover :open-delay="500" placement="bottom" width="200" trigger="hover">
-                 <div  v-if="$store.state.login.userInfo.type=== '门办'"  class="fixed-info">
+                 <div class="fixed-info">
                   <p class="fixed-info-title">门诊号源信息</p>
                   <p class="default"><i></i>普通（10）</p>
                   <p class="expert"><i></i>专家（2）</p>
@@ -60,72 +60,69 @@
   export default {
     data() {
       return {
-        attList:[
-          {
-              name:"外科",
-              children:[
-                { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
-                { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
-                { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
-              ]
-          },
-          {
-            name:"外科",
-            children:[
-              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
-              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
-              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
-            ]
-          },
-          {
-            name:"外科",
-            children:[
-              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
-              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
-              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
-            ]
-          },
-          {
-            name:"外科",
-            children:[
-              { name:"胃肠科（东院）" },{ name:"烧伤科" },{ name:"胸心外科" },{ name:"脑外科（西园）" },
-              { name:"胃肠科（西院）" },{ name:"心血管科" },{ name:"泌尿外科" },{ name:"烧伤科" },
-              { name:"口腔科门诊（东院）" },{ name:"胸心外科" },{ name:"胃肠科（东院）" }
-            ]
-          }
-        ],
+        attList:[],
         SettingVisible:false,
-        userType:this.$store.state.login.userInfo.type,
         form: {
           region: '',
           date1: '',
           date2: ''
         },
+        settingForm:{
+          mbdm:'',
+          kssj:'',
+          jssj:''
+        },
         departmentList:[],
-
+        temList:[]
       }
     },
     created(){
       this.$nextTick(() => {
         this.init();
-
     })
     },
     computed: {
-
     },
     methods: {
       init(){
-        //获取服务类型
-        this.getServiceType();
+        //获取科室列表
+        this.getDepartmentList();
+        //设置出班弹框中获取模板列表
+        this.getTemList();
       },
-      getServiceType(){
+      getDepartmentList(){
         this.departmentList = this.$store.state.scheduling.departmentList;
-        console.log(this.departmentList)
         let newArr = listArray.classifyArr( this.departmentList, 'sjksbm');
         this.departmentList=newArr;
       },
-    }
+      getTemList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", {yydm:this.$store.state.login.userInfo.yydm }).then(data => {
+          this.temList = data;
+          console.log( this.temList);
+        }).catch(err => {
+          this.$message('暂无模板列表数据');
+        });
+      },
+      //设置出班表单提交
+      settingFormPost(){
+        this.SettingVisible = false;
+        this.settingForm.kssj=this.dateFormat(this.settingForm.kssj);
+        this.settingForm.jssj=this.dateFormat(this.settingForm.jssj);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S03", this.settingForm).then(data => {
+          console.log(data);
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      dateFormat(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+      }
+    },
   }
 </script>
 

@@ -1043,6 +1043,7 @@
     line-height: 35px
   }
   .ball-row>span>span>i>p.price{
+    margin-left:10px;
     height:14px;
     line-height: 14px;
     font-size: 14px;
@@ -1118,7 +1119,6 @@
   }
   .ball-price {
     width: 30px;
-    margin: 0 0 0 9px;
   }
   .ball-row > div > span > i > p.num {
     height: 33px;

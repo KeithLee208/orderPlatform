@@ -33,7 +33,8 @@
         this.cardlistInit();
       },
       cardlistInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: '',yydm:this.$store.state.login.userInfo.yydm }).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm }).then(data => {
+          console.log(data)
           this.TpCard = data;
           this.loading=false;
         }).catch(err => {
