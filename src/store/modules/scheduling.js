@@ -19,6 +19,7 @@ const state = {
   curSelDepartList:[],//当前选择科室列表
   currentDocSchedule:{},//当前所选医生出班表
   currentSchedulingSet:{},//当前排班设置
+  allTypeList:{},//用于点击服务类型切换数据的总集合
   //----- 出班模板 ----//
 
   //----- 出班表 ----//
