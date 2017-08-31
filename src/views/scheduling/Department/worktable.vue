@@ -208,11 +208,12 @@
       //获取出报表数据
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
-          ksrq: "2017-08-07",
-          ksdmList: [this.$store.state.scheduling.departmentWorkMbdm],
-          jsrq:"2017-08-13"}).then(data => {
+          ksrq: "2017-09-04",
+          ksdmList: ['20000000.23.23.2180'],
+          jsrq:"2017-09-10"}).then(data => {
           console.log('出班表明细列表 %o', data);
           this.tableList = this.formatData(arr.classifyArr(data, 'ysdm'));
+          console.log(this.tableList);
           this.loading = false;
         }).catch(err => {
           console.log(err);
@@ -228,26 +229,29 @@
             slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期一') {
-                slot.weekday[0] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期二') {
-                slot.weekday[1] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期三') {
-                slot.weekday[2] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期四') {
-                slot.weekday[3] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期五') {
-                slot.weekday[4] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期六') {
-                slot.weekday[5] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期天') {
-                slot.weekday[6] = week;
+              if(week.sjddm != slot.sjddm)return;
+              switch (week.cbrqlx) {
+                case '星期一':
+                  Object.assign(slot.weekday[0],week);
+                  break;
+                case '星期二':
+                  Object.assign(slot.weekday[1],week);
+                  break;
+                case '星期三':
+                  Object.assign(slot.weekday[2],week);
+                  break;
+                case '星期四':
+                  Object.assign(slot.weekday[3],week);
+                  break;
+                case '星期五':
+                  Object.assign(slot.weekday[4],week);
+                  break;
+                case '星期六':
+                  Object.assign(slot.weekday[5],week);
+                  break;
+                case '星期日':
+                  Object.assign(slot.weekday[6],week);
+                  break;
               }
             })
             newArr[index].slot.push(slot);
