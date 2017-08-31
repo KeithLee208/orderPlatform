@@ -23,16 +23,19 @@
       </div>
       <div class="page-body">
         <div class="table-time">
+          <div  class="btn-left" @click="moduleTimeListPage?moduleTimeListPage--:''">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
+          <div class="btn-right" @click="moduleTimeListPage < (moduleTimeList.length/7 -1) ? moduleTimeListPage++:''">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
           <span></span>
-          <span>周一</span>
-          <span>周二</span>
-          <span>周三</span>
-          <span>周四</span>
-          <span>周五</span>
-          <span>周六</span>
-          <span>周日</span>
+          <span v-for="item in moduleTimeListSelect">
+            <p class="day">{{item.week}}</p>
+            <p class="date">{{item.date}}</p>
+          </span>
         </div>
-        <div v-for="item in tableList" class="adtable">
+        <div v-for="item in filterListFormatTable" class="adtable">
           <div class="AdTableLeft">
             <div>
               <i></i>
@@ -47,7 +50,7 @@
               <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="week in slot.weekday">
-                      <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
+                      <el-popover :open-delay="500" v-if="week.fwlxdm" placement="bottom" width="200" trigger="hover">
                         <div class="fixed-info">
                           <div class="fixed-body">
                             <div class="fixed-title">出班信息</div>
@@ -80,7 +83,7 @@
                           </div>
                         </div>
                         <div slot="reference" class="ordered disease">
-                          <p>{{week.kssj | timeFormat}}-{{week.jssj | timeFormat}}</p>
+                          <p>{{week.kssj}}-{{week.jssj}}</p>
                           <p>{{week.ksmc}}</p>
                         </div>
                       </el-popover>
@@ -138,6 +141,7 @@
 
 <script>
   import * as arr from 'filters/array.js'
+  import * as time from 'filters/time.js'
   export default {
     data(){
       return {
@@ -158,7 +162,11 @@
           value: 'label',
           children: 'doctorList'
         },//科室级联
-        tableList: [],//出班列表
+        moduleTimeList:[],//出班日期列表
+        moduleTimeListPage:0,//出班日期当前所选页
+        list:[],//出班列表
+        filterListFormatTable:[],//过滤出班列表表格形式
+        tableList: [],//出班列表表格形式
         selectWeek: {},//当前所选单次排班
         shiftForm: {
           shiftType: '替诊',
@@ -185,12 +193,32 @@
         this.init();
       });
     },
+    computed:{
+      moduleTimeListSelect(){
+        return this.moduleTimeList.slice(7*this.moduleTimeListPage,7*(this.moduleTimeListPage+1));
+      },
+      filterList(){
+          if(!this.fwlxdm)return this.list;
+          return this.list.filter(item => item.fwlxdm == this.fwlxdm)
+      }
+    },
+    watch:{
+      moduleTimeListPage:
+        {
+          handler(curVal){
+            //初始化表格双栏设置
+            this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
+          }
+        }
+    },
     methods: {
       init(){
         //获取服务类型
         this.getServiceList();
         //获取时间段列表
         this.getTimeSlot();
+        //获取出班时间
+        this.getmModuleTime();
         //获取出报表数据
         this.getTableList();
       },
@@ -205,57 +233,77 @@
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
+      //获取出班时间
+      getmModuleTime(){
+        let startTime = new Date(Date.parse('2017-08-31'.replace(/-/g,   "/"))).getTime();
+        let endTime = new Date(Date.parse('2017-09-15'.replace(/-/g,   "/"))).getTime();
+        let dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+        let weekArr = [];
+        for(let i = 0;i<=dates;i++){
+          weekArr.push({
+            date:new Date(startTime + 1000*60*60*24*i),
+            week:new Date(startTime + 1000*60*60*24*i).getDay()
+          });
+        }
+        let beforeMinus = weekArr[0].week;
+        let afterMinus = weekArr[weekArr.length-1].week;
+        for(let i= beforeMinus - 1;i >= 1;i--){
+          weekArr.unshift({
+            date:new Date(startTime - 1000*60*60*24*(beforeMinus-i)),
+            week:i
+          });
+        }
+        for(let i = 1 ;i <= 7 - afterMinus;i++){
+          weekArr.push({
+            date:new Date(endTime + 1000*60*60*24*i),
+            week:i
+          });
+        }
+        weekArr.map(item => {
+          item.date = time.timeFormat(item.date);
+          item.week = "星期" + "日一二三四五六".charAt(new Date(item.date).getDay())
+        });
+        this.moduleTimeList = weekArr;
+      },
       //获取出报表数据
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: "2017-09-04",
           ksdmList: ['20000000.23.23.2180'],
-          jsrq:"2017-09-10"}).then(data => {
-          console.log('出班表明细列表 %o', data);
-          this.tableList = this.formatData(arr.classifyArr(data, 'ysdm'));
-          console.log(this.tableList);
+          jsrq:"2017-09-20"}).then(data => {
+          this.list = data;
+          this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
           this.loading = false;
         }).catch(err => {
           console.log(err);
         });
       },
-      //处理数据格式
+      //数据处理
       formatData(list){
         //医生→时间段→日期
-        let newArr = [];
-        list.map((item, index) => {
-          newArr[index] = {"ysdm": item.name, "slot": []};
-          this.timeSlot.map(slot => {
-            slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
-            item.children.map(week => {
-              newArr[index].ysmc = week.ysmc;
+        let newArr = arr.clone(list);
+        let timeSlot = arr.clone(this.timeSlot);
+        newArr.map(item => {
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+            slot.weekday = [
+              {cbrqlx:this.moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[0].date},
+              {cbrqlx:this.moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[1].date},
+              {cbrqlx:this.moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[2].date},
+              {cbrqlx:this.moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[3].date},
+              {cbrqlx:this.moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[4].date},
+              {cbrqlx:this.moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[5].date},
+              {cbrqlx:this.moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[6].date}
+            ];
+            let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
+            weekTemp.map(week => {
+              item.ysmc = week.ysmc;
               if(week.sjddm != slot.sjddm)return;
-              switch (week.cbrqlx) {
-                case '星期一':
-                  Object.assign(slot.weekday[0],week);
-                  break;
-                case '星期二':
-                  Object.assign(slot.weekday[1],week);
-                  break;
-                case '星期三':
-                  Object.assign(slot.weekday[2],week);
-                  break;
-                case '星期四':
-                  Object.assign(slot.weekday[3],week);
-                  break;
-                case '星期五':
-                  Object.assign(slot.weekday[4],week);
-                  break;
-                case '星期六':
-                  Object.assign(slot.weekday[5],week);
-                  break;
-                case '星期日':
-                  Object.assign(slot.weekday[6],week);
-                  break;
-              }
+              let testDay = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
+                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+              Object.assign(testDay,week);
             })
-            newArr[index].slot.push(slot);
-          });
+          })
         });
         return newArr;
       },
@@ -476,7 +524,24 @@
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
-    margin-top: 10px;
+    position: relative;
+  }
+
+  .table-time>.btn-left,
+  .table-time>.btn-right {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 25px;
+    cursor: pointer;
+  }
+
+  .table-time>.btn-left {
+    left: 160px;
+  }
+
+  .table-time>.btn-right {
+    right: -10px;
   }
 
   .table-time > span {
