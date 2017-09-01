@@ -540,7 +540,16 @@
     text-align: center;
     box-sizing: border-box;
   }
-
+  .table-time > span>p{
+    height: 23px;
+    line-height: 23px;
+  }
+  .table-time > span>p.day{
+    font-weight: bold;
+  }
+  .table-time > span>p.today{
+    color: rgb(32, 160, 255);
+  }
   .adtable > .AdTableLeft,
   .adtable > .AdTableRight {
     box-sizing: border-box;

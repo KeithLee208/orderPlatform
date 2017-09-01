@@ -20,7 +20,7 @@
           <div class="page-head">
             <div class="type-filter">
               <span>服务类型</span>
-              <span @click="dataInit"><i class="el-icon-menu all"></i>全部</span>
+              <span @click="allTyepList"><i class="el-icon-menu all"></i>全部</span>
               <span @click="listTypeChange(item)" v-for="(item,index) in serviceTypeList">
                 <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
@@ -126,7 +126,8 @@
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
         checkList:[],//已选科室列表
-        checkLIstActive:0//已选科室列表点击active
+        checkLIstActive:0,//已选科室列表点击active
+        allTypeList:[]
       };
     },
     created(){
@@ -181,15 +182,34 @@
           if(data=='')this.loading = false;
           this.TpCard = data;
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-          console.log(JSON.stringify(this.templateData));
           this.loading = false;
+          this.allTypeList=arr.clone(this.templateData);
       }).catch(err => {
           console.log(err);
         });
       },
       //服务类型筛选
       listTypeChange(item){
-        console.log(JSON.stringify(item));
+        console.log('2',this.allTypeList);
+        console.log(item);
+        let newArr=[];
+        newArr=arr.clone(this.allTypeList);
+        for(let i=0;i<newArr.length;i++){
+          for(let x=0;x<newArr[i].slot.length;x++){
+            for(let y=0;y<newArr[i].slot[x].weekday.length;y++){
+              if(item.fwlxdm!==newArr[i].slot[x].weekday[y].fwlxdm){
+                newArr[i].slot[x].weekday[y]={};
+                }
+            }
+          }
+        }
+        this.templateData=[];
+        this.templateData=newArr;
+        console.log('3',this.templateData);
+      },
+      //点击服务类型（全部）时展示全部数据
+      allTyepList(){
+        this.templateData=this.allTypeList;
       },
       //数据处理
       formatData(list){
