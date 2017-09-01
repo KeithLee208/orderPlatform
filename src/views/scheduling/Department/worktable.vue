@@ -23,7 +23,7 @@
       </div>
       <div class="page-body">
         <div class="table-time">
-          <div  class="btn-left" @click="moduleTimeListPage?moduleTimeListPage--:''">
+          <div  class="btn-left" @click="moduleTimeListPage ? moduleTimeListPage-- : ''">
             <i class="icon iconfont icon-xiangzuo"></i>
           </div>
           <div class="btn-right" @click="moduleTimeListPage < (moduleTimeList.length/7 -1) ? moduleTimeListPage++:''">
