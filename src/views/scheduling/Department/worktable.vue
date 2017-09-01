@@ -218,7 +218,7 @@
         //获取时间段列表
         this.getTimeSlot();
         //获取出班时间
-        this.getmModuleTime();
+        this.moduleTimeList =this.getmModuleTime();
         //获取出报表数据
         this.getTableList();
       },
@@ -239,31 +239,17 @@
         let endTime = new Date(Date.parse('2017-09-15'.replace(/-/g,   "/"))).getTime();
         let dates = Math.abs((startTime - endTime))/(1000*60*60*24);
         let weekArr = [];
-        for(let i = 0;i<=dates;i++){
-          weekArr.push({
-            date:new Date(startTime + 1000*60*60*24*i),
-            week:new Date(startTime + 1000*60*60*24*i).getDay()
-          });
-        }
-        let beforeMinus = weekArr[0].week;
-        let afterMinus = weekArr[weekArr.length-1].week;
-        for(let i= beforeMinus - 1;i >= 1;i--){
-          weekArr.unshift({
-            date:new Date(startTime - 1000*60*60*24*(beforeMinus-i)),
-            week:i
-          });
-        }
-        for(let i = 1 ;i <= 7 - afterMinus;i++){
-          weekArr.push({
-            date:new Date(endTime + 1000*60*60*24*i),
-            week:i
-          });
-        }
-        weekArr.map(item => {
-          item.date = time.timeFormat(item.date);
-          item.week = "星期" + "日一二三四五六".charAt(new Date(item.date).getDay())
-        });
-        this.moduleTimeList = weekArr;
+        for(let i = 0;i<=dates;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
+        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
+        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
+        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
+                  .concat(weekArr)
+                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
+        weekArr = weekArr.map((item,index) => ({
+                                date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+                                week:"星期" + "日一二三四五六".charAt(item)
+                              }));
+        return weekArr;
       },
       //获取出报表数据
       getTableList(){
@@ -299,9 +285,9 @@
             weekTemp.map(week => {
               item.ysmc = week.ysmc;
               if(week.sjddm != slot.sjddm)return;
-              let testDay = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
-                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
-              Object.assign(testDay,week);
+              let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
+              slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+              Object.assign(_day,week);
             })
           })
         });
