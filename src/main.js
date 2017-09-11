@@ -13,13 +13,13 @@ Vue.use(ElementUI);
 Vue.use(wnhttp, { mode: 'dev' });
 /* eslint-disable no-new */
 new Vue({
-  el: '#login',
-  render: h => h(login),
+  el: '#app',
+  render: h => h(App),
   router,
   store,
   data: {
     eventHub: new Vue()
   },
   template: '<login/>',
-  components: { login }
+  components: { App }
 })

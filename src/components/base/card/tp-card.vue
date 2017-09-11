@@ -6,23 +6,15 @@
                      exact tag="span">
       <div v-if="CardShow" class="tp-card">
         <div class="tp-card-head">
-          <p v-if="$store.state.login.userInfo.type === '科室'">
+          <p>
             <span class="tp-card-title">{{card.mbmc}}</span>
-            <span v-if="card.shzt==='TG'" class="pull-right">
-           <span class="start">已提交</span>
+            <span v-if="card.yxzt=='YX'" class="pull-right">
+           <span class="start">启用</span>
          </span>
-            <span v-if="card.shzt==='BG'" class="pull-right">
-           <span class="unstart">待提交</span>
-         </span>
-            <span v-if="card.shzt==='WS'" class="pull-right">
-           <span class="unstart">数据有更新，待提交</span>
+            <span v-if="card.yxzt!=='YX'" class="pull-right">
+           <span class="unstart">停用</span>
          </span>
           </p>
-          <p v-if="$store.state.login.userInfo.type === '门办'">
-            <span class="tp-card-title">{{card.mbmc}}</span>
-          </p>
-          <p :class="['used-time',{'collapse':$store.state.login.userInfo.type === '科室'}]">使用时间：{{card.StartTime}}-{{card.EndTime}}</p>
-
         </div>
         <div class="tp-card-body">
           <!--<p v-if="$store.state.login.userInfo.type != '科室'" class="tp-card-ksnum">-->
@@ -40,8 +32,21 @@
           <!--</transition>-->
         </div>
         <div v-if="$store.state.login.userInfo.type === '门办'" v-on:click.stop="SubmitVisible = true" class="tp-card-footer">
-          停用模板
+          <span v-if="card.yxzt=='YX'">停用模板</span>
+          <span v-if="card.yxzt!=='YX'">启用模板</span>
+
         </div>
+        <el-dialog
+          title="提示"
+          :visible.sync="SubmitVisible"
+          size="tiny"
+          >
+          <span>确定停用此模板？</span>
+          <span slot="footer" class="dialog-footer">
+    <el-button v-on:click.stop="SubmitVisible = false">取 消</el-button>
+    <el-button type="primary" v-on:click.stop="SubMsg(card)">确 定</el-button>
+  </span>
+        </el-dialog>
       </div>
       </router-link>
     </transition>
@@ -54,17 +59,29 @@
     props: ['card'],
     data(){
       return{
-      CardShow:true
+        CardShow:true,
+        SubmitVisible:false
       }
     },
     methods:{
       deleteCard(){
         this.CardShow=false;
       },
-      SubMsg() {
+      SubMsg(card) {
         this.SubmitVisible=false;
+        console.log(card);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S09",
+          {
+            mbdm:card.mbdm,
+            yxzt:card.yxzt
+          }).then(data => {
+          console.log(data)
+          this.loading=false;
+        }).catch(err => {
+          this.$message('暂无模板列表数据');
+        });
         this.$message({
-          message: '噢啦啦啦啦啦啦提交成功！',
+          message: '已停用！',
           type: 'success'
         });
       }
@@ -155,6 +172,7 @@
     cursor: pointer;
     transition:all .2s;
     overflow: hidden;
+    float: left;
   }
   .tp-card-footer:hover{
     background: rgb(67, 170, 255);
