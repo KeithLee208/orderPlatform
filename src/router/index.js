@@ -22,6 +22,7 @@ import orderlist from '../views/order/orderlist'
 /**
  * Created by sven on 2017/8/21.
  */
+
 // 科室出班模板
 import dTemplateList from 'views/scheduling/department/templatelist'//模板列表
 import dTemplateTable from 'views/scheduling/department/tptable.vue'//模板详情
@@ -109,6 +110,6 @@ export default new Router({
       name: 'setting',
       component: setting,
 
-    }
+    },
   ]
 })

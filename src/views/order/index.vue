@@ -23,7 +23,19 @@
             <el-form-item label="姓名：">
               <el-input class="width-200" size="small" placeholder="请填写姓名"></el-input>
             </el-form-item>
-            <el-form-item label="身份证号：">
+            <el-form-item>
+              <el-dropdown trigger="click">
+                  <span class="el-dropdown-link">
+                    下拉菜单<i class="el-icon-caret-bottom el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>黄金糕</el-dropdown-item>
+                    <el-dropdown-item>狮子头</el-dropdown-item>
+                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                    <el-dropdown-item>双皮奶</el-dropdown-item>
+                    <el-dropdown-item>蚵仔煎</el-dropdown-item>
+                  </el-dropdown-menu>
+              </el-dropdown>
               <el-select class="width-200" size="small" v-model="value" placeholder="身份证号">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
