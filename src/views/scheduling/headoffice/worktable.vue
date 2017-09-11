@@ -634,7 +634,6 @@
     line-height: 45px;
     float: left;
     font-size: 14px;
-    font-weight: bold;
     text-align: center;
     box-sizing: border-box;
   }

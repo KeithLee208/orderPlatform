@@ -20,9 +20,9 @@
           <div class="page-head">
             <div class="type-filter">
               <span>服务类型</span>
-              <span @click="dataInit"><i class="el-icon-menu all"></i>全部</span>
-              <span @click="listTypeChange(item)" v-for="(item,index) in serviceTypeList">
-                <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.number}}）
+              <span @click="allTyepList"><i class="el-icon-menu all"></i>全部</span>
+              <span @click="listTypeChange(index,item)" v-for="(item,index) in serviceTypeList">
+                <i :class="[item.mzlx,{active:checkLIstActive==index}]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
                <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
@@ -126,7 +126,8 @@
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
         checkList:[],//已选科室列表
-        checkLIstActive:0//已选科室列表点击active
+        checkLIstActive:0,//已选科室列表点击active
+        allTypeList:[]
       };
     },
     created(){
@@ -181,15 +182,35 @@
           if(data=='')this.loading = false;
           this.TpCard = data;
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-          console.log(JSON.stringify(this.templateData));
           this.loading = false;
+          this.allTypeList=arr.clone(this.templateData);
       }).catch(err => {
           console.log(err);
         });
       },
       //服务类型筛选
-      listTypeChange(item){
-        console.log(JSON.stringify(item));
+      listTypeChange(index,item){
+        console.log('2',this.allTypeList);
+        console.log(item);
+        this.checkLIstActive=index;
+        let newArr=[];
+        newArr=arr.clone(this.allTypeList);
+        for(let i=0;i<newArr.length;i++){
+          for(let x=0;x<newArr[i].slot.length;x++){
+            for(let y=0;y<newArr[i].slot[x].weekday.length;y++){
+              if(item.fwlxdm!==newArr[i].slot[x].weekday[y].fwlxdm){
+                newArr[i].slot[x].weekday[y]={};
+                }
+            }
+          }
+        }
+        this.templateData=[];
+        this.templateData=newArr;
+        console.log('3',this.templateData);
+      },
+      //点击服务类型（全部）时展示全部数据
+      allTyepList(){
+        this.templateData=this.allTypeList;
       },
       //数据处理
       formatData(list){
@@ -445,24 +466,43 @@
     color: #e0e0e0;
     font-size: 16px;
   }
+  .type-filter > span > .all.active{
+    color: #a0a0a0;
+  }
   .type-filter > span > .PT {
+    border: 1px solid #e0e0e0;
     background: #fff;
+  }
+  .type-filter > span > .PT.active {
+    background: #e0e0e0;
   }
   .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
-  .type-filter > span > .ZB {
+  .type-filter > span > .ZJ.active {
+    background: rgb(192, 229, 255);
+  }
+  .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
+  }
+  .type-filter > span > .disease.active {
+    background: rgb(188, 241, 212);
   }
   .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
+  .type-filter > span > .LH.active {
+    background: rgb(254, 235, 195);
+  }
   .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
+  }
+  .type-filter > span > .TX.active {
+    background: rgb(255, 204, 204);
   }
   .type-filter > span > i {
     width: 16px;
