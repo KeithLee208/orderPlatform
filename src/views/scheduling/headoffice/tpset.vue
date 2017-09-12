@@ -602,6 +602,13 @@
       //处理服务类型click事件
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
+        if(this.formOptions.serviceType.list[index].mzlx=='ZB'){
+          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;//获取专病列表
+          this.formOptions.disease.isShow=true;
+        }else{
+          this.formOptions.disease.isShow=false;
+          this.formOptions.disease.list=[];
+        }
         let selectService = this.form.fwlxdm ? this.formOptions.serviceType.list.filter(item => item.fwlxdm == this.form.fwlxdm)[0]:{};
         console.log(selectService)
         this.form.ghfdm = selectService.sfxm.filter(item => item.lx == 'GHF')[0].mxxh;
@@ -960,7 +967,7 @@
     margin-bottom: 10px;
   }
   .select{
-    border:1px solid red !important;
+    border:1px solid #1e90ff !important;
   }
   /******************************号序配置*******************************/
 

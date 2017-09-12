@@ -25,6 +25,7 @@
             <span>{{template.fwlxmc}}：</span>
             <span class="tp-num pull-right">{{template.fwlxsl}}</span>
           </p>
+          <p class="emt-card" v-if="card.fwlxtj==''">暂无服务明细</p>
           <!--<transition name="el-fade-in-linear">-->
             <!--<div v-if="$store.state.login.userInfo.type != '科室'" v-on:click.stop="deleteCard()" class="tp-card-close">-->
               <!--<i class="el-icon-close"></i>-->
@@ -246,5 +247,8 @@
   }
   .infolist>p>.num{
     float: right;
+  }
+  .emt-card{
+    text-align: center;
   }
 </style>
