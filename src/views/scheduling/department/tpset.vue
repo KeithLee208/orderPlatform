@@ -56,7 +56,6 @@
         </div>
         <el-form-item label="服务类型">
           <div class="type-filter in-model">
-            <span><i class="el-icon-menu all"></i>全部</span>
             <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
@@ -75,12 +74,12 @@
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="选择病种">-->
-        <!--<el-select v-model="form.disease" placeholder="请选择病种">-->
-        <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
+        <el-form-item v-if="formOptions.disease.isShow" label="选择病种">
+        <el-select v-model="form.zydmList" placeholder="请选择病种">
+        <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
+        </el-option>
+        </el-select>
+        </el-form-item>
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.cbrqlx">
             <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
@@ -142,8 +141,9 @@
           ysdm:'',
           ysmc:'',
           yxzt:'',
-          zbxh:'',
-          zlfdm:''
+          zydmList:[],
+          zlfdm:'',
+
         },
         formOptions:{
           serviceType:{
@@ -157,7 +157,7 @@
             list:[]
           },
           disease:{
-            isShow:true,
+            isShow:false,
             isEdit:true,
             list:[]
           },
@@ -254,9 +254,9 @@
       },
       //获取各种字典数据
       getDicData(){
+        console.log('专病',this.$store.state.scheduling.specDiseaseList);
         this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
         this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-        this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //科室选择不同医生
@@ -402,7 +402,7 @@
           hxzs:'',
           fscj: '',
           lrsj:'',
-          zbxh:'',
+          zydmList:[],
         };
         this.setForm(_data);
       },
@@ -456,8 +456,17 @@
         });
       },
       selection(index) {
+        console.log(this.formOptions.serviceType);
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         this.formOptions.serviceType.activeIndex = index;
+        if(this.formOptions.serviceType.list[index].mzlx=='ZB'){
+          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;//获取专病列表
+          this.formOptions.disease.isShow=true;
+        }else{
+          this.formOptions.disease.isShow=false;
+          this.formOptions.disease.list=[];
+        }
+        console.log(this.formOptions.disease.list)
       },
       //保存/新增接口
       save(){
@@ -768,7 +777,7 @@
     background: rgb(255, 237, 237);
   }
   .select{
-    border:1px solid red !important;
+    border:1px solid #1e90ff !important;
   }
   .box-title{
     width: 100%;

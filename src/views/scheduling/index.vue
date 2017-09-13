@@ -42,20 +42,23 @@
         login(){
           return new Promise((resolve, reject) => {
             let target = 'http://172.16.0.131:8888/auth/login';
+            let OFFICE='00';//门办用户名
+            let DEPARTMENT='02';//科室用户名
             axios({
               url: target,
               method: 'get',
               params:{
                 p:111111,
-                u:'00'
+                u:DEPARTMENT,
               },
               headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/json;charset=UTF-8'
               }
             }).then(res => {
-              sessionStorage.setItem('jwtToken',res.data.Response.Body.jwtToken);
-              this.$store.commit('login/SET_USERINFO',res.data.Response.Body.employeeUser);
+              console.log('123',res)
+              sessionStorage.setItem('jwtToken',res.data.Response.body.jwtToken);
+              this.$store.commit('login/SET_USERINFO',res.data.Response.body);
               console.log('登录信息 %o',this.$store.state.login.userInfo);
               resolve();
             }).catch(error => {

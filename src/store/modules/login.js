@@ -7,8 +7,6 @@ const state = {
     type:'科室',
     yydm:'001',
     ksdm:'20000000.23.23.2180',
-    username:'123',
-    password:'132'
   },//登录信息
   userAuth:{
     type:'科室'
@@ -24,6 +22,8 @@ const getters = {
 const mutations = {
   //更新登录信息
   SET_USERINFO (state, userInfo){
+
+    console.log('2',userInfo);
     Object.assign(state.userInfo,userInfo);
   }
 };
