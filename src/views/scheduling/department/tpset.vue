@@ -27,8 +27,9 @@
             <div>
               <i></i>
               <p>
-                <span class="name">{{currentDocSchedule.ysmc}}</span>
-                <span class="position">主治医师</span>
+                <span v-if="currentDocSchedule.ysmc!==''" class="name">{{currentDocSchedule.ysmc}}</span>
+                <span v-if="currentDocSchedule.ysmc!==''" class="position">主治医师</span>
+                <span v-if="currentDocSchedule.ysmc ===''" class="name">普通门诊</span>
               </p>
             </div>
           </div>
@@ -63,8 +64,8 @@
               </span>
           </div>
         </el-form-item>
-        <el-form-item label="选择科室">
-          <el-select v-model="form.ksdm" filterable  placeholder="请选择" @change="handlerDepartChange">
+        <el-form-item label="当前科室">
+          <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
             <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
             </el-option>
           </el-select>
@@ -75,7 +76,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="formOptions.disease.isShow" label="选择病种">
-        <el-select v-model="form.zydmList" placeholder="请选择病种">
+        <el-select multiple v-model="form.zydmList" placeholder="请选择病种">
         <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
         </el-option>
         </el-select>
@@ -131,7 +132,7 @@
           ghfdm:'',
           hxzs:'',
           jssj:'',
-          ksdm:'',
+          ksdm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
           ksmc:'',
           kssj:'',
           lrsj:'',
@@ -198,31 +199,10 @@
         },//表单控制
         currentDocSchedule:{
           ysmc:"默认",
+          doctype:'普通门诊',
           ysdm:"",
           slot:[
-            {
-              jssj : "12:00",
-              kssj : "8:00",
-              sjddm : "SW",
-              sjdmc : "上午",
-              weekday:[{},{},{},{},{},{},{}],
-            },
-            {
-              jssj : "19:00",
-              kssj : "12:01",
-              sjddm : "XW",
-              sjdmc : "下午",
-              weekday:[{},{},{},{},{},{},{}],
 
-            },
-            {
-              jssj : "23:59",
-              kssj : "19:01",
-              sjddm : "WS",
-              sjdmc : "晚上",
-              weekday:[{},{},{},{},{},{},{}],
-
-            }
           ]
         },//当前所选医生出班时间表
         singleSchedule:{},
@@ -243,6 +223,7 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
+        this.getDoc();//获取医生列表
         if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
           this.getDocScheduleList();//获取医生出班模板列表
         }else{
@@ -254,15 +235,24 @@
       },
       //获取各种字典数据
       getDicData(){
-        console.log('专病',this.$store.state.scheduling.specDiseaseList);
         this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
         this.formOptions.department.list = this.$store.state.scheduling.departmentList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //科室选择不同医生
-      handlerDepartChange(val){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm:val}).then(data => {
+      getDoc(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04",
+          {
+            kstybm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
+            yydm:this.$store.state.login.userInfo.yydm
+          }).then(data => {
           this.formOptions.doctor.list = data;
+          let ordinary={
+            zgxm:'普通门诊',
+            zgtybm:''
+          };
+          this.formOptions.doctor.list.push(ordinary);
+          console.log('111',this.formOptions.doctor.list);
         }).catch(err => {
           console.log(err);
         });
@@ -270,7 +260,7 @@
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
         this.timeSlot.map((slot,index) => {
-          Object.assign(this.currentDocSchedule.slot[index],arr.clone(slot))
+          this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
         });
         this.currentDocSchedule.slot.map(slot => {
           slot.weekday = [
@@ -282,7 +272,17 @@
             {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
             {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
           ];
-        })
+        });
+        let params = {
+          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
+          ysdm : '',
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
+          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+        }).catch(err => {
+          console.log(err);
+        });
       },
       //获取医生出班模板列表
       getDocScheduleList(){
@@ -372,7 +372,6 @@
       },
       //
       docChange(val){
-        if(val == '') return;
         this.$store.state.scheduling.currentSchedulingSet.ysdm = val;
         this.getDocScheduleList();
       },
@@ -388,7 +387,7 @@
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
           yxzt:'YX',//必填:默认值
           mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
-          fwlxdm:'',//必填:表单获取
+          fwlxdm:this.form.fwlxdm,//必填:表单获取
           ghfdm:'',//必填:挂号费 数据转换
           zlfdm:'',//必填:诊疗费 数据转换
           sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
@@ -431,6 +430,7 @@
         }];
         newForm.hxmbList = [];
         newForm.zydmList = [];
+        if(this.form.zydmList!=''){newForm.zydmList = this.form.zydmList;}
         newForm.cbrqlxList = newForm.cbrqlx;
         delete newForm['cbrqlx'];
         delete newForm['sjddm'];
@@ -464,21 +464,21 @@
           this.formOptions.disease.isShow=true;
         }else{
           this.formOptions.disease.isShow=false;
-          this.formOptions.disease.list=[];
+          this.form.zydmList=[];
         }
         console.log(this.formOptions.disease.list)
       },
       //保存/新增接口
       save(){
         let data = this.formDataFormat(this.form);
-        console.log('保存时的数据 %o',JSON.stringify(data));
+        console.log('保存时的数据 %o',data);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
           this.$message('保存成功');
           this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
-          console.log(err);
-          if(err.data.Response.Head.AckCode.indexOf('400')>-1){
+          console.log(BizErrorMessage);
+          if(err.data.Response.Body.BizErrorCode=='HIS.APPOINTMENT.BE10005'){
             this.dialogVisible = true;
           }
           //这里错误有2种错误

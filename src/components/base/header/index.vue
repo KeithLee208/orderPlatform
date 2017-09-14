@@ -53,7 +53,7 @@
     methods:{
       setUserInfo(type){
           this.userInfo.type = type;
-          this.$store.commit('login/SET_USERINFO',this.userInfo);
+          this.$store.commit('login/CHANGE_USERINFO',this.userInfo.type);
       }
     }
   }

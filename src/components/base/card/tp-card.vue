@@ -79,7 +79,7 @@
             mbdm:card.mbdm,
             yxzt:card.yxzt
           }).then(data => {
-          console.log(data)
+          console.log('模板',data)
           this.loading=false;
         }).catch(err => {
           this.$message('停用失败');
