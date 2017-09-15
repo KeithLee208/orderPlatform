@@ -34,10 +34,10 @@
         this.textInit();
       },
       textInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Q01", { condition: '嘟嘟',yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
           console.log('嘟嘟',data)
         }).catch(err => {
-          this.$message('暂无模板列表数据');
+          this.$message('获取科室失败');
         });
       },
       cardlistInit() {
