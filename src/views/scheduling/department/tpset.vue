@@ -224,14 +224,15 @@
       init(){
         this.getDicData();//获取字典数据
         this.getDoc();//获取医生列表
-        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
-          this.getDocScheduleList();//获取医生出班模板列表
-        }else{
-          this.$message('无医生信息');
-          //获取医生出班模板列表缺省信息
-          this.getDocScheduleListDefault();
-          this.loading = false;
-        }
+//        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
+        this.getDocScheduleList();//获取医生出班模板列表
+        this.loading = false;
+//        }else{
+//          this.$message('无医生信息');
+//          //获取医生出班模板列表缺省信息
+//          this.getDocScheduleListDefault();
+//          this.loading = false;
+//        }
       },
       //获取各种字典数据
       getDicData(){
@@ -252,38 +253,38 @@
             zgtybm:''
           };
           this.formOptions.doctor.list.push(ordinary);
-          console.log('111',this.formOptions.doctor.list);
         }).catch(err => {
           console.log(err);
         });
       },
       //获取医生排班模板列表缺省信息
-      getDocScheduleListDefault(){
-        this.timeSlot.map((slot,index) => {
-          this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
-        });
-        this.currentDocSchedule.slot.map(slot => {
-          slot.weekday = [
-            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
-            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
-          ];
-        });
-        let params = {
-          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
-          ysdm : '',
-        };
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-        }).catch(err => {
-          console.log(err);
-        });
-      },
+//      getDocScheduleListDefault(){
+//        this.timeSlot.map((slot,index) => {
+//          this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
+//        });
+//        this.currentDocSchedule.slot.map(slot => {
+//          slot.weekday = [
+//            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+//            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+//          ];
+//        });
+//        console.log('9-21',this.currentDocSchedule)
+////        let params = {
+////          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
+////          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
+////          ysdm : '',
+////        };
+////        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
+////          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+////        }).catch(err => {
+////          console.log(err);
+////        });
+//      },
       //获取医生出班模板列表
       getDocScheduleList(){
         let params = {
@@ -293,6 +294,7 @@
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+          console.log('排班表信息',this.currentDocSchedule);
           this.setDefaultInfo();
         }).catch(err => {
           console.log(err);
@@ -477,7 +479,6 @@
           this.isCover = false;
           this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
-          console.log(BizErrorMessage);
           if(err.data.Response.Body.BizErrorCode=='HIS.APPOINTMENT.BE10005'){
             this.dialogVisible = true;
           }
