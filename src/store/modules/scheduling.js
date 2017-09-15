@@ -82,7 +82,6 @@ const mutations = {
   //更新当前选择科室列表
   SET_CURSELDEPARTLIST(state,data){
     state.curSelDepartList =  data;
-
   },
   //卡片页点击传递模板代码
   SET_MBDM(state,data){

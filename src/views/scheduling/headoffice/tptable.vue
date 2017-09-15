@@ -29,28 +29,29 @@
       <div class="setting-main">
         <div>
           <div class="page-head">
-            <div class="type-filter">
+            <div v-if="templateData!=''" class="type-filter">
               <span>服务类型</span>
               <span><i @click="allTyepList" class="el-icon-menu all"></i>全部</span>
-              <span @click="listTypeChange(item)" v-for="(item,index) in serviceTypeList">
-                <i :class="[item.mzlx]"></i>{{item.fwlxmc}}（{{item.sfxm.length}}）
+              <span @click="listTypeChange(index,item)" v-for="(item,index) in serviceTypeList">
+                <i :class="[item.mzlx,{active:typeLIstActive==index}]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
-               <span class="pull-right">
+            </div>
+            <span class="pull-right">
 
                 <span class="icon-group">
-                  <el-tooltip class="item" effect="dark"
+                  <el-tooltip v-if="templateData!=''" class="item" effect="dark"
                               content="导出" placement="bottom">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-daochu"></i>
                   </el-tooltip>
 
                   <el-tooltip  @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
-                              content="设置出班模板" placement="bottom">
+                               content="设置出班模板" placement="bottom">
                       <router-link tag="span"  to="/scheduling/headoffice/tpset">
                      <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
                            </router-link>
                   </el-tooltip>
                 </span>
-                 <!--导出-->
+              <!--导出-->
               <el-dialog title="导出为Excel" :visible.sync="ExportVisible" size="tiny">
               <span>
               <p>起始时间：
@@ -76,9 +77,8 @@
               </span>
             </el-dialog>
               </span>
-            </div>
           </div>
-          <div class="page-body">
+          <div v-if="templateData!=''"  class="page-body">
             <div class="table-time">
               <span></span>
               <span>周一</span>
@@ -94,8 +94,9 @@
                 <div>
                   <i></i>
                   <p>
-                    <span class="name">{{item.ysmc}}</span>
-                    <span class="position">主治医师</span>
+                    <span v-if="item.ysmc!==''" class="name">{{item.ysmc}}</span>
+                    <span v-if="item.ysmc==''" class="name">普通门诊</span>
+                    <span v-if="item.ysmc!==''" class="position">主治医师</span>
                   </p>
                 </div>
               </div>
@@ -114,7 +115,7 @@
                           </p>
                           <p>
                             <span class="fixed-label">服务类型：</span>
-                            <span>{{week.fwlxdm}}</span>
+                            <span>{{week.mzlx}}</span>
                           </p>
                           <p>
                             <span class="fixed-label">出诊时间：</span>
@@ -150,6 +151,9 @@
               </div>
             </div>
           </div>
+          <div v-if="templateData==''" class="no-data">
+            暂无出班模板数据，请添加模板信息。
+          </div>
         </div>
       </div>
     </div>
@@ -169,6 +173,7 @@
         templateData: [],//排版模板数据
         checkList:this.$store.state.scheduling.curSelDepartList,//已选科室列表
         checkLIstActive:0,//已选科室列表点击active
+        typeLIstActive:0,//服务类型点击active
         allTypeList:[]
       };
     },
@@ -212,9 +217,8 @@
       //门办数据初始化
       mbdataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.checkList[0].kstybm ||'20000000.2.2.3202',
-          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm'] || '001',
-          yydm: this.$store.state.login.userInfo.yydm || '001'
+          ksdm: this.checkList[0].kstybm,
+          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm']
         }).then(data => {
           if(data=='')this.loading = false;
             this.TpCard = data;
@@ -225,9 +229,8 @@
           console.log(err);
         });
       },
-      listTypeChange(item){
-        console.log('2',this.allTypeList);
-        console.log(item);
+      listTypeChange(index,item){
+        this.typeLIstActive=index;
         let newArr=[];
         newArr=arr.clone(this.allTypeList);
         for(let i=0;i<newArr.length;i++){
@@ -241,10 +244,10 @@
         }
         this.templateData=[];
         this.templateData=newArr;
-        console.log('3',this.templateData);
       },
       //点击服务类型（全部）时展示全部数据
       allTyepList(){
+        this.typeLIstActive=0;
         this.templateData=this.allTypeList;
       },
       //数据处理
@@ -310,8 +313,7 @@
           yydm: this.$store.state.login.userInfo.yydm || '001',
         }).then(data => {
           if(data==''){
-            this.$message('暂无数据');
-            this.loading = true;
+            this.templateData=data;
           }
           else{
             this.TpCard = data;
@@ -411,9 +413,9 @@
     cursor: pointer;
     box-sizing: border-box;
   }
-  .AdTable:hover{
-    box-shadow: 0 0 15px rgba(63,81,181, 0.5);
-  }
+  /*.AdTable:hover{*/
+    /*box-shadow: 0 0 15px rgba(63,81,181, 0.5);*/
+  /*}*/
   .table-time {
     display: inline-block;
     width: 100%;
@@ -542,6 +544,7 @@
   .page-head > div {
     height: 50px;
     line-height: 50px;
+    display: inline-block;
   }
   .type-filter > span {
     display: inline-block;
@@ -553,24 +556,50 @@
     color: #e0e0e0;
     font-size: 16px;
   }
+  .type-filter > span > .all.active{
+    color: #a0a0a0;
+  }
   .type-filter > span > .PT {
+    border: 1px solid #e0e0e0;
     background: #fff;
+  }
+  .type-filter > span > .PT.active {
+    background: #e0e0e0;
   }
   .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
-  .type-filter > span > .ZB {
+  .type-filter > span > .ZJ.active {
+    background: rgb(192, 229, 255);
+  }
+  .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
+  }
+  .type-filter > span > .disease.active {
+    background: rgb(188, 241, 212);
   }
   .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
+  .type-filter > span > .LH.active {
+    background: rgb(254, 235, 195);
+  }
   .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
+  }
+  .type-filter > span > .TX.active {
+    background: rgb(255, 204, 204);
+  }
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
   }
   .type-filter > span > i {
     width: 16px;
@@ -744,5 +773,14 @@
   }
   .back-btn:hover>i{
     color:#fff !important;
+  }
+  .no-data{
+    width: 100%;
+    height:500px;
+    line-height: 500px;
+    font-size: 24px;
+    color: #999;
+    text-align: center;
+    vertical-align: middle;
   }
 </style>
