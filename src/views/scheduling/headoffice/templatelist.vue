@@ -22,7 +22,7 @@
         <span :class="['used',{active:UsedActive}]" @click="UsedTemList"><i></i>启用</span>
         <span :class="['stop',{active:StopActive}]" @click="StopTemList"><i></i>停用</span>
       </div>
-        <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
+        <tpcard @click.native="handleLinkTo(num)" @update="cardlistInit" v-for="num in TpCard" :card="num">
         </tpcard>
     </div>
   </div>

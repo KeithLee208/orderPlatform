@@ -255,7 +255,7 @@
         console.log('-n-',weekArr)
         weekArr = weekArr.map((item,index) => ({
                                 date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
-                                week:"星期" + "一二三四五六日".charAt(item)
+                                week:"星期" + "日一二三四五六".charAt(item)
                               }));
         console.log('weekArr',weekArr);
         this.moduleTimeList =weekArr;
@@ -273,7 +273,7 @@
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
-          ksdmList: ['20000000.23.23.2180'],
+          ksdmList: [this.$store.state.login.userInfo.ksdm],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
           if(this.list==''){

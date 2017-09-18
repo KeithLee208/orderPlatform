@@ -67,13 +67,9 @@
       }
     },
     methods:{
-      deleteCard(){
-        this.CardShow=false;
+      up() {
+        this.$emit('update'); //触发父组件update方法
       },
-//      callMethod(){
-//        this.$emit('childMethod');
-//        //第一个参数名为调用的方法名
-//      },
       SubMsg(card) {
         this.SubmitVisible=false;
         let status='';
@@ -91,7 +87,7 @@
             mbdm:card.mbdm,
             yxzt:status
           }).then(data => {
-          this.callMethod();
+            this.up();
           this.loading=false;
         }).catch(err => {
           this.$message('停用失败');
