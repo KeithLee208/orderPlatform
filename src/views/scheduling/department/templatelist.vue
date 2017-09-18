@@ -53,7 +53,7 @@
         //面包屑交互
         this.$store.commit('scheduling/SET_CRUMBS',{
           key:'tptable',
-          val:[card.mbmc,'科室']
+          val:[card.mbmc]
         });
         this.$store.commit('scheduling/SET_CURRENTSELECTTEMPLATE',card);
         console.log('当前所选模板信息 %o',this.$store.state.scheduling.currentsSelectTemplate);

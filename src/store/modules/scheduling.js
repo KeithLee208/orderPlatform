@@ -26,6 +26,7 @@ const state = {
   departmentWorkMbdm:"20000000.E.E.101",//
   departmentWorkKsrq:'2017-08-14',
   departmentWorkJsrq:'2017-08-20',
+  workTableTime:{}
   //----- 出班表 ----//
 };
 
@@ -87,6 +88,11 @@ const mutations = {
   SET_MBDM(state,data){
     state.mbdm=data;
     console.log('模板代码',state.mbdm);
+  },
+  //更新出班表查询开始结束日期
+  SET_DATETIMENOW(state,data){
+    state.workTableTime=data;
+    console.log('=m=',state.workTableTime);
   }
 };
 

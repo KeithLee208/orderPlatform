@@ -26,8 +26,6 @@
             <span>{{template.fwlxmc}}：</span>
             <span class="tp-num pull-right">{{template.fwlxsl}}</span>
           </p>
-          <p>1</p>
-          <p>2</p>
           <p class="emt-card" v-if="card.fwlxtj==''">暂无服务明细</p>
           <!--<transition name="el-fade-in-linear">-->
             <!--<div v-if="$store.state.login.userInfo.type != '科室'" v-on:click.stop="deleteCard()" class="tp-card-close">-->
@@ -39,21 +37,22 @@
           <span v-if="card.yxzt=='YX'">停用模板</span>
           <span v-if="card.yxzt!=='YX'">启用模板</span>
         </div>
-        <el-dialog
-          title="提示"
-          :visible.sync="SubmitVisible"
-          size="tiny"
-          >
-          <span>确定停用此模板？</span>
-          <span slot="footer" class="dialog-footer">
-    <el-button v-on:click.stop="SubmitVisible = false">取 消</el-button>
-    <el-button type="primary" v-on:click.stop="SubMsg(card)">确 定</el-button>
-  </span>
-        </el-dialog>
+
       </div>
       </div>
       </router-link>
     </transition>
+    <el-dialog
+      title="提示"
+      :visible.sync="SubmitVisible"
+      size="tiny"
+    >
+      <span>确定停用此模板？</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button v-on:click.stop="SubmitVisible = false">取 消</el-button>
+    <el-button type="primary" v-on:click.stop="SubMsg(card)">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -71,21 +70,34 @@
       deleteCard(){
         this.CardShow=false;
       },
+//      callMethod(){
+//        this.$emit('childMethod');
+//        //第一个参数名为调用的方法名
+//      },
       SubMsg(card) {
         this.SubmitVisible=false;
-        console.log(card);
+        let status='';
+        let msgtext='';
+        if(card.yxzt=='YX'){
+          status='WX';
+          msgtext='停用';
+        }
+        else{
+          status='YX';
+          msgtext='启用';
+        }
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S09",
           {
             mbdm:card.mbdm,
-            yxzt:card.yxzt
+            yxzt:status
           }).then(data => {
-          console.log('模板',data)
+          this.callMethod();
           this.loading=false;
         }).catch(err => {
           this.$message('停用失败');
         });
         this.$message({
-          message: '已停用！',
+          message: '已'+msgtext+'！',
           type: 'success'
         });
       }

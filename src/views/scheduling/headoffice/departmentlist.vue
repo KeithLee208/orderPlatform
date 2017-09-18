@@ -15,7 +15,6 @@
         <i class="el-icon-arrow-left"></i>
         <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
       </router-link>
-      <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body">
       <div class="setting-main" v-loading="loading" element-loading-text="拼命加载中">

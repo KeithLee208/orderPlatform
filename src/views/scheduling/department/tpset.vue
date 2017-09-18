@@ -1,8 +1,7 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link
-        to="/scheduling/department/tptable" class="pull-right">
+      <router-link to="/scheduling/department/tptable" class="pull-right">
         <i class="el-icon-close"></i>
       </router-link>
       <span>设置出班信息</span>
@@ -11,7 +10,7 @@
       <div class="box-title">
         <span>出班预览</span>
       </div>
-      <el-form  ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px">
         <div class="table-time">
           <span></span>
           <span>周一</span>
@@ -35,19 +34,17 @@
           </div>
           <div class="AdTableRight">
             <div class="table-body">
-              <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
+              <div v-for="(slot,indexI) in currentDocSchedule.slot" :class="[indexI === 0 ? 'border-top-1':'']">
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                    <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
-                    <span v-else class="ordered"
-                          :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"
-                          @click="setNewSchedule(indexI,indexJ)">
+                                <span v-else class="ordered" :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']" @click="setNewSchedule(indexI,indexJ)">
                     </span>
-              </span>
+                                </span>
               </div>
             </div>
           </div>
@@ -57,7 +54,7 @@
         </div>
         <el-form-item label="服务类型">
           <div class="type-filter in-model">
-            <span v-for="(item,index) in formOptions.serviceType.list">
+                        <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
@@ -65,22 +62,22 @@
           </div>
         </el-form-item>
         <el-form-item label="当前科室">
-          <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
+          <el-select v-model="form.ksdm" disabled filterable placeholder="请选择">
             <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择医生">
-          <el-select @change="docChange(form.ysdm)" v-model="form.ysdm" filterable  :placeholder='form.ysdm'>
+          <el-select @change="docChange(form.ysdm)" v-model="form.ysdm" filterable :placeholder='form.ysdm'>
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="formOptions.disease.isShow" label="选择病种">
-        <el-select multiple v-model="form.zydmList" placeholder="请选择病种">
-        <el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item.zydm">
-        </el-option>
-        </el-select>
-        </el-form-item>
+        <!--<el-form-item v-if="formOptions.disease.isShow" label="选择病种">-->
+          <!--<el-select @change="diseaseChange" multiple v-model="form.zydmList" value-key="zydm" placeholder="请选择病种">-->
+            <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.cbrqlx">
             <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
@@ -98,15 +95,11 @@
         </el-form-item>
       </el-form>
 
-      <div slot="footer"  class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button>取消</el-button>
         <el-button type="primary" @click="save()">保存并继续</el-button>
       </div>
-      <el-dialog
-        title="提示"
-        :visible.sync="dialogVisible"
-        size="tiny"
-        :before-close="handleClose">
+      <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny" :before-close="handleClose">
         <span>是否确认覆盖?</span>
         <span slot="footer" class="dialog-footer">
     <el-button @click="handleCancel">取 消</el-button>
@@ -118,139 +111,157 @@
 </template>
 <script>
   import * as arr from '../../../filters/array'
-  export default{
+  export default {
     data() {
       return {
-        schedulingSelectIndex:[-1,-1],
-        form:{
+        schedulingSelectIndex: [-1, -1],
+        form: {
           cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
           czry: 'EMP.20000000.00',
           fscj: '',
-          fwlxdm:'',
-          ghfdm:'',
-          hxzs:'',
-          jssj:'',
-          ksdm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          ksmc:'',
-          kssj:'',
-          lrsj:'',
-          mbdm:'',
-          mxxh:'',
-          sjddm:[],
-          ysdm:'',
-          ysmc:'',
-          yxzt:'',
-          zydmList:[],
-          zlfdm:'',
-
+          fwlxdm: '',
+          ghfdm: '',
+          hxzs: '',
+          jssj: '',
+          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          ksmc: '',
+          kssj: '',
+          lrsj: '',
+          mbdm: '',
+          mxxh: '',
+          sjddm: [],
+          ysdm: '',
+          ysmc: '',
+          yxzt: '',
+          zydmList: [],
+          zlfdm: '',
         },
-        formOptions:{
-          serviceType:{
-            isShow:true,
-            list:[],
-            activeIndex:0
+        formOptions: {
+          serviceType: {
+            isShow: true,
+            list: [],
+            activeIndex: 0
           },
-          doctor:{
-            isShow:true,
-            isEdit:true,
-            list:[]
+          doctor: {
+            isShow: true,
+            isEdit: true,
+            list: []
           },
-          disease:{
-            isShow:false,
-            isEdit:true,
-            list:[]
+          disease: {
+            isShow: false,
+            isEdit: true,
+            list: []
           },
-          department:{
-            isShow:true,
-            isEdit:true,
-            list:[]
+          department: {
+            isShow: true,
+            isEdit: true,
+            list: []
           },
-          week:{
-            isShow:true,
-            isEdit:true,
-            list:[]
+          week: {
+            isShow: true,
+            isEdit: true,
+            list: []
           },
-          visitTime:{
-            isShow:true,
-            isEdit:true,
-            list:[
-              {name:"周一",val:"星期一"},
-              {name:"周二",val:"星期二"},
-              {name:"周三",val:"星期三"},
-              {name:"周四",val:"星期四"},
-              {name:"周五",val:"星期五"},
-              {name:"周六",val:"星期六"},
-              {name:"周日",val:"星期日"}]
+          visitTime: {
+            isShow: true,
+            isEdit: true,
+            list: [
+              {
+                name: "周一",
+                val: "星期一"
+              },
+              {
+                name: "周二",
+                val: "星期二"
+              },
+              {
+                name: "周三",
+                val: "星期三"
+              },
+              {
+                name: "周四",
+                val: "星期四"
+              },
+              {
+                name: "周五",
+                val: "星期五"
+              },
+              {
+                name: "周六",
+                val: "星期六"
+              },
+              {
+                name: "周日",
+                val: "星期日"
+              }]
           },
-          time:{
-            isShow:true,
-            isEdit:true,
-            list:[]
+          time: {
+            isShow: true,
+            isEdit: true,
+            list: []
           },
-          slotTime:{
-            isShow:true,
-            isEdit:true,
-            list:[]
+          slotTime: {
+            isShow: true,
+            isEdit: true,
+            list: []
           },
-          address:'',
-          note:''
-        },//表单控制
-        currentDocSchedule:{
-          ysmc:"默认",
-          doctype:'普通门诊',
-          ysdm:"",
-          slot:[
+          address: '',
+          note: ''
+        }, //表单控制
+        currentDocSchedule: {
+          ysmc: "默认",
+          doctype: '普通门诊',
+          ysdm: "",
+          slot: [
 
           ]
-        },//当前所选医生出班时间表
-        singleSchedule:{},
-        timeSlot:[],//时间段列表
-        templateData:[],//排版模板数据
-        loading:true,//数据读取状态
-        isCover:false,//是否覆盖
-        dialogVisible: false//确认覆盖弹窗显示
+        }, //当前所选医生出班时间表
+        singleSchedule: {},
+        timeSlot: [], //时间段列表
+        templateData: [], //排版模板数据
+        loading: true, //数据读取状态
+        isCover: false, //是否覆盖
+        dialogVisible: false //确认覆盖弹窗显示
       };
     },
     created() {
       this.$nextTick(() => {
         setTimeout(_ => {
           this.init();
-        },0);
+        }, 0);
       })
     },
     methods: {
-      init(){
-        this.getDicData();//获取字典数据
-        this.getDoc();//获取医生列表
-//        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
-        this.getDocScheduleList();//获取医生出班模板列表
-        this.loading = false;
-//        }else{
-//          this.$message('无医生信息');
-//          //获取医生出班模板列表缺省信息
-//          this.getDocScheduleListDefault();
-//          this.loading = false;
-//        }
+      init() {
+        this.getDicData(); //获取字典数据
+        this.getDoc(); //获取医生列表
+        //        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
+        this.getDocScheduleList(); //获取医生出班模板列表
+        //        }else{
+        //          this.$message('无医生信息');
+        //          //获取医生出班模板列表缺省信息
+        //          this.getDocScheduleListDefault();
+        //          this.loading = false;
+        //        }
       },
       //获取各种字典数据
-      getDicData(){
+      getDicData() {
         this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
         this.formOptions.department.list = this.$store.state.scheduling.departmentList;
         this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //科室选择不同医生
-      getDoc(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04",
-          {
-            kstybm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
-            yydm:this.$store.state.login.userInfo.yydm
-          }).then(data => {
+      getDoc() {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
+          kstybm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          yydm: this.$store.state.login.userInfo.yydm
+        }).then(data => {
           this.formOptions.doctor.list = data;
-          let ordinary={
-            zgxm:'普通门诊',
-            zgtybm:''
+          let ordinary = {
+            zgxm: '普通门诊',
+            zgtybm: ''
           };
           this.formOptions.doctor.list.push(ordinary);
         }).catch(err => {
@@ -258,157 +269,174 @@
         });
       },
       //获取医生排班模板列表缺省信息
-//      getDocScheduleListDefault(){
-//        this.timeSlot.map((slot,index) => {
-//          this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
-//        });
-//        this.currentDocSchedule.slot.map(slot => {
-//          slot.weekday = [
-//            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
-//            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
-//          ];
-//        });
-//        console.log('9-21',this.currentDocSchedule)
-////        let params = {
-////          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
-////          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
-////          ysdm : '',
-////        };
-////        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-////          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-////        }).catch(err => {
-////          console.log(err);
-////        });
-//      },
+      getDocScheduleListDefault() {
+        this.timeSlot.map((slot, index) => {
+          this.currentDocSchedule.slot[index] = Object.assign({}, arr.clone(slot))
+        });
+        this.currentDocSchedule.slot.map(slot => {
+          this.formOptions.visitTime.list.map((item, index) => {
+            slot.weekday[index] = {
+              cbrqlx: [item.val],
+              sjddm: [slot.sjddm]
+            };
+          });
+        })
+        this.loading = false;
+      },
       //获取医生出班模板列表
-      getDocScheduleList(){
+      getDocScheduleList() {
         let params = {
-          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
-          ysdm : this.$store.state.scheduling.currentSchedulingSet.ysdm,
+          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,
+          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-          console.log('排班表信息',this.currentDocSchedule);
-          this.setDefaultInfo();
+          if (data == '') {
+            this.currentDocSchedule.ysmc = this.$store.state.scheduling.currentSchedulingSet.ysmc;
+            this.getDocScheduleListDefault();
+          } else {
+            this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+            console.log('排班表信息', this.currentDocSchedule);
+            this.setDefaultInfo();
+          }
         }).catch(err => {
           console.log(err);
         });
+
       },
       //获取默认信息:有医生信息，科室、医生会被自动拉取
-      setDefaultInfo(){
+      setDefaultInfo() {
         //科室默认
         this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
         //医生默认
         this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
       },
       //数据处理
-      formatData(list){
+      formatData(list) {
         //医生→时间段→日期
         let newArr = [];
-        list.map((item,index) => {
-          newArr[index] = {"ysmc":item.name,"slot":[]};
+        list.map((item, index) => {
+          newArr[index] = {
+            "ysmc": item.name,
+            "slot": []
+          };
           this.timeSlot.map(slot => {
             slot.weekday = [
-              {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
-              {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+              {
+                cbrqlx: ['星期一'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期二'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期三'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期四'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期五'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期六'],
+                sjddm: [slot.sjddm]
+              },
+              {
+                cbrqlx: ['星期日'],
+                sjddm: [slot.sjddm]
+              }
             ];
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if(week.sjddm != slot.sjddm)return
-              if(week.cbrqlx === '星期一'){
-                Object.assign(slot.weekday[0],week)
+              if (week.sjddm != slot.sjddm) return
+              if (week.cbrqlx === '星期一') {
+                Object.assign(slot.weekday[0], week)
               }
-              if(week.cbrqlx === '星期二'){
-                Object.assign(slot.weekday[1],week)
+              if (week.cbrqlx === '星期二') {
+                Object.assign(slot.weekday[1], week)
               }
-              if(week.cbrqlx === '星期三'){
-                Object.assign(slot.weekday[2],week)
+              if (week.cbrqlx === '星期三') {
+                Object.assign(slot.weekday[2], week)
               }
-              if(week.cbrqlx === '星期四'){
-                Object.assign(slot.weekday[3],week)
+              if (week.cbrqlx === '星期四') {
+                Object.assign(slot.weekday[3], week)
               }
-              if(week.cbrqlx === '星期五'){
-                Object.assign(slot.weekday[4],week)
+              if (week.cbrqlx === '星期五') {
+                Object.assign(slot.weekday[4], week)
               }
-              if(week.cbrqlx === '星期六'){
-                Object.assign(slot.weekday[5],week)
+              if (week.cbrqlx === '星期六') {
+                Object.assign(slot.weekday[5], week)
               }
-              if(week.cbrqlx === '星期日'){
-                Object.assign(slot.weekday[6],week)
+              if (week.cbrqlx === '星期日') {
+                Object.assign(slot.weekday[6], week)
               }
             })
             newArr[index].slot.push(slot);
-            this.loading=false;
+            this.loading = false;
           });
         });
         return newArr;
       },
       //获取单次出班信息
-      getSingleSchedule(i,j,item){
+      getSingleSchedule(i, j, item) {
         console.log(item);
-        for(let i=0;i<this.formOptions.serviceType.list.length;i++){
-         if(item.fwlxdm==this.formOptions.serviceType.list[i].fwlxdm){
-           this.formOptions.serviceType.activeIndex=i;
-         }
+        for (let i = 0; i < this.formOptions.serviceType.list.length; i++) {
+          if (item.fwlxdm == this.formOptions.serviceType.list[i].fwlxdm) {
+            this.formOptions.serviceType.activeIndex = i;
+          }
         }
-        this.schedulingSelectIndex = [i,j];//更新所选格子
+        this.schedulingSelectIndex = [i, j]; //更新所选格子
         this.form = arr.clone(item);
-        this.form.cbrqlx = [this.form.cbrqlx];//处理多选出班日期
-        this.form.sjddm = [this.form.sjddm];//处理多选时间段
+        this.form.cbrqlx = [this.form.cbrqlx]; //处理多选出班日期
+        this.form.sjddm = [this.form.sjddm]; //处理多选时间段
         this.setForm(this.form);
       },
       //表单填充策略
-      setForm(data){
-        Object.assign(this.form,data)
+      setForm(data) {
+        Object.assign(this.form, data)
       },
       //
-      docChange(val){
+      docChange(val) {
         this.$store.state.scheduling.currentSchedulingSet.ysdm = val;
         this.getDocScheduleList();
       },
       //设置新的排班信息
-      setNewSchedule(i,j){
-        this.schedulingSelectIndex = [i,j];
+      setNewSchedule(i, j) {
+        this.schedulingSelectIndex = [i, j];
         this.$message('设置新的出班信息');
         //修改添加/保存状态
         let _data = {
-          cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
-          cbzt: 'ZC',//必填:默认值
-          czdz: '',//必填:表单获取
-          czry: this.$store.state.login.userInfo.userId,//必填:登录信息
-          yxzt:'YX',//必填:默认值
-          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
-          fwlxdm:this.form.fwlxdm,//必填:表单获取
-          ghfdm:'',//必填:挂号费 数据转换
-          zlfdm:'',//必填:诊疗费 数据转换
-          sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
-          kssj:'',//必填:时间段列表 数据转换
-          jssj:'',//必填:时间段列表 数据转换
-          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
-          ysmc:'',//必填:表单获取
-          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
-          ksmc:'',//必填:表单获取
-          mxxh:'',
-          hxzs:'',
+          cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx, //必填:表单获取
+          cbzt: 'ZC', //必填:默认值
+          czdz: '', //必填:表单获取
+          czry: this.$store.state.login.userInfo.userId, //必填:登录信息
+          yxzt: 'YX', //必填:默认值
+          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm, //必填
+          fwlxdm: this.form.fwlxdm, //必填:表单获取
+          ghfdm: '', //必填:挂号费 数据转换
+          zlfdm: '', //必填:诊疗费 数据转换
+          sjddm: this.currentDocSchedule.slot[i].weekday[j].sjddm, //必填:表单获取
+          kssj: '', //必填:时间段列表 数据转换
+          jssj: '', //必填:时间段列表 数据转换
+          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm, //必填:医生列表 数据转换
+          ysmc: '', //必填:表单获取
+          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm, //必填:科室列表 数据转换
+          ksmc: '', //必填:表单获取
+          mxxh: '',
+          hxzs: '',
           fscj: '',
-          lrsj:'',
-          zydmList:[],
+          lrsj: '',
+          zydmList: [],
         };
         this.setForm(_data);
       },
       //数据转换
-      formDataFormat(form){
+      formDataFormat(form) {
         let newForm = arr.clone(form);
         newForm.ghfdm = newForm.fwlxdm ? this.formOptions.serviceType.list
           .filter(item => item.fwlxdm == newForm.fwlxdm)[0].sfxm
@@ -419,20 +447,22 @@
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
           newForm.sjddmList.push({
-            sjddm:sjddm,
-            kssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
-            jssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
+            sjddm: sjddm,
+            kssj: this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
+            jssj: this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
           });
         });
         newForm.userList = [{
-          ksdm:newForm.ksdm,
-          ksmc:this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
-          ysdm:newForm.ysdm,
-          ysmc:this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
+          ksdm: newForm.ksdm,
+          ksmc: this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
+          ysdm: newForm.ysdm,
+          ysmc: this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
         }];
         newForm.hxmbList = [];
         newForm.zydmList = [];
-        if(this.form.zydmList!=''){newForm.zydmList = this.form.zydmList;}
+        if (this.form.zydmList != '') {
+          newForm.zydmList = this.form.zydmList;
+        }
         newForm.cbrqlxList = newForm.cbrqlx;
         delete newForm['cbrqlx'];
         delete newForm['sjddm'];
@@ -457,41 +487,70 @@
           type: 'success'
         });
       },
+      diseaseChange(nowvalue) {
+        let value = arr.clone(nowvalue);
+        let diseaseValue = [];
+        for (let i = 0; i < value.length; i++) {
+          let arrValue = {
+            zydm: value[i].zydm,
+            zymc: value[i].zymc
+          }
+          diseaseValue.push(arrValue);
+        }
+        //        this.form.zydmList=diseaseValue;
+        //        console.log('hehe',diseaseValue);
+      },
       selection(index) {
-        console.log(this.formOptions.serviceType);
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         this.formOptions.serviceType.activeIndex = index;
-        if(this.formOptions.serviceType.list[index].mzlx=='ZB'){
-          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;//获取专病列表
-          this.formOptions.disease.isShow=true;
-        }else{
-          this.formOptions.disease.isShow=false;
-          this.form.zydmList=[];
+        if (this.formOptions.serviceType.list[index].mzlx == 'ZB') {
+          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList; //获取专病列表
+          this.formOptions.disease.isShow = true;
+        } else {
+          this.formOptions.disease.isShow = false;
+          this.form.zydmList = [];
         }
         console.log(this.formOptions.disease.list)
       },
       //保存/新增接口
-      save(){
+      save() {
         let data = this.formDataFormat(this.form);
-        console.log('保存时的数据 %o',data);
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: data,ifCover:this.isCover}).then(data => {
-          this.$message('保存成功');
-          this.isCover = false;
-          this.getDocScheduleList();//获取医生出班模板列表
-        }).catch(err => {
-          if(err.data.Response.Body.BizErrorCode=='HIS.APPOINTMENT.BE10005'){
-            this.dialogVisible = true;
-          }
-          //这里错误有2种错误
-          //1. 服务端业务错误，错误码邮件中有
-          //2. 网络错误，本地网络断开、超时等
-        });
+        if (data.fwlxdm == '') {
+          this.$message({
+            message: '请选择服务类型',
+            type: 'warning'
+          });
+          return
+        } else {
+          console.log('保存时的数据 %o', data);
+          this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
+            insert: data,
+            ifCover: this.isCover
+          }).then(data => {
+            this.$message('保存成功');
+            this.isCover = false;
+            this.getDocScheduleList(); //获取医生出班模板列表
+
+          }).catch(err => {
+            if (err.data.Response.Body.BizErrorCode == 'HIS.APPOINTMENT.BE10005') {
+              this.dialogVisible = true;
+            }
+            //这里错误有2种错误
+            //1. 服务端业务错误，错误码邮件中有
+            //2. 网络错误，本地网络断开、超时等
+          });
+        }
       },
       //删除
-      delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
+      delSchedule(item) {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
+          delete: [{
+            mxxh: item.mxxh
+          }],
+          ifCover: true
+        }).then(data => {
           this.$message('已删除');
-          this.getDocScheduleList();//获取医生出班模板列表
+          this.getDocScheduleList(); //获取医生出班模板列表
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
@@ -506,17 +565,17 @@
           })
           .catch(_ => {});
       },
-      handleCancel(){
+      handleCancel() {
         this.dialogVisible = false;
         this.isCover = false;
       },
-      handleConfirm(){
+      handleConfirm() {
         this.dialogVisible = false;
         this.isCover = true;
         this.save();
       },
-      equalsArray(array1,array2) {
-        if(array1[0] != array2[0] || array1[1] != array2[1]){
+      equalsArray(array1, array2) {
+        if (array1[0] != array2[0] || array1[1] != array2[1]) {
           return false;
         }
         return true;
@@ -524,7 +583,7 @@
     },
     filters: {
       timeFormat: function (time) {
-        if(!time)return;
+        if (!time) return;
         return time.split(' ')[1]
       },
 
@@ -542,6 +601,7 @@
     min-height: 940px;
     background: #fff;
   }
+
   .setting-header {
     height: 60px;
     width: 100%;
@@ -554,62 +614,85 @@
     cursor: default;
     box-sizing: border-box;
   }
-  .set-body{
+
+  .set-body {
     padding: 20px;
   }
-  .setting-header>span{
+
+  .setting-header>span {
     font-size: 16px;
   }
-  .setting-header > a > i{
+
+  .setting-header > a > i {
     color: #fff;
   }
+
   .type-filter > span {
     display: inline-block;
     cursor: default;
   }
+
   .type-filter > span > .all {
     border: 1px solid transparent;
     margin-top: 15px;
     color: #e0e0e0;
     font-size: 16px;
   }
-  .type-filter > span > .all.active{
+
+  .type-filter > span > .all.active {
     color: #a0a0a0;
   }
+
   .type-filter > span > .PT {
     border: 1px solid #e0e0e0;
     background: #fff;
   }
+
   .type-filter > span > .PT.active {
     background: #e0e0e0;
   }
+
   .type-filter > span > .ZJ {
     border: 1px solid rgb(192, 229, 255);
     background: rgb(233, 246, 255);
   }
+
   .type-filter > span > .ZJ.active {
     background: rgb(192, 229, 255);
   }
+
   .type-filter > span > .disease {
     border: 1px solid rgb(188, 241, 212);
     background: rgb(231, 250, 240);
   }
+
   .type-filter > span > .disease.active {
     background: rgb(188, 241, 212);
   }
+
   .type-filter > span > .LH {
     border: 1px solid rgb(254, 235, 195);
     background: rgb(255, 248, 234);
   }
+
   .type-filter > span > .LH.active {
     background: rgb(254, 235, 195);
   }
+
   .type-filter > span > .TX {
     border: 1px solid rgb(255, 204, 204);
     background: rgb(255, 237, 237);
   }
+
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
+  }
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
   }
   .type-filter > span > i {
     width: 16px;
@@ -620,18 +703,23 @@
     margin: 15px 5px 0 10px;
     cursor: pointer;
   }
-  .in-model > span > i, .in-model > span>.all{
+
+  .in-model > span > i,
+  .in-model > span>.all {
     margin: 10px 5px 0 10px;
   }
-  .dialog-footer{
+
+  .dialog-footer {
     text-align: right;
   }
+
   .table-time {
     display: inline-block;
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
   }
+
   .table-time > span {
     width: 12.5%;
     height: 45px;
@@ -642,6 +730,7 @@
     text-align: center;
     box-sizing: border-box;
   }
+
   .AdTable {
     position: relative;
     margin: 0 0 10px 0;
@@ -649,31 +738,37 @@
     width: 100%;
     box-sizing: border-box;
   }
+
   .AdTable > .AdTableLeft,
   .AdTable > .AdTableRight {
     box-sizing: border-box;
     float: left;
   }
+
   .AdTable > .AdTableLeft {
     width: 160px;
     height: 166px;
     position: absolute;
     left: 0;
   }
+
   .AdTable > .AdTableRight {
     width: 100%;
     padding-left: 160px;
     box-sizing: border-box;
   }
+
   .table-body {
     width: 100%;
     display: inline-block;
     border-right: 1px solid #e0e0e0;
   }
+
   .AdTableLeft > div {
     height: 166px;
     line-height: 166px;
   }
+
   .AdTableLeft > div > i {
     width: 60px;
     height: 60px;
@@ -681,6 +776,7 @@
     margin: 60px 0px;
     background: url("../../../../static/img/man.png") center center no-repeat;
   }
+
   .AdTableLeft > div > p {
     float: left;
     width: 100px;
@@ -689,6 +785,7 @@
     padding: 70px 0;
     box-sizing: border-box;
   }
+
   .AdTableLeft > div > p > span {
     height: 20px;
     line-height: 20px;
@@ -696,22 +793,27 @@
     display: inline-block;
     float: left;
   }
-  .AdTableLeft > div > p>.name{
+
+  .AdTableLeft > div > p>.name {
     font-size: 15px;
     font-weight: bold;
     color: #333;
   }
-  .AdTableLeft > div > p>.position{
+
+  .AdTableLeft > div > p>.position {
     color: #999;
   }
+
   .table-body > div {
     width: 100%;
     display: inline-block;
     float: left;
   }
+
   .table-body > .border-top-1 {
     border-top: 1px solid #D4DEED;
   }
+
   .table-body > div > span {
     width: 12.5%;
     height: 60px;
@@ -724,6 +826,7 @@
     box-sizing: border-box;
   }
   /*-------------------------*/
+
   .ordered {
     width: 100%;
     height: 100%;
@@ -734,53 +837,69 @@
     position: relative;
     cursor: pointer;
   }
-  .ordered:hover{
+
+  .ordered:hover {
     background: #eef6ff;
   }
-  .ordered:hover>i{
+
+  .ordered:hover>i {
     display: inline-block;
   }
-  .ordered>i{
+
+  .ordered>i {
     position: absolute;
-    top:5px;
+    top: 5px;
     right: 5px;
     font-size: 10px;
     height: 12px;
     line-height: 12px;
     display: none;
   }
+
   .ordered > p {
     height: 20px;
     line-height: 20px;
   }
   /*default,expert,disease,union,VIP*/
-  .ordered.active{
+
+  .ordered.active {
     background: red;
   }
+
   .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
+
   .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
+
   .ordered.disease {
     color: rgb(12, 175, 148);
     background: rgb(231, 250, 240);
   }
+
   .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
+
   .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }
-  .select{
-    border:1px solid #1e90ff !important;
+  .ordered.ZB {
+    color: #0caf4e;
+    background: #e6faef;
   }
-  .box-title{
+
+  .select {
+    border: 1px solid #1e90ff !important;
+  }
+
+  .box-title {
     width: 100%;
     height: 20px;
     line-height: 20px;
@@ -793,4 +912,3 @@
     margin-bottom: 10px;
   }
 </style>
-
