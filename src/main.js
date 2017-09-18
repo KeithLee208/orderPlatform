@@ -20,6 +20,6 @@ new Vue({
   data: {
     eventHub: new Vue()
   },
-  template: '<login/>',
+  template: '<App/>',
   components: { App }
 })

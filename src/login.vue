@@ -70,7 +70,6 @@
     }
   }
 </script>
-
 <style>
   @import './../static/css/reset.css';
   @import './../static/font/iconfont.css';

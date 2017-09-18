@@ -38,7 +38,7 @@
               <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                    <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
