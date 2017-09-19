@@ -98,6 +98,151 @@
         </div>
       </div>
     </div>
+    <!--出班调整-->
+    <el-dialog title="出班调整" :visible.sync="shiftVisible" size="small">
+      <div>
+        <div class="now-num">已有32位患者预约</div>
+        <div class="now-info">
+          <div>
+            <span class="tab-label">调整类型</span>
+            <el-radio-group v-model="shiftForm.shiftType">
+              <el-radio label="替诊">替诊</el-radio>
+              <el-radio label="停诊">停诊</el-radio>
+              <el-radio label="调班">调班</el-radio>
+            </el-radio-group>
+            <!--替诊-->
+            <el-form v-if="shiftForm.shiftType == '替诊'" ref="form" :model="shiftForm.replaceForm" label-width="110px">
+              <el-form-item label="当前医生">
+                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
+              </el-form-item>
+              <div class="line"></div>
+              <el-form-item label="替诊医生">
+                <el-cascader
+                  :model="shiftForm.replaceForm.doctor"
+                  :options="departmentList"
+                  @active-item-change="handleItemChange"
+                  :props="props"
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="替诊原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.replaceForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+            <!--停诊-->
+            <el-form v-if="shiftForm.shiftType == '停诊'" ref="form" :model="shiftForm.stopForm" label-width="110px">
+              <el-form-item label="停诊时间">
+                <el-date-picker
+                  class="width-300"
+                  v-model="shiftForm.stopForm.date"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="停诊原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.stopForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+            <!--调班-->
+            <el-form v-if="shiftForm.shiftType == '调班'" ref="form" :model="shiftForm.adjustForm" label-width="110px">
+              <el-form-item label="医生/科室">
+                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
+              </el-form-item>
+              <el-form-item label="预约时间">
+                <span>2015/05/01</span>
+              </el-form-item>
+              <div class="change-icon">
+                <i class="icon iconfont icon-duihuan"></i>
+              </div>
+              <el-form-item label="调班医生">
+                <el-cascader
+                  :options="departmentList"
+                  @active-item-change="handleItemChange"
+                  :props="props"
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="调班时间">
+                <el-date-picker
+                  class="width-300"
+                  v-model="shiftForm.adjustForm.date"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <div class="line"></div>
+              <el-form-item label="调班原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.adjustForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+      <el-button>恢复到最初排班</el-button>
+      <el-button @click="shiftVisible = false">取 消</el-button>
+      <el-button type="primary" @click="handleSaveClick()">确 定</el-button>
+    </span>
+    </el-dialog>
+    <!--记录调整-->
+    <el-dialog title="调整记录" :visible.sync="recordVisible" size="small">
+      <div class="time-wrapper">
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i class="active"></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="recordVisible = false">取 消</el-button>
+                <el-button type="primary" @click="recordVisible = false">确定</el-button>
+              </span>
+    </el-dialog>
     <!--打印-->
     <el-dialog title="打印出班表" :visible.sync="printVisible" size="tiny">
               <span>
@@ -205,8 +350,8 @@
         return this.moduleTimeList.slice(7*this.moduleTimeListPage,7*(this.moduleTimeListPage+1));
       },
       filterList(){
-          if(!this.fwlxdm)return this.list;
-          return this.list.filter(item => item.fwlxdm == this.fwlxdm)
+        if(!this.fwlxdm)return this.list;
+        return this.list.filter(item => item.fwlxdm == this.fwlxdm)
       }
     },
     watch:{
@@ -256,12 +401,10 @@
 //        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
 //                  .concat(weekArr)
 //                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
-        console.log('-n-',weekArr)
         weekArr = weekArr.map((item,index) => ({
-                                date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
-                                week:"星期" + "日一二三四五六".charAt(item)
-                              }));
-        console.log('weekArr',weekArr);
+          date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+          week:"星期" + "日一二三四五六".charAt(item)
+        }));
         this.moduleTimeList =weekArr;
       },
       //时间转换
@@ -275,9 +418,10 @@
       },
       //获取出报表数据
       getTableList(){
+        console.log('time',this.$store.state.scheduling.workTableTime.startTime,this.$store.state.scheduling.workTableTime.endTime)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
-          ksdmList: [this.$store.state.login.userInfo.ksdm],
+          ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
           if(this.list==''){
@@ -297,33 +441,34 @@
         let daynow=new Date(datenow).getDay();
         let startTime='';
         let endTime='';
+        let day=1000*60*60*24;
         switch (daynow){
           case 1:
             startTime=datenow;
-            endTime=datenow+1000*60*60*24*6;
+            endTime=datenow+day*6;
             break;
           case 2:
-            startTime=datenow-1000*60*60*24*1;
-            endTime=datenow+1000*60*60*24*5;
+            startTime=datenow-day*1;
+            endTime=datenow+day*5;
             break;
           case 3:
-            startTime=datenow-1000*60*60*24*2;
-            endTime=datenow+1000*60*60*24*4;
+            startTime=datenow-day*2;
+            endTime=datenow+day*4;
             break;
           case 4:
-            startTime=datenow-1000*60*60*24*3;
-            endTime=datenow+1000*60*60*24*3;
+            startTime=datenow-day*3;
+            endTime=datenow+day*3;
             break;
           case 5:
-            startTime=datenow-1000*60*60*24*4;
-            endTime=datenow+1000*60*60*24*2;
+            startTime=datenow-day*4;
+            endTime=datenow+day*2;
             break;
           case 6:
-            startTime=datenow-1000*60*60*24*5;
-            endTime=datenow+1000*60*60*24*1;
+            startTime=datenow-day*5;
+            endTime=datenow+day*1;
             break;
           case 0:
-            startTime=datenow-1000*60*60*24*6;
+            startTime=datenow-day*6;
             endTime=datenow;
             break;
         }
@@ -354,7 +499,7 @@
               item.ysmc = week.ysmc;
               if(week.sjddm != slot.sjddm)return;
               let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
-              slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
               Object.assign(_day,week);
             })
           })
@@ -403,8 +548,8 @@
           endTime:this.$store.state.scheduling.workTableTime.endTime-1000*60*60*24*7
         });
         console.log(this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)));
-       this.getmModuleTime();
-       this.getTableList();
+        this.getmModuleTime();
+        this.getTableList();
       },
       pageright(){
         this.$store.commit('scheduling/SET_DATETIMENOW', {
