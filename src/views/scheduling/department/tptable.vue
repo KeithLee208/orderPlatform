@@ -12,19 +12,19 @@
         </router-link>
       </div>
       <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
-      <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
     </div>
     <div class="setting-body" v-loading="loading" element-loading-text="拼命加载中">
       <div class="setting-main">
         <div>
           <div class="page-head">
-            <div class="type-filter">
+            <div v-if="templateData!=''" class="type-filter">
               <span>服务类型</span>
               <span @click="allTyepList"><i class="el-icon-menu all"></i>全部</span>
               <span @click="listTypeChange(index,item)" v-for="(item,index) in serviceTypeList">
                 <i :class="[item.mzlx,{active:checkLIstActive==index}]"></i>{{item.fwlxmc}}（{{item.number}}）
               </span>
-               <span class="pull-right">
+            </div>
+            <span class="pull-right">
                 <!--<el-button @click="SubmitVisible = true" type="primary" size="small">提交</el-button>-->
                 <span class="icon-group">
                   <el-tooltip class="item" effect="dark"
@@ -35,9 +35,8 @@
                   </el-tooltip>
                 </span>
               </span>
-            </div>
           </div>
-          <div class="page-body">
+          <div v-if="templateData!=''" class="page-body">
             <div class="table-time">
               <span></span>
               <span>周一</span>
@@ -109,6 +108,9 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div v-if="templateData==''" class="no-data">
+            暂无出班模板数据，请添加模板信息。
           </div>
         </div>
       </div>
@@ -191,8 +193,6 @@
       },
       //服务类型筛选
       listTypeChange(index,item){
-        console.log('2',this.allTypeList);
-        console.log(item);
         this.checkLIstActive=index;
         let newArr=[];
         newArr=arr.clone(this.allTypeList);
@@ -207,10 +207,10 @@
         }
         this.templateData=[];
         this.templateData=newArr;
-        console.log('3',this.templateData);
       },
       //点击服务类型（全部）时展示全部数据
       allTyepList(){
+        this.checkLIstActive='';
         this.templateData=this.allTypeList;
       },
       //数据处理
@@ -354,9 +354,9 @@
     cursor: pointer;
     box-sizing: border-box;
   }
-  .AdTable:hover{
-    box-shadow: 0 0 15px rgba(63,81,181, 0.5);
-  }
+  /*.AdTable:hover{*/
+    /*box-shadow: 0 0 15px rgba(63,81,181, 0.5);*/
+  /*}*/
   .AdTable > .AdTableLeft,
   .AdTable > .AdTableRight {
     box-sizing: border-box;
@@ -468,6 +468,7 @@
   .page-head > div {
     height: 50px;
     line-height: 50px;
+    display: inline-block;
   }
   .type-filter > span {
     display: inline-block;
@@ -516,6 +517,13 @@
   }
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
+  }
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
   }
   .type-filter > span > i {
     width: 16px;
@@ -635,5 +643,13 @@
   .page-body {
     height: calc(90vh - 300px);
   }
-
+.no-data{
+  width: 100%;
+  height:500px;
+  line-height: 500px;
+  font-size: 24px;
+  color: #999;
+  text-align: center;
+  vertical-align: middle;
+}
 </style>

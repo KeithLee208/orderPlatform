@@ -27,8 +27,9 @@
           <div>
             <i></i>
             <p>
-              <span class="name">{{currentDocSchedule.ysmc}}</span>
-              <span class="position">主治医师</span>
+              <span v-if="currentDocSchedule.ysmc!==''" class="name">{{currentDocSchedule.ysmc}}</span>
+              <span v-if="currentDocSchedule.ysmc!==''" class="position">主治医师</span>
+              <span v-if="currentDocSchedule.ysmc ===''" class="name">普通门诊</span>
             </p>
           </div>
         </div>
@@ -37,7 +38,7 @@
             <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
               <span>{{slot.sjdmc}}</span>
               <span v-for="(week,indexJ) in slot.weekday">
-                    <span v-if="week.ysdm" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                    <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                       <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
@@ -63,8 +64,8 @@
               </span>
         </div>
       </el-form-item>
-      <el-form-item label="选择科室">
-        <el-select v-model="form.ksdm" filterable  placeholder="请选择" @change="handlerDepartChange">
+      <el-form-item label="当前科室">
+        <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
           <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
           </el-option>
         </el-select>
@@ -204,7 +205,7 @@
           ghfdm:'',
           hxzs:'',
           jssj:'',
-          ksdm:'',
+          ksdm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
           ksmc:'',
           kssj:'',
           lrsj:'',
@@ -327,24 +328,21 @@
       init(){
         this.getDicData();//获取字典数据
         this.getChannalList();//获取号序列表
-        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
-          this.getDocScheduleList();//获取医生出班模板列表
-        }else{
-          this.$message('无医生信息');
-          this.getDocScheduleListDefault();
-          this.loading=false;
-        }
+        this.getDoc();//根据科室选择医生
+        this.getDocScheduleList();//获取医生出班模板列表
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
         this.timeSlot.map((slot,index) => {
-          Object.assign(this.currentDocSchedule.slot[index],arr.clone(slot))
+          this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
         });
         this.currentDocSchedule.slot.map(slot => {
           this.formOptions.visitTime.list.map((item,index) => {
             slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
           });
-        })
+        });
+        this.loading = false;
+
       },
       //获取各种字典数据
       getDicData(){
@@ -352,6 +350,23 @@
           this.formOptions.department.list = this.$store.state.scheduling.departmentList;
           this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
           this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //科室选择不同医生
+      getDoc(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04",
+          {
+            kstybm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
+            yydm:this.$store.state.login.userInfo.yydm
+          }).then(data => {
+          this.formOptions.doctor.list = data;
+          let ordinary={
+            zgxm:'普通门诊',
+            zgtybm:''
+          };
+          this.formOptions.doctor.list.push(ordinary);
+        }).catch(err => {
+          console.log(err);
+        });
       },
       //获取渠道列表
       getChannalList(){
@@ -368,7 +383,7 @@
       channalListFormat(data){
         data.map((item, index) => {
           item.edit = false;
-          item.num = 1;
+          item.num = 0;
           item.style = this.styleArr[index]
         });
         return data;
@@ -380,11 +395,17 @@
           mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
           ysdm : this.$store.state.scheduling.currentSchedulingSet.ysdm,
         };
+        console.log('000',params);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-          console.log('医生排班列表数据 %o',this.currentDocSchedule);
-          this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-          console.log('医生排班列表数据 %o',this.currentDocSchedule);
-          this.setDefaultInfo();
+          if(data==''){
+            this.currentDocSchedule.ysmc=this.$store.state.scheduling.currentSchedulingSet.ysmc;
+            this.getDocScheduleListDefault();
+          }
+          else {
+            this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+            console.log('排班表信息', this.currentDocSchedule);
+            this.setDefaultInfo();
+          }
         }).catch(err => {
           console.log(err);
         });
@@ -509,9 +530,11 @@
           fscj:'',
           lrsj:'',
           zbxh:'',
+          hxmbList:'',
           money:0
         };
         this.ballList=[];
+        this.channalList =  this.channalListFormat(arr.clone( this.$store.state.scheduling.channalList));
         this.setForm(_data);
       },
       //数据转换
@@ -547,7 +570,7 @@
         let _validator = new validator.Validator();
         _validator.add(this.form.czdz, [{
           strategy: 'isNonEmpty',
-          errorMsg: '请选择就诊地址'
+          errorMsg: '请填写就诊地址'
         },{
           strategy: 'isNonSpace',
           errorMsg: '就诊地址有空格'
@@ -788,6 +811,13 @@
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
   }
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
+  }
   .type-filter > span > i {
     width: 16px;
     height: 16px;
@@ -953,6 +983,10 @@
   .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
+  }
+  .ordered.ZB {
+    color: #0caf4e;
+    background: #e6faef;
   }
   .box-title{
     width: 100%;

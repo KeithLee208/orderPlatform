@@ -23,10 +23,14 @@
       </div>
       <div class="page-body">
         <div class="table-time">
+<<<<<<< HEAD
           <div  class="btn-left" @click="moduleTimeListPage ? moduleTimeListPage-- : ''">
+=======
+          <div  class="btn-left" @click="pageleft">
+>>>>>>> bd8433dafb8477cf730f7f9506b40c15128eaec1
             <i class="icon iconfont icon-xiangzuo"></i>
           </div>
-          <div class="btn-right" @click="moduleTimeListPage < (moduleTimeList.length/7 -1) ? moduleTimeListPage++:''">
+          <div class="btn-right" @click="pageright">
             <i class="icon iconfont icon-xiangzuo"></i>
           </div>
           <span></span>
@@ -164,6 +168,8 @@
         },//科室级联
         moduleTimeList:[],//出班日期列表
         moduleTimeListPage:0,//出班日期当前所选页
+        startTime:'',
+        endTime:'',
         list:[],//出班列表
         filterListFormatTable:[],//过滤出班列表表格形式
         tableList: [],//出班列表表格形式
@@ -219,9 +225,11 @@
         //获取时间段列表
         this.getTimeSlot();
         //获取出班时间
-        this.moduleTimeList =this.getmModuleTime();
+        this.getmModuleTime();
         //获取出报表数据
         this.getTableList();
+        //获取今天日期
+        this.getDateNow();
       },
       //获取服务类型
       getServiceList(){
@@ -236,33 +244,92 @@
       },
       //获取出班时间
       getmModuleTime(){
-        let startTime = new Date(Date.parse('2017-08-31'.replace(/-/g,   "/"))).getTime();
-        let endTime = new Date(Date.parse('2017-09-15'.replace(/-/g,   "/"))).getTime();
-        let dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+        let startTime=this.$store.state.scheduling.workTableTime.startTime;
+        let endTime=this.$store.state.scheduling.workTableTime.endTime;
+//        let startTime = new Date(Date.parse('2017-09-01'.replace(/-/g,   "/"))).getTime();
+//        let endTime = new Date(Date.parse('2017-09-30'.replace(/-/g,   "/"))).getTime();
         let weekArr = [];
-        for(let i = 0;i<=dates;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
-        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
-        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
-        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
-                  .concat(weekArr)
-                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
+        for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
+//
+//        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
+//        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
+//        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
+//                  .concat(weekArr)
+//                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
+        console.log('-n-',weekArr)
         weekArr = weekArr.map((item,index) => ({
                                 date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
                                 week:"星期" + "日一二三四五六".charAt(item)
                               }));
-        return weekArr;
+        console.log('weekArr',weekArr);
+        this.moduleTimeList =weekArr;
+      },
+      //时间转换
+      dateFormat(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
       },
       //获取出报表数据
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
-          ksrq: "2017-09-04",
-          ksdmList: ['20000000.23.23.2180'],
-          jsrq:"2017-09-20"}).then(data => {
+          ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
+          ksdmList: [this.$store.state.login.userInfo.ksdm],
+          jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
-          this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
+          if(this.list==''){
+            this.filterListFormatTable=this.list;
+          }
+          else {
+            this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
+          }
           this.loading = false;
         }).catch(err => {
           console.log(err);
+        });
+      },
+      //获取当前日期
+      getDateNow(){
+        let datenow=new Date(Date.now()).getTime();
+        let daynow=new Date(datenow).getDay();
+        let startTime='';
+        let endTime='';
+        switch (daynow){
+          case 1:
+            startTime=datenow;
+            endTime=datenow+1000*60*60*24*6;
+            break;
+          case 2:
+            startTime=datenow-1000*60*60*24*1;
+            endTime=datenow+1000*60*60*24*5;
+            break;
+          case 3:
+            startTime=datenow-1000*60*60*24*2;
+            endTime=datenow+1000*60*60*24*4;
+            break;
+          case 4:
+            startTime=datenow-1000*60*60*24*3;
+            endTime=datenow+1000*60*60*24*3;
+            break;
+          case 5:
+            startTime=datenow-1000*60*60*24*4;
+            endTime=datenow+1000*60*60*24*2;
+            break;
+          case 6:
+            startTime=datenow-1000*60*60*24*5;
+            endTime=datenow+1000*60*60*24*1;
+            break;
+          case 0:
+            startTime=datenow-1000*60*60*24*6;
+            endTime=datenow;
+            break;
+        }
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:startTime,
+          endTime:endTime
         });
       },
       //数据处理
@@ -329,6 +396,23 @@
             console.log(err);
           });
         })
+      },
+      pageleft(){
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:this.$store.state.scheduling.workTableTime.startTime-1000*60*60*24*7,
+          endTime:this.$store.state.scheduling.workTableTime.endTime-1000*60*60*24*7
+        });
+        console.log(this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)));
+       this.getmModuleTime();
+       this.getTableList();
+      },
+      pageright(){
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:this.$store.state.scheduling.workTableTime.startTime+1000*60*60*24*7,
+          endTime:this.$store.state.scheduling.workTableTime.endTime+1000*60*60*24*7
+        });
+        this.getmModuleTime();
+        this.getTableList();
       },
       //出班调整-保存分类别：替诊、停诊、调班
       handleSaveClick(){
