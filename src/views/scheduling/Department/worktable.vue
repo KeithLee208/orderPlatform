@@ -201,8 +201,8 @@
         return this.moduleTimeList.slice(7*this.moduleTimeListPage,7*(this.moduleTimeListPage+1));
       },
       filterList(){
-          if(!this.fwlxdm)return this.list;
-          return this.list.filter(item => item.fwlxdm == this.fwlxdm)
+        if(!this.fwlxdm)return this.list;
+        return this.list.filter(item => item.fwlxdm == this.fwlxdm)
       }
     },
     watch:{
@@ -252,12 +252,10 @@
 //        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
 //                  .concat(weekArr)
 //                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
-        console.log('-n-',weekArr)
         weekArr = weekArr.map((item,index) => ({
-                                date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
-                                week:"星期" + "日一二三四五六".charAt(item)
-                              }));
-        console.log('weekArr',weekArr);
+          date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+          week:"星期" + "日一二三四五六".charAt(item)
+        }));
         this.moduleTimeList =weekArr;
       },
       //时间转换
@@ -271,9 +269,10 @@
       },
       //获取出报表数据
       getTableList(){
+        console.log('time',this.$store.state.scheduling.workTableTime.startTime,this.$store.state.scheduling.workTableTime.endTime)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
-          ksdmList: [this.$store.state.login.userInfo.ksdm],
+          ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
           if(this.list==''){
@@ -293,33 +292,34 @@
         let daynow=new Date(datenow).getDay();
         let startTime='';
         let endTime='';
+        let day=1000*60*60*24;
         switch (daynow){
           case 1:
             startTime=datenow;
-            endTime=datenow+1000*60*60*24*6;
+            endTime=datenow+day*6;
             break;
           case 2:
-            startTime=datenow-1000*60*60*24*1;
-            endTime=datenow+1000*60*60*24*5;
+            startTime=datenow-day*1;
+            endTime=datenow+day*5;
             break;
           case 3:
-            startTime=datenow-1000*60*60*24*2;
-            endTime=datenow+1000*60*60*24*4;
+            startTime=datenow-day*2;
+            endTime=datenow+day*4;
             break;
           case 4:
-            startTime=datenow-1000*60*60*24*3;
-            endTime=datenow+1000*60*60*24*3;
+            startTime=datenow-day*3;
+            endTime=datenow+day*3;
             break;
           case 5:
-            startTime=datenow-1000*60*60*24*4;
-            endTime=datenow+1000*60*60*24*2;
+            startTime=datenow-day*4;
+            endTime=datenow+day*2;
             break;
           case 6:
-            startTime=datenow-1000*60*60*24*5;
-            endTime=datenow+1000*60*60*24*1;
+            startTime=datenow-day*5;
+            endTime=datenow+day*1;
             break;
           case 0:
-            startTime=datenow-1000*60*60*24*6;
+            startTime=datenow-day*6;
             endTime=datenow;
             break;
         }
@@ -350,7 +350,7 @@
               item.ysmc = week.ysmc;
               if(week.sjddm != slot.sjddm)return;
               let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
-              slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
               Object.assign(_day,week);
             })
           })
@@ -399,8 +399,8 @@
           endTime:this.$store.state.scheduling.workTableTime.endTime-1000*60*60*24*7
         });
         console.log(this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)));
-       this.getmModuleTime();
-       this.getTableList();
+        this.getmModuleTime();
+        this.getTableList();
       },
       pageright(){
         this.$store.commit('scheduling/SET_DATETIMENOW', {
