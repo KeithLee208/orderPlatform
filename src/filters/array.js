@@ -38,6 +38,9 @@ function uniqueArray(arr){
 
 //数组分类
 export function classifyArr (arr,key){
+  if(!arr.length){
+    return  [];
+  }
   let newArr = arr
     .map(item => [item[key]])
     .reduce((a,b) => a.concat(b))

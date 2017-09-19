@@ -70,7 +70,8 @@
     }
   }
 </script>
-<style>
+
+<style scoped>
   @import './../static/css/reset.css';
   @import './../static/font/iconfont.css';
   #login{
@@ -115,22 +116,7 @@
     box-sizing: border-box;
     padding: 0 20px;
     }
-  .el-form-item__content>span{
-    color: #999;
-    font-size: 10px;
-    float: left;
-    margin-bottom: -12px;
-  }
-  .login-input>input{
-    border-radius: 0px;
-    border: 1px solid transparent !important;
-    border-bottom: 1px solid #e0e0e0 !important;
-    padding: 0;
-    float: left;
-  }
-  .login-input>input:focus{
-    border-bottom: 1px solid rgb(139,192,240) !important;
-  }
+
   .login-btn{
     margin-top: 30px;
     width: 100%;
@@ -162,6 +148,24 @@
   }
   .describe{
     font-size: 16px;
+  }
+  .login-input>input{
+    border-radius: 0px;
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding: 0;
+    float: left;
+  }
+  .login-input>input:focus{
+    border-bottom: 1px solid rgb(139,192,240) !important;
+  }
+</style>
+<style>
+  .el-form-item__content>span{
+    color: #999;
+    font-size: 10px;
+    float: left;
+    margin-bottom: -12px;
   }
   .el-form-item__error{
     top:100%;

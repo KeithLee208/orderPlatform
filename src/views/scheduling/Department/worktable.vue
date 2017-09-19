@@ -23,11 +23,7 @@
       </div>
       <div class="page-body">
         <div class="table-time">
-<<<<<<< HEAD
-          <div  class="btn-left" @click="moduleTimeListPage ? moduleTimeListPage-- : ''">
-=======
           <div  class="btn-left" @click="pageleft">
->>>>>>> bd8433dafb8477cf730f7f9506b40c15128eaec1
             <i class="icon iconfont icon-xiangzuo"></i>
           </div>
           <div class="btn-right" @click="pageright">
@@ -424,12 +420,7 @@
           ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
-          if(this.list==''){
-            this.filterListFormatTable=this.list;
-          }
-          else {
-            this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
-          }
+          this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
           this.loading = false;
         }).catch(err => {
           console.log(err);
@@ -482,6 +473,10 @@
         //医生→时间段→日期
         let newArr = arr.clone(list);
         let timeSlot = arr.clone(this.timeSlot);
+        if(!newArr.length){
+
+          this.loading = false;
+        }
         newArr.map(item => {
           item.slot = arr.clone(timeSlot);
           item.slot.map(slot => {
