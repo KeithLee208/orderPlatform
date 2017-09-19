@@ -94,6 +94,151 @@
         </div>
       </div>
     </div>
+    <!--出班调整-->
+    <el-dialog title="出班调整" :visible.sync="shiftVisible" size="small">
+      <div>
+        <div class="now-num">已有32位患者预约</div>
+        <div class="now-info">
+          <div>
+            <span class="tab-label">调整类型</span>
+            <el-radio-group v-model="shiftForm.shiftType">
+              <el-radio label="替诊">替诊</el-radio>
+              <el-radio label="停诊">停诊</el-radio>
+              <el-radio label="调班">调班</el-radio>
+            </el-radio-group>
+            <!--替诊-->
+            <el-form v-if="shiftForm.shiftType == '替诊'" ref="form" :model="shiftForm.replaceForm" label-width="110px">
+              <el-form-item label="当前医生">
+                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
+              </el-form-item>
+              <div class="line"></div>
+              <el-form-item label="替诊医生">
+                <el-cascader
+                  :model="shiftForm.replaceForm.doctor"
+                  :options="departmentList"
+                  @active-item-change="handleItemChange"
+                  :props="props"
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="替诊原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.replaceForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+            <!--停诊-->
+            <el-form v-if="shiftForm.shiftType == '停诊'" ref="form" :model="shiftForm.stopForm" label-width="110px">
+              <el-form-item label="停诊时间">
+                <el-date-picker
+                  class="width-300"
+                  v-model="shiftForm.stopForm.date"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="停诊原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.stopForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+            <!--调班-->
+            <el-form v-if="shiftForm.shiftType == '调班'" ref="form" :model="shiftForm.adjustForm" label-width="110px">
+              <el-form-item label="医生/科室">
+                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
+              </el-form-item>
+              <el-form-item label="预约时间">
+                <span>2015/05/01</span>
+              </el-form-item>
+              <div class="change-icon">
+                <i class="icon iconfont icon-duihuan"></i>
+              </div>
+              <el-form-item label="调班医生">
+                <el-cascader
+                  :options="departmentList"
+                  @active-item-change="handleItemChange"
+                  :props="props"
+                ></el-cascader>
+              </el-form-item>
+              <el-form-item label="调班时间">
+                <el-date-picker
+                  class="width-300"
+                  v-model="shiftForm.adjustForm.date"
+                  type="datetime"
+                  placeholder="选择日期时间">
+                </el-date-picker>
+              </el-form-item>
+              <div class="line"></div>
+              <el-form-item label="调班原因">
+                <el-input class="width-300" type="textarea" v-model="shiftForm.adjustForm.desc"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+      <el-button>恢复到最初排班</el-button>
+      <el-button @click="shiftVisible = false">取 消</el-button>
+      <el-button type="primary" @click="handleSaveClick()">确 定</el-button>
+    </span>
+    </el-dialog>
+    <!--记录调整-->
+    <el-dialog title="调整记录" :visible.sync="recordVisible" size="small">
+      <div class="time-wrapper">
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i class="active"></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+        <div class="time-line">
+          <div class="time-left">
+            <span>2017/04/28</span>
+            <i></i>
+          </div>
+          <div class="time-right">
+            <div>
+              <p class="title">调整为"停诊"</p>
+              <p>停诊时间：2017/05/01 8:00-12:00</p>
+              <p>停诊原因：突发意外情况需要处理</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="recordVisible = false">取 消</el-button>
+                <el-button type="primary" @click="recordVisible = false">确定</el-button>
+              </span>
+    </el-dialog>
     <!--打印-->
     <el-dialog title="打印出班表" :visible.sync="printVisible" size="tiny">
               <span>
