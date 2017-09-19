@@ -354,8 +354,9 @@
       moduleTimeListPage:
         {
           handler(curVal){
-            //
-            this.filterListFormatTable = this.formatData(arr.classifyArr(arr.clone(this.filterList), 'ysdm'),arr.clone(this.timeSlot),this.moduleTimeListSelect);
+            let _list = arr.classifyArr(this.filterList, 'ysdm');
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
+            this.filterListFormatTable = this.formatData(_list,_timeSlot);
           }
         }
     },
@@ -420,7 +421,9 @@
           ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
-          this.filterListFormatTable = this.formatData(arr.classifyArr(arr.clone(this.filterList), 'ysdm'),arr.clone(this.timeSlot),this.moduleTimeListSelect);
+          let _list = arr.classifyArr(this.filterList, 'ysdm');
+          let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
+          this.filterListFormatTable = this.formatData(_list,_timeSlot);
           this.loading = false;
         }).catch(err => {
           console.log(err);
@@ -468,42 +471,52 @@
           endTime:endTime
         });
       },
-      //数据处理
-      formatData(list,timeSlot,moduleTimeListSelect){
-        //医生→时间段→日期
-        let newArr = list;
-        timeSlot.map(slot => {
+      formatTimeSlot(timeSlot,moduleTimeListSelect){
+        let _timeSlot = arr.clone(timeSlot);
+        let _moduleTimeListSelect = arr.clone(moduleTimeListSelect);
+        _timeSlot.map(slot => {
           slot.weekday = [
-            {cbrqlx:moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[0].date},
-            {cbrqlx:moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[1].date},
-            {cbrqlx:moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[2].date},
-            {cbrqlx:moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[3].date},
-            {cbrqlx:moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[4].date},
-            {cbrqlx:moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[5].date},
-            {cbrqlx:moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[6].date}
+            {cbrqlx:_moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[0].date},
+            {cbrqlx:_moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[1].date},
+            {cbrqlx:_moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[2].date},
+            {cbrqlx:_moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[3].date},
+            {cbrqlx:_moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[4].date},
+            {cbrqlx:_moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[5].date},
+            {cbrqlx:_moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[6].date}
           ];
         });
+        return _timeSlot;
+      },
+      //数据处理
+      formatData(list,timeSlot){
+        //医生→时间段→日期
+        let newArr = list;
+        let normalTypeData = [{
+          ysmc:"普通门诊",
+          name:"",
+          slot:arr.clone(timeSlot)
+        }];
+        let flag = true;
         if(!newArr.length){
-          newArr = [{
-              ysmc:"普通门诊",
-              name:"",
-              slot:arr.clone(timeSlot)
-          }];
-          return newArr;
+          return normalTypeData;
         }
         newArr.map(item => {
+          if(!item.name) flag = false;
           item.slot = arr.clone(timeSlot);
           item.slot.map(slot => {
             let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
-            weekTemp.map(week => {
-              item.ysmc = week.ysmc;
-              if(week.sjddm != slot.sjddm)return;
-              let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
-                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
-              Object.assign(_day,week);
-            })
+                weekTemp.map(week => {
+                  item.ysmc = week.ysmc;
+                  if(week.sjddm != slot.sjddm)return;
+                  let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
+                    slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+                  Object.assign(_day,week);
+                })
           })
         });
+        if(flag) {
+          newArr = normalTypeData.concat(newArr);
+        }
         return newArr;
       },
       //处理出班调整点击事件
