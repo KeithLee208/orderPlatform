@@ -354,8 +354,8 @@
       moduleTimeListPage:
         {
           handler(curVal){
-            //初始化表格双栏设置
-            this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
+            //
+            this.filterListFormatTable = this.formatData(arr.classifyArr(arr.clone(this.filterList), 'ysdm'),arr.clone(this.timeSlot),this.moduleTimeListSelect);
           }
         }
     },
@@ -420,7 +420,7 @@
           ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
-          this.filterListFormatTable = this.formatData(arr.classifyArr(this.filterList, 'ysdm'));
+          this.filterListFormatTable = this.formatData(arr.classifyArr(arr.clone(this.filterList), 'ysdm'),arr.clone(this.timeSlot),this.moduleTimeListSelect);
           this.loading = false;
         }).catch(err => {
           console.log(err);
@@ -469,26 +469,31 @@
         });
       },
       //数据处理
-      formatData(list){
+      formatData(list,timeSlot,moduleTimeListSelect){
         //医生→时间段→日期
-        let newArr = arr.clone(list);
-        let timeSlot = arr.clone(this.timeSlot);
+        let newArr = list;
+        timeSlot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[0].date},
+            {cbrqlx:moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[1].date},
+            {cbrqlx:moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[2].date},
+            {cbrqlx:moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[3].date},
+            {cbrqlx:moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[4].date},
+            {cbrqlx:moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[5].date},
+            {cbrqlx:moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:moduleTimeListSelect[6].date}
+          ];
+        });
         if(!newArr.length){
-
-          this.loading = false;
+          newArr = [{
+              ysmc:"普通门诊",
+              name:"",
+              slot:arr.clone(timeSlot)
+          }];
+          return newArr;
         }
         newArr.map(item => {
           item.slot = arr.clone(timeSlot);
           item.slot.map(slot => {
-            slot.weekday = [
-              {cbrqlx:this.moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[0].date},
-              {cbrqlx:this.moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[1].date},
-              {cbrqlx:this.moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[2].date},
-              {cbrqlx:this.moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[3].date},
-              {cbrqlx:this.moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[4].date},
-              {cbrqlx:this.moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[5].date},
-              {cbrqlx:this.moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:this.moduleTimeListSelect[6].date}
-            ];
             let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
             weekTemp.map(week => {
               item.ysmc = week.ysmc;
