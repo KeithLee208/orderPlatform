@@ -45,10 +45,10 @@ export default {
                                 //成功
                                 resolve(res);
                             }
-                            // else if(resHead.AckCode.indexOf("400")>=0){
-                            //     //业务错误
-                            //     resolve(res);
-                            // }
+                            else if(resHead.AckCode.indexOf("400")>=0){
+                                //业务错误
+                                resolve(res);
+                            }
                             else {
                                 //失败
                                 this.$message({

@@ -70,7 +70,9 @@ export function classifyCheckArr (arr,key){
       allChecked:false,
       isIndeterminate: false,
       children:[]
-    }));
+    }
+    )
+    );
   arr.map(item => {
     newArr.map(newItem => {
       if(item[key] === newItem.name){

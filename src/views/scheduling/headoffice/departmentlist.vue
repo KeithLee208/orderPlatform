@@ -128,11 +128,13 @@
       });
       }, //专病病种
       TpListInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q02", {
           kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
-        let newArr = listArray.classifyCheckArr(data, 'sjksbm');
+          console.log('data',data);
+        let newArr = listArray.classifyCheckArr(data, 'sjksmc');
+          console.log('newdata',newArr);
         let selcetArr = [];
         this.attList = newArr;
         this.loading=false;

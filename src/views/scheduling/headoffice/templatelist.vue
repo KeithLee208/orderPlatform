@@ -87,18 +87,23 @@
           mbmc:this.form.name
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S00", params).then(data => {
-          this.creatVisible = false;
+          if(data.BizErrorCode=='200.5'){
+            this.$message.error(data.BizErrorMessage);
+          }
+          else {
           this.$message({
             message: '创建成功！',
             type: 'success'
           });
+          this.creatVisible = false;
+            this.cardlistInit();
+          }
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
         });
-        this.cardlistInit();
       },
       allTemList(){
         this.StopActive=false;

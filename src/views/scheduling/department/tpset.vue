@@ -62,13 +62,13 @@
           </div>
         </el-form-item>
         <el-form-item label="当前科室">
-          <el-select v-model="form.ksdm" disabled filterable placeholder="请选择">
+          <el-select v-model="form.ksmc" disabled filterable placeholder="请选择">
             <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择医生">
-          <el-select @change="docChange(form.ysdm)" v-model="form.ysdm" filterable :placeholder='form.ysdm'>
+          <el-select @change="docChange(form.ysmc,form.ysdm)" v-model="form.ysdm" filterable :placeholder='form.ysdm'>
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
@@ -126,7 +126,7 @@
           hxzs: '',
           jssj: '',
           ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          ksmc: '',
+          ksmc: this.$store.state.scheduling.currentSchedulingSet.ksmc,
           kssj: '',
           lrsj: '',
           mbdm: '',
@@ -215,7 +215,6 @@
           doctype: '普通门诊',
           ysdm: "",
           slot: [
-
           ]
         }, //当前所选医生出班时间表
         singleSchedule: {},
@@ -273,7 +272,11 @@
         this.timeSlot.map((slot, index) => {
           this.currentDocSchedule.slot[index] = Object.assign({}, arr.clone(slot))
         });
+//        console.log('this.currentDocSchedule',this.currentDocSchedule);
+//        this.currentDocSchedule.slot.weekday=[{},{},{},{},{},{},{}];
+//        console.log('1',this.currentDocSchedule.slot.weekday[0]);
         this.currentDocSchedule.slot.map(slot => {
+          slot.weekday = [];
           this.formOptions.visitTime.list.map((item, index) => {
             slot.weekday[index] = {
               cbrqlx: [item.val],
@@ -281,7 +284,7 @@
             };
           });
         })
-        this.loading = false;
+
       },
       //获取医生出班模板列表
       getDocScheduleList() {
@@ -293,6 +296,7 @@
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           if (data == '') {
             this.currentDocSchedule.ysmc = this.$store.state.scheduling.currentSchedulingSet.ysmc;
+            this.loading = false;
             this.getDocScheduleListDefault();
           } else {
             this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
@@ -401,8 +405,11 @@
         Object.assign(this.form, data)
       },
       //
-      docChange(val) {
-        this.$store.state.scheduling.currentSchedulingSet.ysdm = val;
+      docChange(ysmc,ysdm) {
+        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
+          ysdm:ysdm,
+          ysmc:ysmc
+        });
         this.getDocScheduleList();
       },
       //设置新的排班信息
@@ -530,7 +537,6 @@
             this.$message('保存成功');
             this.isCover = false;
             this.getDocScheduleList(); //获取医生出班模板列表
-
           }).catch(err => {
             if (err.data.Response.Body.BizErrorCode == 'HIS.APPOINTMENT.BE10005') {
               this.dialogVisible = true;
