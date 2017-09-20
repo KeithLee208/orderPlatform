@@ -530,9 +530,7 @@
       },
       //处理科室医生级联
       handleItemChange(item){
-        console.log(item);
         this.getDoctorList().then(data => {
-          console.log('医生列表 %o', data);
           data.map(item => {
             item.label = item.zcmc;
           });
