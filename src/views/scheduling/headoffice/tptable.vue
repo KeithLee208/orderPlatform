@@ -47,7 +47,7 @@
                   <el-tooltip  @click.native="clearCurrentDocSchedule()" class="item" effect="dark"
                                content="设置出班模板" placement="bottom">
                       <router-link tag="span"  to="/scheduling/headoffice/tpset">
-                     <i @click="ExportVisible = true" class="icon iconfont icon iconfont icon-shezhi_"></i>
+                     <i  class="icon iconfont icon iconfont icon-shezhi_"></i>
                            </router-link>
                   </el-tooltip>
                 </span>
@@ -206,6 +206,14 @@
       getServiceType(){
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
       },
+      //获取统计接口
+      setServieNumber(data){
+        let fwlxtj = data;
+        console.log('fwlxtj',fwlxtj);
+        this.serviceTypeList.map(item => {
+          item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
+        })
+      },
       //获取时间段列表
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
@@ -316,6 +324,7 @@
             this.templateData=data;
           }
           else{
+            this.setServieNumber(data);
             this.TpCard = data;
             this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
             this.loading = false;

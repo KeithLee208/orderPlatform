@@ -65,7 +65,7 @@
         </div>
       </el-form-item>
       <el-form-item label="当前科室">
-        <el-select v-model="form.ksmc" disabled  filterable  placeholder="请选择">
+        <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
           <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
           </el-option>
         </el-select>
@@ -205,11 +205,11 @@
           ghfdm:'',
           hxzs:'',
           jssj:'',
-          ksdm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          ksmc:this.$store.state.scheduling.currentSchedulingSet.ksmc,
+          ksdm:'',
+          ksmc:'',
           kssj:'',
           lrsj:'',
-          mbdm:this.$store.state.scheduling.currentSchedulingSet.mbdm,
+          mbdm:'',
           mxxh:'',
           sjddm:'',
           ysdm:'',
@@ -327,9 +327,8 @@
     methods: {
       init(){
         this.getDicData();//获取字典数据
-        this.getChannalList();//获取号序列表
         this.getDoc();//根据科室选择医生
-        this.getDocScheduleList();//获取医生出班模板列表
+        this.getChannalList();//获取号序列表
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
@@ -365,6 +364,7 @@
             zgtybm:''
           };
           this.formOptions.doctor.list.push(ordinary);
+          this.getDocScheduleList();//获取医生出班模板列表
         }).catch(err => {
           console.log(err);
         });
@@ -396,10 +396,15 @@
           mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
           ysdm : this.$store.state.scheduling.currentSchedulingSet.ysdm,
         };
-        console.log('000',params);
+        this.form.ksdm=this.$store.state.scheduling.currentSchedulingSet.ksdm;
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
+          console.log('this.formOptions.doctor.list',this.formOptions.doctor.list);
+          for(let i=0;i<this.formOptions.doctor.list.length;i++){
+            if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.currentSchedulingSet.ysdm){
+              this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
+            }
+          }
           if(data==''){
-            this.currentDocSchedule.ysmc=this.$store.state.scheduling.currentSchedulingSet.ysmc;
             this.getDocScheduleListDefault();
           }
           else {
@@ -477,12 +482,13 @@
         //根据明细获取号序列表
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
           this.ballList= data;
+          console.log('当前号序',this.ballList);
           this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
                         .map(item => {
                           item.money = this.getServiceMoney(item.fwlxdm);
                           item.style = this.getBallStyle(item.qddm);
                         });//号源升序,整合金额,整合样式
-          console.log(this.ballList);
+
           this.ballToChannal();//根据号序列表更新渠道信息
         }).catch(err => {
           console.log(err);
@@ -593,31 +599,48 @@
         let insert = this.formDataFormat(this.form);
         console.log('保存的数据',insert)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: insert,ifCover:this.ifCover}).then(data => {
-          this.$message('保存成功');
-          this.ifCover = false;
-          this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-            ysdm:insert.ysdm,
-            mbdm:insert.mbdm,
-            ksdm:insert.ksdm
-          });
-          this.getDocScheduleList();//获取医生出班模板列表
+          if(data){
+            if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
+              this.$message(data.BizErrorMessage);
+              return
+            }
+            else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
+              this.$message(data.BizErrorMessage);
+              this.dialogVisible = true;
+              return
+            }
+          }
+          else {
+            this.$message('保存成功');
+            this.isCover = false;
+            this.getDocScheduleList(); //获取医生出班模板列表
+          }
         }).catch(err => {
           console.log(err);
-          if(err.data.Response.Head.AckCode.indexOf('400')>-1){
-            this.dialogVisible = true;
-          }
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
         });
       },
       //删除
-      delSchedule(item){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { delete: [{mxxh:item.mxxh}],ifCover:true }).then(data => {
-          this.$message('已删除');
-          this.getDocScheduleList();//获取医生出班模板列表
+      delSchedule(item) {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
+          delete: [{
+            mxxh: item.mxxh
+          }],
+          ifCover: true
+        }).then(data => {
+          console.log('data',data);
+          if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
+            this.$message(data.BizErrorMessage);
+            return
+          }
+          else {
+            this.$message('已删除');
+            this.getDocScheduleList(); //获取医生出班模板列表
+          }
         }).catch(err => {
-            console.log(err);
+          console.log(err);
           //这里错误有2种错误
           //1. 服务端业务错误，错误码邮件中有
           //2. 网络错误，本地网络断开、超时等
@@ -662,7 +685,6 @@
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
             ysdm:val
         });
-        alert(this.form.ysmc)
         this.getDocScheduleList();//获取医生出班模板列表
       },
       handleClose(done) {

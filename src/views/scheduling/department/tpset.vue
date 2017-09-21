@@ -62,21 +62,21 @@
           </div>
         </el-form-item>
         <el-form-item label="当前科室">
-          <el-select v-model="form.ksmc" disabled filterable placeholder="请选择">
+          <el-select v-model="form.ksdm" disabled filterable placeholder="请选择">
             <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="选择医生">
-          <el-select @change="docChange(form.ysmc,form.ysdm)" v-model="form.ysdm" filterable :placeholder='form.ysdm'>
+          <el-select @change="docChange" v-model="form.ysdm" filterable :placeholder='form.ysdm'>
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
         <!--<el-form-item v-if="formOptions.disease.isShow" label="选择病种">-->
-          <!--<el-select @change="diseaseChange" multiple v-model="form.zydmList" value-key="zydm" placeholder="请选择病种">-->
-            <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item">-->
-            <!--</el-option>-->
-          <!--</el-select>-->
+        <!--<el-select @change="diseaseChange" multiple v-model="form.zydmList" value-key="zydm" placeholder="请选择病种">-->
+        <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item">-->
+        <!--</el-option>-->
+        <!--</el-select>-->
         <!--</el-form-item>-->
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.cbrqlx">
@@ -236,14 +236,7 @@
       init() {
         this.getDicData(); //获取字典数据
         this.getDoc(); //获取医生列表
-        //        if(this.$store.state.scheduling.currentSchedulingSet['ysdm']){
         this.getDocScheduleList(); //获取医生出班模板列表
-        //        }else{
-        //          this.$message('无医生信息');
-        //          //获取医生出班模板列表缺省信息
-        //          this.getDocScheduleListDefault();
-        //          this.loading = false;
-        //        }
       },
       //获取各种字典数据
       getDicData() {
@@ -272,9 +265,6 @@
         this.timeSlot.map((slot, index) => {
           this.currentDocSchedule.slot[index] = Object.assign({}, arr.clone(slot))
         });
-//        console.log('this.currentDocSchedule',this.currentDocSchedule);
-//        this.currentDocSchedule.slot.weekday=[{},{},{},{},{},{},{}];
-//        console.log('1',this.currentDocSchedule.slot.weekday[0]);
         this.currentDocSchedule.slot.map(slot => {
           slot.weekday = [];
           this.formOptions.visitTime.list.map((item, index) => {
@@ -294,8 +284,12 @@
           ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
+          for(let i=0;i<this.formOptions.doctor.list.length;i++){
+            if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.currentSchedulingSet.ysdm){
+              this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
+            }
+          }
           if (data == '') {
-            this.currentDocSchedule.ysmc = this.$store.state.scheduling.currentSchedulingSet.ysmc;
             this.loading = false;
             this.getDocScheduleListDefault();
           } else {
@@ -405,10 +399,9 @@
         Object.assign(this.form, data)
       },
       //
-      docChange(ysmc,ysdm) {
+      docChange(val) {
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-          ysdm:ysdm,
-          ysmc:ysmc
+          ysdm:val
         });
         this.getDocScheduleList();
       },
@@ -440,6 +433,7 @@
           lrsj: '',
           zydmList: [],
         };
+        console.log('data',_data)
         this.setForm(_data);
       },
       //数据转换
@@ -534,13 +528,24 @@
             insert: data,
             ifCover: this.isCover
           }).then(data => {
-            this.$message('保存成功');
-            this.isCover = false;
-            this.getDocScheduleList(); //获取医生出班模板列表
+            if(data){
+              if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
+                this.$message(data.BizErrorMessage);
+                return
+              }
+              else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
+                this.$message(data.BizErrorMessage);
+                this.dialogVisible = true;
+                return
+              }
+              }
+               else {
+                this.$message('保存成功');
+                this.isCover = false;
+                this.getDocScheduleList(); //获取医生出班模板列表
+              }
           }).catch(err => {
-            if (err.data.Response.Body.BizErrorCode == 'HIS.APPOINTMENT.BE10005') {
-              this.dialogVisible = true;
-            }
+            console.log(err);
             //这里错误有2种错误
             //1. 服务端业务错误，错误码邮件中有
             //2. 网络错误，本地网络断开、超时等
@@ -555,8 +560,15 @@
           }],
           ifCover: true
         }).then(data => {
-          this.$message('已删除');
-          this.getDocScheduleList(); //获取医生出班模板列表
+          console.log('data',data);
+          if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
+            this.$message(data.BizErrorMessage);
+            return
+          }
+          else {
+            this.$message('已删除');
+            this.getDocScheduleList(); //获取医生出班模板列表
+          }
         }).catch(err => {
           console.log(err);
           //这里错误有2种错误

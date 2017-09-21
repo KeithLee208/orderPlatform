@@ -146,7 +146,7 @@
         this.getCrumbs();
         //获取服务类型
         this.getServiceType();
-        this.setServieNumber();
+//        this.setServieNumber();
         //获取时间段
         this.getTimeSlot();
         //获取已选科室列表
@@ -162,10 +162,11 @@
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
       },
       //获取统计接口
-      setServieNumber(){
-        let fwlxtj = this.$store.state.scheduling.currentsSelectTemplate.fwlxtj;
+      setServieNumber(data){
+        let fwlxtj = data;
+        console.log('fwlxtj',fwlxtj);
         this.serviceTypeList.map(item => {
-            item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length ? fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm)[0].fwlxsl:0;
+            item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
         })
       },
       //获取时间段列表
@@ -182,11 +183,15 @@
           ksdm: this.$store.state.login.userInfo.ksdm ,
           mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm']
         }).then(data => {
+          console.log('data',data);
           if(data=='')this.loading = false;
+          else {
           this.TpCard = data;
+          this.setServieNumber(data);
           this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
           this.loading = false;
           this.allTypeList=arr.clone(this.templateData);
+          }
       }).catch(err => {
           console.log(err);
         });

@@ -16,7 +16,7 @@
                 <el-button type="primary" @click="newTemplate">创 建</el-button>
               </span>
     </el-dialog>
-    <div v-loading="loading" element-loading-text="拼命加载中" class="page-main">
+    <div v-if="TpCard" v-loading="loading" element-loading-text="拼命加载中" class="page-main">
         <div class="type-filter">
         <span @click="allTemList"><i class="el-icon-menu all"></i>全部</span>
         <span :class="['used',{active:UsedActive}]" @click="UsedTemList"><i></i>启用</span>
@@ -24,6 +24,9 @@
       </div>
         <tpcard @click.native="handleLinkTo(num)" @update="cardlistInit" v-for="num in TpCard" :card="num">
         </tpcard>
+    </div>
+    <div v-if="TpCard==''" class="no-data">
+      暂无出班模板
     </div>
   </div>
 </template>
@@ -209,5 +212,14 @@
   }
   .type-filter > .used.active > i{
     background: rgb(188, 241, 212);
+  }
+  .no-data{
+    width: 100%;
+    height:500px;
+    line-height: 500px;
+    font-size: 24px;
+    color: #999;
+    text-align: center;
+    vertical-align: middle;
   }
 </style>
