@@ -31,18 +31,13 @@
     methods: {
       init(){
         this.cardlistInit();
-        this.textInit();
-      },
-      textInit(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('嘟嘟',data)
-        }).catch(err => {
-          this.$message('获取科室失败');
-        });
       },
       cardlistInit() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", { kstybm: this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm }).then(data => {
-          console.log(data)
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q00", {
+          kstybm: this.$store.state.login.userInfo.ksdm,
+          yydm:this.$store.state.login.userInfo.yydm
+        }).then(data => {
+          console.log('模板数据',data)
           this.TpCard = data;
           this.loading=false;
         }).catch(err => {

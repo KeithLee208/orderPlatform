@@ -340,6 +340,50 @@
         this.getDepartmentList();
         //获取出报表数据
         this.getTableList();
+        //获取当前时间
+        this.getDateNow();
+      },
+      //获取当前时间
+      getDateNow(){
+        let datenow=new Date(Date.now()).getTime();
+        let daynow=new Date(datenow).getDay();
+        let startTime='';
+        let endTime='';
+        let day=1000*60*60*24;
+        switch (daynow){
+          case 1:
+            startTime=datenow;
+            endTime=datenow+day*6;
+            break;
+          case 2:
+            startTime=datenow-day*1;
+            endTime=datenow+day*5;
+            break;
+          case 3:
+            startTime=datenow-day*2;
+            endTime=datenow+day*4;
+            break;
+          case 4:
+            startTime=datenow-day*3;
+            endTime=datenow+day*3;
+            break;
+          case 5:
+            startTime=datenow-day*4;
+            endTime=datenow+day*2;
+            break;
+          case 6:
+            startTime=datenow-day*5;
+            endTime=datenow+day*1;
+            break;
+          case 0:
+            startTime=datenow-day*6;
+            endTime=datenow;
+            break;
+        }
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:startTime,
+          endTime:endTime
+        });
       },
       //获取服务类型
       getServiceList(){

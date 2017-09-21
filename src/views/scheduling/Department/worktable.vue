@@ -60,11 +60,11 @@
                             </p>
                             <p>
                               <span class="fixed-label">服务类型：</span>
-                              <span>{{week.fwlxdm}}</span>
+                              <span>{{week.mzlx}}</span>
                             </p>
                             <p>
                               <span class="fixed-label">出诊时间：</span>
-                              <span>{{slot.sjdmc}}{{week.kssj | timeFormat}}-{{week.jssj | timeFormat}}</span>
+                              <span>{{slot.sjdmc}}{{week.kssj}}-{{week.jssj}}</span>
                             </p>
                             <p>
                               <span class="fixed-label">就诊地址：</span>
@@ -82,7 +82,7 @@
                                        class="el-button pull-right">调整记录</el-button>
                           </div>
                         </div>
-                        <div slot="reference" class="ordered disease">
+                        <div slot="reference" class="ordered" :class="[week.mzlx]">
                           <p>{{week.kssj}}-{{week.jssj}}</p>
                           <p>{{week.ksmc}}</p>
                         </div>
@@ -118,6 +118,7 @@
                   :options="departmentList"
                   @active-item-change="handleItemChange"
                   :props="props"
+                  filterable
                 ></el-cascader>
               </el-form-item>
               <el-form-item label="替诊原因">
@@ -126,14 +127,6 @@
             </el-form>
             <!--停诊-->
             <el-form v-if="shiftForm.shiftType == '停诊'" ref="form" :model="shiftForm.stopForm" label-width="110px">
-              <el-form-item label="停诊时间">
-                <el-date-picker
-                  class="width-300"
-                  v-model="shiftForm.stopForm.date"
-                  type="datetime"
-                  placeholder="选择日期时间">
-                </el-date-picker>
-              </el-form-item>
               <el-form-item label="停诊原因">
                 <el-input class="width-300" type="textarea" v-model="shiftForm.stopForm.desc"></el-input>
               </el-form-item>
@@ -304,7 +297,8 @@
         timeSlot: [],//时间段列表
         departmentList: [],//科室列表
         props: {
-          value: 'label',
+          label:'label',
+          value:'value',
           children: 'doctorList'
         },//科室级联
         moduleTimeList:[],//出班日期列表
@@ -337,7 +331,6 @@
     },
     created(){
       this.$nextTick(() => {
-
         this.init();
       });
     },
@@ -372,6 +365,8 @@
         this.getTableList();
         //获取今天日期
         this.getDateNow();
+        //获取科室列表
+        this.getDepartmentList();
       },
       //获取服务类型
       getServiceList(){
@@ -379,6 +374,16 @@
         this.serviceTypeList.map(item => {
           item.number = Math.floor(Math.random() * 100)
         });
+      },
+      //获取科室列表
+      getDepartmentList(){
+        this.departmentList = this.$store.state.scheduling.departmentList;
+        this.departmentList.map(item => {
+          item.label = item.ksmc;
+          item.value = item.kstybm;
+          this.$set(item, 'doctorList', []);
+        });
+        console.log('321',this.departmentList);
       },
       //获取时间段列表
       getTimeSlot(){
@@ -529,8 +534,10 @@
 
       },
       //处理科室医生级联
-      handleItemChange(item){
-        this.getDoctorList().then(data => {
+      handleItemChange(value){
+        console.log('Orz',value);
+        this.getDoctorList(value).then(data => {
+          console.log('医生列表 %o', data);
           data.map(item => {
             item.label = item.zcmc;
           });
@@ -541,10 +548,10 @@
         })
       },
       //科室获取医生列表
-      getDoctorList(){
+      getDoctorList(value){
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-            kstybm: '20000000.1.1.0320',
+            kstybm: value.join(),
             yydm:this.$store.state.login.userInfo.yydm
           }).then(data => {
             resolve(data);
@@ -582,7 +589,6 @@
       },
       //替诊保存
       saveReplace(){
-        console.log(this.shiftForm.replaceForm.doctor);
         let params = {
           ksdm: '',
           ksmc: '',
@@ -602,11 +608,9 @@
       },
       //停诊保存
       saveStop(){
-        console.log(this.shiftForm.stopForm);
         let params = {
-          mxxh: '',
-          tzsj: '',
-          tzyy: ''
+          mxxh: this.selectWeek.mxxh,
+          tzyy: this.shiftForm.stopForm.desc
         };
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S05", params).then(data => {
@@ -930,6 +934,7 @@
     font-size: 14px;
     padding: 10px 0 10px 0;
     box-sizing: border-box;
+    cursor: default;
   }
 
   .ordered > p {
@@ -938,36 +943,23 @@
   }
 
   /*default,expert,disease,union,VIP*/
-
-  .ordered.default,
-  .ordered.expert,
-  .ordered.disease,
-  .ordered.union,
-  .ordered.VIP {
-    cursor: pointer;
-  }
-
-  .ordered.default {
+  .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
-
-  .ordered.expert {
+  .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
-
-  .ordered.disease {
+  .ordered.ZB {
     color: rgb(12, 175, 148);
     background: rgb(231, 250, 240);
   }
-
-  .ordered.union {
+  .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
-
-  .ordered.VIP {
+  .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }

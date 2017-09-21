@@ -65,13 +65,13 @@
         </div>
       </el-form-item>
       <el-form-item label="当前科室">
-        <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
+        <el-select v-model="form.ksmc" disabled  filterable  placeholder="请选择">
           <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="选择医生">
-        <el-select v-model="form.ysdm"  :placeholder='form.ysdm' @change="handleDocChange">
+        <el-select v-model="form.ysdm" filterable @change="handleDocChange">
           <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
         </el-select>
       </el-form-item>
@@ -206,7 +206,7 @@
           hxzs:'',
           jssj:'',
           ksdm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          ksmc:'',
+          ksmc:this.$store.state.scheduling.currentSchedulingSet.ksmc,
           kssj:'',
           lrsj:'',
           mbdm:this.$store.state.scheduling.currentSchedulingSet.mbdm,
@@ -337,6 +337,7 @@
           this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
         });
         this.currentDocSchedule.slot.map(slot => {
+          slot.weekday = [];
           this.formOptions.visitTime.list.map((item,index) => {
             slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
           });
@@ -661,6 +662,7 @@
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
             ysdm:val
         });
+        alert(this.form.ysmc)
         this.getDocScheduleList();//获取医生出班模板列表
       },
       handleClose(done) {
