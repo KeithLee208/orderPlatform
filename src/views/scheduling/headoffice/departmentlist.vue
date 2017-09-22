@@ -39,17 +39,17 @@
               <div style="margin: 15px 0;"></div>
               <el-checkbox-group @change="ListChange(index)" v-model="checkedAttlist" >
                 <span class="radiobox" v-for="(att,index) in item.children">
-                  <el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">
+                  <!--<el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">-->
                   <el-checkbox  slot="reference" style="color: rgb(32, 178, 255);" :label="att" :key="att">{{att.ksmc}}</el-checkbox>
-                  <div class="fixed-info">
-                  <p class="fixed-info-title">门诊号源信息</p>
-                  <p><i class="default"></i>普通（10）</p>
-                  <p><i class="expert"></i>专家（2）</p>
-                  <p><i class="disease"></i>专病（3）</p>
-                  <p><i class="union"></i>联合（4）</p>
-                  <p><i class="VIP"></i>特需（5）</p>
-                 </div>
-                </el-popover>
+                  <!--<div class="fixed-info">-->
+                  <!--<p class="fixed-info-title">门诊号源信息</p>-->
+                  <!--<p><i class="default"></i>普通（10）</p>-->
+                  <!--<p><i class="expert"></i>专家（2）</p>-->
+                  <!--<p><i class="disease"></i>专病（3）</p>-->
+                  <!--<p><i class="union"></i>联合（4）</p>-->
+                  <!--<p><i class="VIP"></i>特需（5）</p>-->
+                 <!--</div>-->
+                <!--</el-popover>-->
                 </span>
               </el-checkbox-group>
             </div>

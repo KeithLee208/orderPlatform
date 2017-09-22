@@ -1,8 +1,13 @@
 <template>
-    <div v-loading="loading" element-loading-text="拼命加载中" class="page-main">
+  <div>
+    <div v-if="TpCard" v-loading="loading" element-loading-text="拼命加载中" class="page-main">
       <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
       </tpcard>
     </div>
+    <div v-if="TpCard==''" class="no-data">
+      暂无出班模板
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,11 +42,16 @@
           kstybm: this.$store.state.login.userInfo.ksdm,
           yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
-          console.log('模板数据',data)
-          this.TpCard = data;
-          this.loading=false;
+          if(data==''){
+            this.TpCard='';
+            this.$message('暂无模板列表数据');
+            this.loading=false;
+          }else {
+            this.TpCard = data;
+            this.loading=false;
+          }
         }).catch(err => {
-          this.$message('暂无模板列表数据');
+
         });
       },
       handleLinkTo(card){
@@ -65,5 +75,14 @@
   }
   .page-main{
     min-height: calc(100vh - 250px);
+  }
+  .no-data{
+    width: 100%;
+    height:500px;
+    line-height: 500px;
+    font-size: 24px;
+    color: #999;
+    text-align: center;
+    vertical-align: middle;
   }
 </style>

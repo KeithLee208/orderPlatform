@@ -75,7 +75,7 @@
 //        },
         //获取医院所有预约科室
         getDepartmentList(){
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q01", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q02", {yydm:this.$store.state.login.userInfo.yydm}).then(data => {
             console.log('Q01科室列表 %o', data);
             this.$store.commit('scheduling/SET_DEPARTMENTLIST',data)
           }).catch(err => {
