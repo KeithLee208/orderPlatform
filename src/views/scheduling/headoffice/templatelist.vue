@@ -99,6 +99,7 @@
             type: 'success'
           });
           this.creatVisible = false;
+          this.form.name='';
             this.cardlistInit();
           }
         }).catch(err => {

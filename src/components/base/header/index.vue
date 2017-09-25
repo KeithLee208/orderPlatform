@@ -22,9 +22,13 @@
         trigger="hover">
         <div class="block">
           <span class="wrapper">
-            <el-button @click="setUserInfo('科室')" type="success">科室</el-button>
+             <router-link to="/scheduling/department/templatelist" exact tag="span">
+              <el-button @click="setUserInfo('科室')" type="success">科室</el-button>
+            </router-link>
             <!--<el-button @click="setUserInfo('医务科')" type="danger">医务科</el-button>-->
-            <el-button @click="setUserInfo('门办')" type="info">门办</el-button>
+             <router-link to="/scheduling/headoffice/templatelist" exact tag="span">
+               <el-button @click="setUserInfo('门办')" type="info">门办</el-button>
+             </router-link>
           </span>
         </div>
         <span class="adminlogo" slot="reference">

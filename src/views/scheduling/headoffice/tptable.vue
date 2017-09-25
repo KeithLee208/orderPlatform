@@ -11,7 +11,10 @@
         </router-link>
       </div>
       <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
-      <span class="used-time"> <i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
+      <span class="used-time">
+        <!--<i class="el-icon-time"></i>-->
+        <!--使用时间：2017/03/02-2017/05/02-->
+      </span>
     </div>
     <div class="setting-tag">
       <div @click="selection(index)" :class="{active:checkLIstActive==index}" v-for="(item,index) in checkList">

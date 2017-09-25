@@ -211,7 +211,7 @@
           note: ''
         }, //表单控制
         currentDocSchedule: {
-          ysmc: "默认",
+          ysmc: "普通门诊",
           doctype: '普通门诊',
           ysdm: "",
           slot: [
