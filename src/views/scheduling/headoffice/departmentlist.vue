@@ -37,7 +37,7 @@
             </div>
             <div class="Att-row-data">
               <div style="margin: 15px 0;"></div>
-              <el-checkbox-group @change="ListChange(index)" v-model="checkedAttlist" >
+              <el-checkbox-group @change="event=>ListChange(event,index)" v-model="checkedList[item.name]" >
                 <span class="radiobox" v-for="(att,index) in item.children">
                   <!--<el-popover :open-delay="500"  placement="bottom" width="200" trigger="hover">-->
                   <el-checkbox  slot="reference" style="color: rgb(32, 178, 255);" :label="att" :key="att">{{att.ksmc}}</el-checkbox>
@@ -81,7 +81,7 @@
         loading:true,
         attList: [],
         checkList:[],//用于全选的科室列表
-        checkedAttlist:[],//已选中的科室value数组
+        checkedList:{}//已选择的科室数组
       }
     },
     created() {
@@ -93,13 +93,12 @@
     methods: {
       //全选改变时
      AllChange(event,index) {
-        this.checkedAttlist =  event.target.checked ? this.attList[index].children: [];
+        this.checkedList[this.attList[index].name] = event.target.checked ? this.attList[index].children: [];
         this.attList[index].isIndeterminate = false;
-        console.log(this.checkedAttlist);
       },
       //单选改变时
-      ListChange(index) {
-        let checkedCount = this.checkedAttlist.length;
+      ListChange(event,index) {
+        let checkedCount = event.length;
         this.attList[index].allChecked = checkedCount === this.attList[index].children.length;
         this.attList[index].isIndeterminate = checkedCount > 0 && checkedCount < this.attList[index].children.length;
       },
@@ -133,9 +132,7 @@
           kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
-          console.log('data',data);
         let newArr = listArray.classifyCheckArr(data, 'sjksmc');
-          console.log('newdata',newArr);
         let selcetArr = [];
         this.attList = newArr;
         this.loading=false;
@@ -146,17 +143,24 @@
           });
           this.checkList.push({ksmc:data[i].ksmc,ksbm:data[i].ksmc});
         }
-
+        this.checkedList = this.getDepartClassify(this.attList);
       }).catch(err => {
           console.log(err);
         //这里错误有2种错误
         //1. 服务端业务错误，错误码邮件中有
         //2. 网络错误，本地网络断开、超时等
       });
-      }, //科室列表
+      },
+      //备份科室分类列表，返回空数组
+      getDepartClassify(list){
+        let newData = {};
+        list.map( item =>  newData[item.name] = []);
+        return newData;
+      },
+      //科室列表
       postCheckList(){
-          console.log('绑定的数组 %o',this.checkedAttlist);
-        this.$store.commit('scheduling/SET_CURSELDEPARTLIST', this.checkedAttlist)
+        let _list = Object.values(this.checkedList);
+        this.$store.commit('scheduling/SET_CURSELDEPARTLIST', _list.filter(item => item.length > 0).reduce((a,b) => a.concat(b)))
       }//已选科室传值
     }
   };
