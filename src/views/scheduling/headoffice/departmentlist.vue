@@ -95,6 +95,7 @@
      AllChange(event,index) {
         this.checkedAttlist =  event.target.checked ? this.attList[index].children: [];
         this.attList[index].isIndeterminate = false;
+        console.log(this.checkedAttlist);
       },
       //单选改变时
       ListChange(index) {
