@@ -85,7 +85,6 @@
         })
         this.$store.commit('scheduling/SET_CURRENTSELECTTEMPLATE',card);
         console.log('当前所选模板信息 %o',this.$store.state.scheduling.currentsSelectTemplate);
-        alert(1);
       },
       newTemplate(){
         let params = {
