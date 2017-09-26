@@ -1,43 +1,40 @@
 <template>
-<div class="setting-wraaper">
-  <div class="setting-header">
-    <router-link
-      to="/scheduling/headoffice/tptable" class="pull-right">
-      <i class="el-icon-close"></i>
-    </router-link>
-    <span>设置出班信息</span>
-  </div>
-  <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
-    <div class="box-title">
-      <span>出班预览</span>
+  <div class="setting-wraaper">
+    <div class="setting-header">
+      <router-link
+        to="/scheduling/headoffice/worktable" class="pull-right">
+        <i class="el-icon-close"></i>
+      </router-link>
+      <span>设置临时出班</span>
     </div>
-    <el-form  ref="form" :model="form" label-width="80px">
-      <div class="table-time">
-        <span></span>
-        <span>周一</span>
-        <span>周二</span>
-        <span>周三</span>
-        <span>周四</span>
-        <span>周五</span>
-        <span>周六</span>
-        <span>周日</span>
+    <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
+      <div class="box-title">
+        <span>出班预览</span>
       </div>
-      <div class="AdTable">
-        <div class="AdTableLeft">
-          <div>
-            <i></i>
-            <p>
-              <span v-if="currentDocSchedule.ysmc!==''" class="name">{{currentDocSchedule.ysmc}}</span>
-              <span v-if="currentDocSchedule.ysmc!==''" class="position">主治医师</span>
-              <span v-if="currentDocSchedule.ysmc ===''" class="name">普通门诊</span>
-            </p>
-          </div>
+      <el-form  ref="form" :model="form" label-width="80px">
+        <div class="table-time">
+          <span></span>
+          <span v-for="item in moduleTimeList">
+            <p class="day">{{item.week}}</p>
+            <p class="date">{{item.date}}</p>
+          </span>
         </div>
-        <div class="AdTableRight">
-          <div class="table-body">
-            <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
-              <span>{{slot.sjdmc}}</span>
-              <span v-for="(week,indexJ) in slot.weekday">
+        <div class="AdTable">
+          <div class="AdTableLeft">
+            <div>
+              <i></i>
+              <p>
+                <span v-if="currentDocSchedule.ysmc!==''" class="name">{{currentDocSchedule.ysmc}}</span>
+                <span v-if="currentDocSchedule.ysmc!==''" class="position">主治医师</span>
+                <span v-if="currentDocSchedule.ysmc ===''" class="name">普通门诊</span>
+              </p>
+            </div>
+          </div>
+          <div class="AdTableRight">
+            <div class="table-body">
+              <div v-for="(slot,indexI) in currentDocSchedule.slot"  :class="[indexI === 0 ? 'border-top-1':'']">
+                <span>{{slot.sjdmc}}</span>
+                <span v-for="(week,indexJ) in slot.weekday">
                     <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
@@ -48,90 +45,90 @@
                           @click="setNewSchedule(indexI,indexJ)">
                     </span>
               </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="box-title">
-        <span>编辑出班信息</span>
-      </div>
-      <el-form-item label="服务类型">
-        <div class="type-filter in-model">
+        <div class="box-title">
+          <span>编辑出班信息</span>
+        </div>
+        <el-form-item label="服务类型">
+          <div class="type-filter in-model">
               <span v-for="(item,index) in formOptions.serviceType.list">
                 <!--,{active:active==index}-->
                 <i @click="selection(index)"  :class="[item.mzlx,{active:formOptions.serviceType.activeIndex==index}]"></i>
                 {{item.fwlxmc}}
               </span>
-        </div>
-      </el-form-item>
-      <el-form-item label="当前科室">
-        <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
-          <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择医生">
-        <el-select v-model="form.ysdm" filterable @change="handleDocChange">
-          <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="就诊时间">
-        <el-checkbox-group v-model="form.cbrqlx">
-          <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="出诊时间">
-        <el-col :span="8">
-          <el-checkbox-group v-model="form.sjddm">
-            <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+          </div>
+        </el-form-item>
+        <el-form-item label="当前科室">
+          <el-select v-model="form.ksdm" disabled  filterable  placeholder="请选择">
+            <el-option v-for="item in formOptions.department.list" :key="item.ksbm" :label="item.ksmc" :value="item.kstybm">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选择医生">
+          <el-select v-model="form.ysdm" filterable @change="handleDocChange">
+            <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="就诊时间">
+          <el-checkbox-group v-model="form.cbrqlx">
+            <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
           </el-checkbox-group>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="就诊地址">
-        <el-input type="input" v-model="form.czdz"></el-input>
-      </el-form-item>
-      <div class="box-title">
-        <span>设置费用及号序</span>
-      </div>
-      <el-form-item label="配置号序">
-        <span class="num-info">(当前服务费用: {{form.money}}元 当前号源数: {{ballList.length}})</span>
-      </el-form-item>
-      <div class="Channel">
-        <el-radio-group v-model="formOptions.channel">
-          <el-radio label="channel">区分渠道</el-radio>
-          <el-radio label="unchannel">不区分渠道</el-radio>
-        </el-radio-group>
-        <div>
-          <div class="Channel-Warrper" v-if="formOptions.channel == 'channel'">
-            <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
-              <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="{color:item.style ? item.style.color: ''}">
-                <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
-                <p v-else="item.edit" class="top">
-                  <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
-                </p>
-                <p class="footer">{{item.qdmc}}</p>
+        </el-form-item>
+        <el-form-item label="出诊时间">
+          <el-col :span="8">
+            <el-checkbox-group v-model="form.sjddm">
+              <el-checkbox v-for="item in formOptions.slotTime.list" :label="item.sjddm" :value="item.sjddm">{{item.kssj+'-'+item.jssj}}</el-checkbox>
+            </el-checkbox-group>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="就诊地址">
+          <el-input type="input" v-model="form.czdz"></el-input>
+        </el-form-item>
+        <div class="box-title">
+          <span>设置费用及号序</span>
+        </div>
+        <el-form-item label="配置号序">
+          <span class="num-info">(当前服务费用: {{form.money}}元 当前号源数: {{ballList.length}})</span>
+        </el-form-item>
+        <div class="Channel">
+          <el-radio-group v-model="formOptions.channel">
+            <el-radio label="channel">区分渠道</el-radio>
+            <el-radio label="unchannel">不区分渠道</el-radio>
+          </el-radio-group>
+          <div>
+            <div class="Channel-Warrper" v-if="formOptions.channel == 'channel'">
+              <draggable v-model="channalList"  @start="drag=true" @end="drag=false">
+                <div v-for="(item,index) in channalList" :key="index" class="channel-box" :style="{color:item.style ? item.style.color: ''}">
+                  <p v-if="!item.edit" @click="channalList[index].edit = true" class="top">{{item.num}}</p>
+                  <p v-else="item.edit" class="top">
+                    <input  @blur="channalList[index].edit = false" v-model="item.num" v-focus class="num-edit" :style="'color:'+item.style.color" type="text">
+                  </p>
+                  <p class="footer">{{item.qdmc}}</p>
+                </div>
+              </draggable>
+              <div class="production">
+                <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
               </div>
-            </draggable>
-            <div class="production">
-              <el-button @click="getSortList" class="pull-right" type="success">生成号序</el-button>
             </div>
-          </div>
-          <div class="UnChannel" v-if="formOptions.channel == 'unchannel'">
-            <el-form label-width="100px">
-              <el-form-item label="设置总号源数">
-                <el-input v-model="form.hxzs" style="width: 170px"></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
+            <div class="UnChannel" v-if="formOptions.channel == 'unchannel'">
+              <el-form label-width="100px">
+                <el-form-item label="设置总号源数">
+                  <el-input v-model="form.hxzs" style="width: 170px"></el-input>
+                </el-form-item>
+              </el-form>
+            </div>
 
-          <div v-if="ball && formOptions.channel == 'channel'">
-            <div class="ball-row">
+            <div v-if="ball && formOptions.channel == 'channel'">
+              <div class="ball-row">
                      <span v-for="(item,index) in ballList">
                       <el-popover
-                       placement="top"
-                       width="260"
-                       trigger="click"
-                       :open-delay="500">
+                        placement="top"
+                        width="260"
+                        trigger="click"
+                        :open-delay="500">
                         <div class="changeType">
                           <p class="title">配置服务费用</p>
                           <p>
@@ -159,35 +156,36 @@
                         </i>
                        </el-popover>
                      </span>
-              <!--<span>-->
-                 <!--<i class="plus el-icon-plus"></i>-->
-               <!--</span>-->
+                <!--<span>-->
+                <!--<i class="plus el-icon-plus"></i>-->
+                <!--</span>-->
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </el-form>
+      </el-form>
 
-    <div slot="footer"  class="dialog-footer">
-      <el-button>取消</el-button>
-      <el-button type="primary" @click="save()">保存并继续</el-button>
-    </div>
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogVisible"
-      size="tiny"
-      :before-close="handleClose">
-      <span>是否确认覆盖?</span>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer"  class="dialog-footer">
+        <el-button>取消</el-button>
+        <el-button type="primary" @click="save()">保存并继续</el-button>
+      </div>
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        size="tiny"
+        :before-close="handleClose">
+        <span>是否确认覆盖?</span>
+        <span slot="footer" class="dialog-footer">
     <el-button @click="handleCancel">取 消</el-button>
     <el-button type="primary" @click="handleConfirm">确 定</el-button>
   </span>
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
-</div>
 </template>
 <script>
   import * as arr from '../../../filters/array'
+  import * as time from 'filters/time.js'
   import * as validator from '../../../filters/validator'
   import channeldrag from '../../../components/base/drag/channel-drag.vue'
   import draggable from 'vuedraggable'
@@ -299,6 +297,7 @@
         },//当前所选医生出班时间表
         singleSchedule:{},
         timeSlot:[],//时间段列表
+        moduleTimeList:[],//带日期表头
         templateData:[],//排版模板数据
         loading:true,//数据读取状态
         ifCover:false,//是否覆盖
@@ -328,7 +327,21 @@
       init(){
         this.getDicData();//获取字典数据
         this.getDoc();//根据科室选择医生
+        this.getmModuleTime();//获取出班时间
         this.getChannalList();//获取号序列表
+      },
+      //获取出班时间
+      getmModuleTime(){
+        let startTime=this.$store.state.scheduling.workTableTime.startTime;
+        let endTime=this.$store.state.scheduling.workTableTime.endTime;
+        let weekArr = [];
+        for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
+        weekArr = weekArr.map((item,index) => ({
+          date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+          week:"星期" + "日一二三四五六".charAt(item)
+        }));
+        this.moduleTimeList =weekArr;
+        console.log('this.moduleTimeList',this.moduleTimeList)
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
@@ -346,16 +359,16 @@
       },
       //获取各种字典数据
       getDicData(){
-          this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-          this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-          this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
-          this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
+        this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+        this.formOptions.department.list = this.$store.state.scheduling.departmentList;
+        this.formOptions.disease.list = this.$store.state.scheduling.specDiseaseList;
+        this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //科室选择不同医生
       getDoc(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04",
           {
-            kstybm:this.$store.state.scheduling.currentSchedulingSet.ksdm,
+            kstybm:this.$store.state.scheduling.headofficePostList.kstybm,
             yydm:this.$store.state.login.userInfo.yydm
           }).then(data => {
           this.formOptions.doctor.list = data;
@@ -392,15 +405,15 @@
       //获取医生出班模板列表
       getDocScheduleList(){
         let params = {
-          ksdm : this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          mbdm : this.$store.state.scheduling.currentSchedulingSet.mbdm,
-          ysdm : this.$store.state.scheduling.currentSchedulingSet.ysdm,
+          ksdm : this.$store.state.scheduling.headofficePostList.kstybm,
+          ksrq : this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
+          jsrq : this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime)),
+          ysdm : this.$store.state.scheduling.plusWork.name,
         };
-        this.form.ksdm=this.$store.state.scheduling.currentSchedulingSet.ksdm;
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-          console.log('this.formOptions.doctor.list',this.formOptions.doctor.list);
+        this.form.ksdm=this.$store.state.scheduling.headofficePostList.kstybm;
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q11", params).then(data => {
           for(let i=0;i<this.formOptions.doctor.list.length;i++){
-            if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.currentSchedulingSet.ysdm){
+          if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.plusWork.name){
               this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
             }
           }
@@ -419,9 +432,9 @@
       //获取默认信息:有医生信息，科室、医生会被自动拉取
       setDefaultInfo(){
         //科室默认
-        this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
+        this.form.ksdm = this.$store.state.scheduling.headofficePostList.kstybm;
         //医生默认
-        this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
+        this.form.ysdm = this.$store.state.scheduling.plusWork.name;
       },
       //数据处理
       formatData(list){
@@ -434,9 +447,10 @@
             this.formOptions.visitTime.list.map((item,index) => {
               slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
             });
+            console.log('1',item.children);
             item.children.map(week => {
               newArr[index].ysmc = week.ysmc;
-              if(week.sjddm != slot.sjddm)return;
+              if(week.sjddm != slot.sjddm) return;
               switch (week.cbrqlx) {
                 case '星期一':
                   Object.assign(slot.weekday[0],week);
@@ -484,10 +498,10 @@
           this.ballList= data;
           console.log('当前号序',this.ballList);
           this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
-                        .map(item => {
-                          item.money = this.getServiceMoney(item.fwlxdm);
-                          item.style = this.getBallStyle(item.qddm);
-                        });//号源升序,整合金额,整合样式
+            .map(item => {
+              item.money = this.getServiceMoney(item.fwlxdm);
+              item.style = this.getBallStyle(item.qddm);
+            });//号源升序,整合金额,整合样式
 
           this.ballToChannal();//根据号序列表更新渠道信息
         }).catch(err => {
@@ -497,12 +511,12 @@
       //根据号序列表更新渠道信息
       ballToChannal (){
         this.channalList.map(channal => {
-            channal.num = 0;
-            channal.children = [];
-            this.ballList.filter(ball => channal.qddm == ball.qddm).map(item => {
-                channal.num ++;
-                channal.children.push(item);
-            })
+          channal.num = 0;
+          channal.children = [];
+          this.ballList.filter(ball => channal.qddm == ball.qddm).map(item => {
+            channal.num ++;
+            channal.children.push(item);
+          })
         });
       },
       //表单填充策略
@@ -514,7 +528,6 @@
       setNewSchedule(i,j){
         this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
-
         let _data = {
           cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
           cbzt: 'ZC',//必填:默认值
@@ -589,6 +602,14 @@
         var errorMsg = _validator.start();
         return errorMsg;
       },
+      dateFormat(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+      },
       //保存
       save(){
         let formValidErrMsg = this.formValid();
@@ -598,7 +619,7 @@
         }
         let insert = this.formDataFormat(this.form);
         console.log('保存的数据',insert)
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: insert,ifSkip:this.ifCover}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S04", { insert: insert,ifSkip:this.ifCover}).then(data => {
           if(data){
             if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
               this.$message(data.BizErrorMessage);
@@ -628,7 +649,7 @@
           delete: [{
             mxxh: item.mxxh
           }],
-          ifCover: trueF
+          ifCover: true
         }).then(data => {
           console.log('data',data);
           if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
@@ -683,7 +704,7 @@
       //选择不同医生刷新当前排班模板信息
       handleDocChange(val){
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-            ysdm:val
+          ysdm:val
         });
         this.getDocScheduleList();//获取医生出班模板列表
       },
@@ -869,9 +890,18 @@
     line-height: 45px;
     float: left;
     font-size: 14px;
-    font-weight: bold;
     text-align: center;
     box-sizing: border-box;
+  }
+  .table-time > span>p{
+    height: 23px;
+    line-height: 23px;
+  }
+  .table-time > span>p.day{
+    font-weight: bold;
+  }
+  .table-time > span>p.today{
+    color: rgb(32, 160, 255);
   }
   .AdTable {
     position: relative;
@@ -966,8 +996,8 @@
     cursor: pointer;
   }
   .ordered:hover{
-  background: #eef6ff;
-}
+    background: #eef6ff;
+  }
   .ordered:hover>i{
     display: inline-block;
   }

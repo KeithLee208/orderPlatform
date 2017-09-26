@@ -53,8 +53,7 @@
                   <i></i>
                   <p>
                     <span v-if="item.ysmc!==''" class="name">{{item.ysmc}}</span>
-                    <span v-if="item.ysmc==''" class="name">普通门诊</span>
-                    <span v-if="item.ysmc!==''" class="position">主治医师</span>
+                    <span v-if="item.ysmc!=='普通门诊'" class="position">主治医师</span>
                   </p>
                 </div>
               </div>

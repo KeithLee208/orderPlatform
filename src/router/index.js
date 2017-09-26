@@ -40,6 +40,7 @@ import dWorkTable from  'views/scheduling/department/worktable' //批量设置�
 //门办出班表
 import hWorkList from  'views/scheduling/headoffice/worklist' //批量设置费用及号序
 import hWorkTable from  'views/scheduling/headoffice/worktable' //批量设置费用及号序
+import hPlusWork from  'views/scheduling/headoffice/pluswork' //临时出班
 
 const scheduling = r => require.ensure([], () => r(require('../views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('../views/order/index')), 'order');
@@ -94,6 +95,7 @@ export default new Router({
         //门办出班表
         {path:'/scheduling/headoffice/worklist',component: hWorkList},
         {path:'/scheduling/headoffice/worktable',component: hWorkTable},
+        {path:'/scheduling/headoffice/pluswork',component: hPlusWork}
       ]
     },
     {

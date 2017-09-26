@@ -23,10 +23,9 @@ const state = {
   //----- 出班模板 ----//
 
   //----- 出班表 ----//
-  departmentWorkMbdm:"20000000.E.E.101",//
-  departmentWorkKsrq:'2017-08-14',
-  departmentWorkJsrq:'2017-08-20',
-  workTableTime:{}
+  workTableTime:{},
+  headofficePostList:{},
+  plusWork:{}
   //----- 出班表 ----//
 };
 
@@ -87,12 +86,18 @@ const mutations = {
   //卡片页点击传递模板代码
   SET_MBDM(state,data){
     state.mbdm=data;
-    console.log('模板代码',state.mbdm);
   },
   //更新出班表查询开始结束日期
   SET_DATETIMENOW(state,data){
     state.workTableTime=data;
-    console.log('=m=',state.workTableTime);
+  },
+  //更新门办点击进入科室代码
+  SET_HEADOFFICEPOSTLIST(state,data){
+    state.headofficePostList=data;
+  },
+  //更新临时出班
+  SET_WORKPLUS(state,data){
+    state.plusWork=data;
   }
 };
 

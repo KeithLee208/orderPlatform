@@ -1,8 +1,6 @@
 <template>
     <div class="setting-body">
             <div class="Att-list-title">
-              当前模版：<span class="name">春季模板</span>
-              <span><i class="el-icon-time"></i>使用时间：2017/03/02-2017/05/02</span>
                <span class="setting-btn">
                  <el-button class="pull-right btn-blue" @click="SettingVisible=true" type="primary" >设置出班</el-button>
                </span>
@@ -37,17 +35,7 @@
           <div class="Att-row-data">
             <span v-for="(att,index) in item.children">
                <router-link to="/scheduling/headoffice/worktable" exact tag="span">
-               <el-popover :open-delay="500" placement="bottom" width="200" trigger="hover">
-                 <div class="fixed-info">
-                  <p class="fixed-info-title">门诊号源信息</p>
-                  <p class="default"><i></i>普通（10）</p>
-                  <p class="expert"><i></i>专家（2）</p>
-                  <p class="disease"><i></i>专病（3）</p>
-                  <p class="union"><i></i>联合（4）</p>
-                  <p class="VIP"><i></i>特需（5）</p>
-                 </div>
-                  <el-button type="text" slot="reference">{{att.ksmc}}</el-button>
-            </el-popover>
+                  <el-button @click="postDepartment(att)" type="text">{{att.ksmc}}</el-button>
               </router-link>
             </span>
           </div>
@@ -92,7 +80,8 @@
       },
       getDepartmentList(){
         this.departmentList = this.$store.state.scheduling.departmentList;
-        let newArr = listArray.classifyArr( this.departmentList, 'sjksbm');
+        console.log('this.departmentList',this.departmentList);
+        let newArr = listArray.classifyCheckArr( this.departmentList, 'sjksmc');
         this.departmentList=newArr;
       },
       getTemList(){
@@ -113,6 +102,10 @@
         }).catch(err => {
           console.log(err);
         });
+      },
+      postDepartment(value){
+        this.$store.commit('scheduling/SET_HEADOFFICEPOSTLIST',value);
+        console.log('value',value);
       },
       dateFormat(date){
         var y = date.getFullYear();
@@ -146,9 +139,6 @@
   }
   .Att-list-title{
     color: #999;
-    height: 40px;
-    line-height: 30px;
-    border-bottom: 1px solid #E7ECF4;
     margin-bottom: 10px;
     position: relative;
   }
