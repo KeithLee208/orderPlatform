@@ -1,9 +1,6 @@
 <template>
   <div>
     <transition name="el-zoom-in-top">
-      <router-link :to="{path:$store.state.login.userInfo.type === '科室'?
-                '/scheduling/department/tptable':'/scheduling/headoffice/departmentlist'}"
-                     exact tag="span">
       <div class="tp-card-wrapper">
         <div v-if="CardShow" class="tp-card">
         <div class="tp-card-head">
@@ -40,7 +37,7 @@
 
       </div>
       </div>
-      </router-link>
+
     </transition>
     <el-dialog
       title="提示"

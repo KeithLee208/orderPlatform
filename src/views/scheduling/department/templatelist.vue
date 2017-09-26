@@ -1,8 +1,11 @@
 <template>
   <div>
     <div v-if="TpCard" v-loading="loading" element-loading-text="拼命加载中" class="page-main">
+      <router-link to="/scheduling/Department/tptable"
+                   exact tag="span">
       <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
       </tpcard>
+      </router-link>
     </div>
     <div v-if="TpCard==''" class="no-data">
       暂无出班模板

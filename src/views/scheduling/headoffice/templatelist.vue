@@ -22,8 +22,11 @@
         <span :class="['used',{active:UsedActive}]" @click="UsedTemList"><i></i>启用</span>
         <span :class="['stop',{active:StopActive}]" @click="StopTemList"><i></i>停用</span>
       </div>
+      <router-link to="/scheduling/headoffice/departmentlist"
+                   exact tag="span">
         <tpcard @click.native="handleLinkTo(num)" @update="cardlistInit" v-for="num in TpCard" :card="num">
         </tpcard>
+      </router-link>
     </div>
     <div v-if="TpCard==''" class="no-data">
       暂无出班模板
@@ -82,6 +85,7 @@
         })
         this.$store.commit('scheduling/SET_CURRENTSELECTTEMPLATE',card);
         console.log('当前所选模板信息 %o',this.$store.state.scheduling.currentsSelectTemplate);
+        alert(1);
       },
       newTemplate(){
         let params = {

@@ -4,8 +4,9 @@
       <div class="page-head">
         <div class="type-filter">
           <span>服务类型</span>
-          <span v-for="(item,index) in serviceTypeList">
-                <i @click="serviceTypeIndex = index" :class="[item.fwlxdm,{active:serviceTypeIndex==index}]"></i>
+          <span @click="allTyepList"><i class="el-icon-menu all"></i>全部</span>
+          <span @click="listTypeChange(index,item)" v-for="(item,index) in serviceTypeList">
+                <i @click="serviceTypeIndex = index" :class="[item.mzlx,{active:serviceTypeIndex==index}]"></i>
                 {{item.fwlxmc}}（{{item.number}}）
           </span>
 
@@ -288,6 +289,7 @@
         exportVisible: false,//导出弹窗控制
         printVisible: false,//打印弹窗控制
         shiftVisible: false,//出班调整弹窗控制
+        allTypeList:[],//服务类型列表
         pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -355,6 +357,8 @@
     },
     methods: {
       init(){
+        //获取今天日期
+        this.getDateNow();
         //获取服务类型
         this.getServiceList();
         //获取时间段列表
@@ -363,8 +367,6 @@
         this.getmModuleTime();
         //获取出报表数据
         this.getTableList();
-        //获取今天日期
-        this.getDateNow();
         //获取科室列表
         this.getDepartmentList();
       },
@@ -383,7 +385,14 @@
           item.value = item.kstybm;
           this.$set(item, 'doctorList', []);
         });
-        console.log('321',this.departmentList);
+      },
+      //获取统计接口
+      setServieNumber(data){
+        let fwlxtj = data;
+        console.log('fwlxtj',fwlxtj);
+        this.serviceTypeList.map(item => {
+          item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
+        })
       },
       //获取时间段列表
       getTimeSlot(){
@@ -426,9 +435,11 @@
           ksdmList: ['20000000.23.23.2180'],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
+          this.setServieNumber(data);
           let _list = arr.classifyArr(this.filterList, 'ysdm');
           let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
           this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          this.allTypeList=arr.clone(this.filterListFormatTable);
           this.loading = false;
         }).catch(err => {
           console.log(err);
@@ -566,16 +577,18 @@
           endTime:this.$store.state.scheduling.workTableTime.endTime-1000*60*60*24*7
         });
         console.log(this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)));
-        this.getmModuleTime();
-        this.getTableList();
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
       },
       pageright(){
         this.$store.commit('scheduling/SET_DATETIMENOW', {
           startTime:this.$store.state.scheduling.workTableTime.startTime+1000*60*60*24*7,
           endTime:this.$store.state.scheduling.workTableTime.endTime+1000*60*60*24*7
         });
-        this.getmModuleTime();
-        this.getTableList();
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
       },
       //出班调整-保存分类别：替诊、停诊、调班
       handleSaveClick(){
@@ -637,6 +650,28 @@
             console.log(err);
           });
         })
+      },
+      //点击服务类型（全部）时展示全部数据
+      allTyepList(){
+        this.checkLIstActive='';
+        this.filterListFormatTable=this.allTypeList;
+      },
+      //服务类型筛选
+      listTypeChange(index,item){
+        this.checkLIstActive=index;
+        let newArr=[];
+        newArr=arr.clone(this.allTypeList);
+        for(let i=0;i<newArr.length;i++){
+          for(let x=0;x<newArr[i].slot.length;x++){
+            for(let y=0;y<newArr[i].slot[x].weekday.length;y++){
+              if(item.fwlxdm!==newArr[i].slot[x].weekday[y].fwlxdm){
+                newArr[i].slot[x].weekday[y]={};
+              }
+            }
+          }
+        }
+        this.filterListFormatTable=[];
+        this.filterListFormatTable=newArr;
       }
     },
     filters: {
@@ -729,7 +764,13 @@
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
   }
-
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
+  }
   .type-filter > span > i {
     width: 16px;
     height: 16px;

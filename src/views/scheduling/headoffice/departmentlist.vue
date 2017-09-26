@@ -87,10 +87,13 @@
     created() {
       this.$nextTick(() => {
         this.getCrumbs();//获取面包屑数据
-        this.TpListInit(); //科室列表
+        this.init();
     })
     },
     methods: {
+      init(){
+        this.TpListInit(); //科室列表
+      },
       //全选改变时
      AllChange(event,index) {
         this.checkedList[this.attList[index].name] = event.target.checked ? this.attList[index].children: [];
@@ -105,6 +108,8 @@
       //获取面包屑数据
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tplist;
+        alert(2);
+        console.log(' this.crumbs', this.crumbs)
       },
       diseaseInit() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q07", {
@@ -128,6 +133,7 @@
       });
       }, //专病病种
       TpListInit() {
+        console.log('this.crumbs',this.crumbs);
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q02", {
           kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm
