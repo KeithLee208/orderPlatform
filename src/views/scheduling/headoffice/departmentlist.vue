@@ -108,7 +108,6 @@
       //获取面包屑数据
       getCrumbs(){
         this.crumbs = this.$store.state.scheduling.crumbs.tplist;
-        alert(2);
         console.log(' this.crumbs', this.crumbs)
       },
       diseaseInit() {
