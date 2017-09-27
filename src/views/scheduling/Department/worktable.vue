@@ -309,7 +309,7 @@
         shiftForm: {
           shiftType: '替诊',
           replaceForm: {
-            doctor: '',
+            doctor: [],
             desc: ''
           },
           stopForm: {
@@ -326,7 +326,7 @@
         loading: true,//loading状态
         docListProps: {
           label:'label',
-          value:"value",
+          value:['value'],
           children: 'doctorList'
         },//科室级联
       };
@@ -542,14 +542,21 @@
         this.getDoctorList(value).then(data => {
           data.map(item => {
             item.label = item.zgxm;
-            item.value = item.zgtybm;
+            item.value = [item.zgtybm,item.zgxm,item.ksmc];
           });
+          console.log('data',data);
           this.departmentList.map(item => {
-            if(item.kstybm==data[0].kstybm){
+            if(data.length!==0){
+             if(item.kstybm==data[0].kstybm){
             item.label = item.ksmc;
             item.doctorList = data;
+             }
+             }
+            else{
+
             }
           });
+
 
         })
       },
@@ -597,14 +604,14 @@
       },
       //替诊保存
       saveReplace(){
-        console.log('1',this.shiftForm.replaceForm);return
+        console.log('1',this.shiftForm.replaceForm) ;
         let params = {
-          ksdm: '',
-          ksmc: '',
-          mxxh: '',
-          tzyy: '',
-          ysdm: '',
-          ysmc: ''
+          ksdm: this.shiftForm.replaceForm.doctor[0],
+          ksmc: this.shiftForm.replaceForm.doctor[1][2],
+          mxxh: this.selectWeek.mxxh,//明细序号
+          tzyy: this.shiftForm.replaceForm.desc,
+          ysdm: this.shiftForm.replaceForm.doctor[1][0],
+          ysmc: this.shiftForm.replaceForm.doctor[1][1]
         };
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S06", params).then(data => {
