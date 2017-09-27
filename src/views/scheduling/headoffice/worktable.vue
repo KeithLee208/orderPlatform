@@ -418,16 +418,8 @@
       getmModuleTime(){
         let startTime=this.$store.state.scheduling.workTableTime.startTime;
         let endTime=this.$store.state.scheduling.workTableTime.endTime;
-//        let startTime = new Date(Date.parse('2017-09-01'.replace(/-/g,   "/"))).getTime();
-//        let endTime = new Date(Date.parse('2017-09-30'.replace(/-/g,   "/"))).getTime();
         let weekArr = [];
         for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
-//
-//        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
-//        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
-//        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
-//                  .concat(weekArr)
-//                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
         weekArr = weekArr.map((item,index) => ({
           date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
           week:"星期" + "日一二三四五六".charAt(item)
