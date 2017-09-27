@@ -38,7 +38,6 @@
                     <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
-                      <i v-on:click.stop="delSchedule(week)" class="icon iconfont icon-shanchu"></i>
                     </span>
                     <span v-else class="ordered"
                           :class="[equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"
@@ -194,7 +193,7 @@
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
-          cbrqlx: '',
+          cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
           czry: 'EMP.20000000.00',
@@ -208,7 +207,7 @@
           kssj:'',
           lrsj:'',
           mxxh:'',
-          sjddm:'',
+          sjddm:[],
           ysdm:'',
           ysmc:'',
           yxzt:'',
@@ -342,7 +341,6 @@
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
-        alert(1);
         this.timeSlot.map((slot,index) => {
           this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
         });
@@ -637,30 +635,6 @@
           else {
             this.$message('保存成功');
             this.isCover = false;
-            this.getDocScheduleList(); //获取医生出班模板列表
-          }
-        }).catch(err => {
-          console.log(err);
-          //这里错误有2种错误
-          //1. 服务端业务错误，错误码邮件中有
-          //2. 网络错误，本地网络断开、超时等
-        });
-      },
-      //删除
-      delSchedule(item) {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
-          delete: [{
-            mxxh: item.mxxh
-          }],
-          ifCover: true
-        }).then(data => {
-          console.log('data',data);
-          if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
-            this.$message(data.BizErrorMessage);
-            return
-          }
-          else {
-            this.$message('已删除');
             this.getDocScheduleList(); //获取医生出班模板列表
           }
         }).catch(err => {
@@ -1001,18 +975,18 @@
   .ordered:hover{
     background: #eef6ff;
   }
-  .ordered:hover>i{
-    display: inline-block;
-  }
-  .ordered>i{
-    position: absolute;
-    top:5px;
-    right: 5px;
-    font-size: 10px;
-    height: 12px;
-    line-height: 12px;
-    display: none;
-  }
+  /*.ordered:hover>i{*/
+    /*display: inline-block;*/
+  /*}*/
+  /*.ordered>i{*/
+    /*position: absolute;*/
+    /*top:5px;*/
+    /*right: 5px;*/
+    /*font-size: 10px;*/
+    /*height: 12px;*/
+    /*line-height: 12px;*/
+    /*display: none;*/
+  /*}*/
   .ordered > p {
     height: 20px;
     line-height: 20px;
