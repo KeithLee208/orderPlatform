@@ -115,10 +115,10 @@
               <div class="line"></div>
               <el-form-item label="替诊医生">
                 <el-cascader
-                  :model="shiftForm.replaceForm.doctor"
+                  v-model="shiftForm.replaceForm.doctor"
                   :options="departmentList"
                   @active-item-change="handleItemChange"
-                  :props="props"
+                  :props="docListProps"
                   filterable
                 ></el-cascader>
               </el-form-item>
@@ -147,7 +147,7 @@
                 <el-cascader
                   :options="departmentList"
                   @active-item-change="handleItemChange"
-                  :props="props"
+                  :props="docListProps"
                 ></el-cascader>
               </el-form-item>
               <el-form-item label="调班时间">
@@ -298,11 +298,6 @@
         loading: false,//loading状态控制
         timeSlot: [],//时间段列表
         departmentList: [],//科室列表
-        props: {
-          label:'label',
-          value:'value',
-          children: 'doctorList'
-        },//科室级联
         moduleTimeList:[],//出班日期列表
         moduleTimeListPage:0,//出班日期当前所选页
         startTime:'',
@@ -328,7 +323,12 @@
           }
         },//出班调整表单
         recordVisible: false,//调整记录弹窗控制
-        loading: true//loading状态
+        loading: true,//loading状态
+        docListProps: {
+          label:'label',
+          value:"value",
+          children: 'doctorList'
+        },//科室级联
       };
     },
     created(){
@@ -385,6 +385,7 @@
           item.value = item.kstybm;
           this.$set(item, 'doctorList', []);
         });
+        console.log('this.departmentList',this.departmentList);
       },
       //获取统计接口
       setServieNumber(data){
@@ -402,16 +403,8 @@
       getmModuleTime(){
         let startTime=this.$store.state.scheduling.workTableTime.startTime;
         let endTime=this.$store.state.scheduling.workTableTime.endTime;
-//        let startTime = new Date(Date.parse('2017-09-01'.replace(/-/g,   "/"))).getTime();
-//        let endTime = new Date(Date.parse('2017-09-30'.replace(/-/g,   "/"))).getTime();
         let weekArr = [];
         for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
-//
-//        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
-//        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
-//        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
-//                  .concat(weekArr)
-//                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
         weekArr = weekArr.map((item,index) => ({
           date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
           week:"星期" + "日一二三四五六".charAt(item)
@@ -546,16 +539,18 @@
       },
       //处理科室医生级联
       handleItemChange(value){
-        console.log('Orz',value);
         this.getDoctorList(value).then(data => {
-          console.log('医生列表 %o', data);
           data.map(item => {
-            item.label = item.zcmc;
+            item.label = item.zgxm;
+            item.value = item.zgtybm;
           });
           this.departmentList.map(item => {
+            if(item.kstybm==data[0].kstybm){
             item.label = item.ksmc;
             item.doctorList = data;
+            }
           });
+
         })
       },
       //科室获取医生列表
@@ -602,6 +597,7 @@
       },
       //替诊保存
       saveReplace(){
+        console.log('1',this.shiftForm.replaceForm);return
         let params = {
           ksdm: '',
           ksmc: '',

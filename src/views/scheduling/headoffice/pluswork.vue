@@ -522,16 +522,15 @@
           czdz: '',//必填:表单获取
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
           yxzt:'YX',//必填:默认值
-          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,//必填
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
           sjddm:[this.currentDocSchedule.slot[i].weekday[j].sjddm],//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
-          ysdm:this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
+          ysdm: this.$store.state.scheduling.plusWork.name,//必填:医生列表 数据转换
           ysmc:'',//必填:表单获取
-          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,//必填:科室列表 数据转换
+          ksdm: this.$store.state.scheduling.headofficePostList.kstybm,//必填:科室列表 数据转换
           ksmc:'',//必填:表单获取
           mxxh:'',
           hxzs:'',
@@ -548,7 +547,7 @@
       //数据转换
       formDataFormat(form){
         console.log('提交的表单 %o',form);
-        console.log('传过来的参数 %o',this.$store.state.scheduling.currentSchedulingSet);
+        console.log('传过来的参数 %o',this.$store.state.scheduling.headofficePostList,this.$store.state.scheduling.plusWork);
         let newForm = arr.clone(form);
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
