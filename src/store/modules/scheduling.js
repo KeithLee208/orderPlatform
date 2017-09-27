@@ -93,11 +93,11 @@ const mutations = {
   },
   //更新门办点击进入科室代码
   SET_HEADOFFICEPOSTLIST(state,data){
-    state.headofficePostList=data;
+    Object.assign(state.headofficePostList,data);
   },
   //更新临时出班
   SET_WORKPLUS(state,data){
-    state.plusWork=data;
+    Object.assign(state.plusWork,data);
   }
 };
 

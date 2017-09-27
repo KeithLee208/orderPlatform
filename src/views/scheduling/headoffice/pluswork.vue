@@ -342,6 +342,7 @@
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
+        alert(1);
         this.timeSlot.map((slot,index) => {
           this.currentDocSchedule.slot[index] = Object.assign({},arr.clone(slot))
         });
@@ -421,7 +422,6 @@
             let _list = arr.classifyArr(data, 'ysdm');
             let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);console.log('_timeSlot %o',_timeSlot);
             this.currentDocSchedule = this.formatData(_list,_timeSlot)[0];
-            console.log('排班表信息', this.currentDocSchedule);
             this.setDefaultInfo();
           }
         }).catch(err => {
@@ -540,6 +540,7 @@
           hxmbList:'',
           money:0
         };
+        console.log('data',_data);
         this.ballList=[];
         this.channalList =  this.channalListFormat(arr.clone( this.$store.state.scheduling.channalList));
         this.setForm(_data);
@@ -706,8 +707,8 @@
       },
       //选择不同医生刷新当前排班模板信息
       handleDocChange(val){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-          ysdm:val
+        this.$store.commit('scheduling/SET_WORKPLUS', {
+          name:val
         });
         this.getDocScheduleList();//获取医生出班模板列表
       },
