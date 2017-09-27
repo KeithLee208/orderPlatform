@@ -196,7 +196,7 @@
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
-          cbrqlx: '',
+          cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
           czry: 'EMP.20000000.00',
@@ -211,7 +211,7 @@
           lrsj:'',
           mbdm:'',
           mxxh:'',
-          sjddm:'',
+          sjddm:[],
           ysdm:'',
           ysmc:'',
           yxzt:'',
