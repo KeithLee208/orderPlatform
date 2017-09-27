@@ -550,9 +550,10 @@
         console.log('传过来的参数 %o',this.$store.state.scheduling.headofficePostList,this.$store.state.scheduling.plusWork);
         let newForm = arr.clone(form);
         newForm.cbrqList = [];
-        newForm.cbrqlx.map(cbrqlx => {
-          newForm.cbrqList.push(this.formOptions.visitTime.list.find(item => item.val == cbrqlx).date);
-        });
+        newForm.cbrqList = newForm.cbrqlx.map(cbrqlx => this.formOptions.visitTime.list.find(visiTime => visiTime.val == cbrqlx).date)
+//        newForm.cbrqlx.map(cbrqlx => {
+//          newForm.cbrqList.push(this.formOptions.visitTime.list.find(item => item.val == cbrqlx).date);
+//        });
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
           newForm.sjddmList.push({
@@ -620,7 +621,7 @@
           return false;
         }
         let insert = this.formDataFormat(this.form);
-        console.log('保存的数据',insert)
+        console.log('保存的数据',insert);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S04", { insert: insert,ifSkip:this.ifCover}).then(data => {
           if(data){
             if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
