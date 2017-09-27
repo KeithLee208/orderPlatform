@@ -42,7 +42,7 @@
               <i></i>
               <p>
                 <span class="name">{{item.ysmc}}</span>
-                <span class="position">主治医师</span>
+                <span v-if="item.ysmc!=='普通门诊'" class="position">主治医师</span>
               </p>
             </div>
           </div>
@@ -432,7 +432,7 @@
         console.log('time',this.$store.state.scheduling.workTableTime.startTime,this.$store.state.scheduling.workTableTime.endTime)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
-          ksdmList: ['20000000.23.23.2180'],
+          ksdmList: [this.$store.state.login.userInfo.ksdm],
           jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
           this.list = data;
           this.setServieNumber(data);
@@ -654,6 +654,7 @@
       //点击服务类型（全部）时展示全部数据
       allTyepList(){
         this.checkLIstActive='';
+        this.serviceTypeIndex=-1;//还原服务类型筛选
         this.filterListFormatTable=this.allTypeList;
       },
       //服务类型筛选
@@ -929,9 +930,7 @@
     box-sizing: border-box;
     border-left: 1px solid #D4DEED;
     border-bottom: 1px solid #D4DEED;
-    box-sizing: border-box;
   }
-
   .fixed-info {
     padding: 5px;
     color: #999;

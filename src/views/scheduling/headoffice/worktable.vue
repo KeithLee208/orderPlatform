@@ -1,14 +1,21 @@
 <template>
+  <div class="setting-wraaper">
+  <div class="setting-header">
+    <router-link tag="span" to="/scheduling/headoffice/worklist">
+      <i class="el-icon-arrow-left"></i>
+      <span>{{headInfo}}</span>
+    </router-link>
+    </div>
   <div class="setting-body">
     <div v-loading="loading" element-loading-text="拼命加载中" class="setting-main">
       <div class="page-head">
         <div class="type-filter">
           <span>服务类型</span>
-          <span v-for="(item,index) in serviceTypeList">
-                <i @click="serviceTypeIndex = index" :class="[item.fwlxdm,{active:serviceTypeIndex==index}]"></i>
+          <span @click="allTyepList"><i class="el-icon-menu all"></i>全部</span>
+          <span @click="listTypeChange(index,item)" v-for="(item,index) in serviceTypeList">
+                <i @click="serviceTypeIndex = index" :class="[item.mzlx,{active:serviceTypeIndex==index}]"></i>
                 {{item.fwlxmc}}（{{item.number}}）
           </span>
-
           <span class="pull-right">
                 <span class="icon-group">
                   <el-tooltip class="item" effect="dark" content="导出" placement="bottom">
@@ -23,22 +30,25 @@
       </div>
       <div class="page-body">
         <div class="table-time">
+          <div  class="btn-left" @click="pageleft">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
+          <div class="btn-right" @click="pageright">
+            <i class="icon iconfont icon-xiangzuo"></i>
+          </div>
           <span></span>
-          <span>周一</span>
-          <span>周二</span>
-          <span>周三</span>
-          <span>周四</span>
-          <span>周五</span>
-          <span>周六</span>
-          <span>周日</span>
+          <span v-for="item in moduleTimeListSelect">
+            <p class="day">{{item.week}}</p>
+            <p class="date">{{item.date}}</p>
+          </span>
         </div>
-        <div v-for="item in tableList" class="adtable">
+        <div v-for="item in filterListFormatTable" class="adtable">
           <div class="AdTableLeft">
             <div>
               <i></i>
               <p>
                 <span class="name">{{item.ysmc}}</span>
-                <span class="position">主治医师</span>
+                <span v-if="item.ysmc!=='普通门诊'" class="position">主治医师</span>
               </p>
             </div>
           </div>
@@ -46,8 +56,8 @@
             <div class="table-body">
               <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
                 <span>{{slot.sjdmc}}</span>
-                <span v-for="week in slot.weekday">
-                      <el-popover :open-delay="500" v-if="week.cbrqlx" placement="bottom" width="200" trigger="hover">
+                <router-link tag="span"  to="/scheduling/headoffice/pluswork" @click.native="workPlus(item,week)" v-for="week in slot.weekday">
+                      <el-popover :open-delay="500" v-if="week.fwlxdm" placement="bottom" width="200" trigger="hover">
                         <div class="fixed-info">
                           <div class="fixed-body">
                             <div class="fixed-title">出班信息</div>
@@ -57,11 +67,11 @@
                             </p>
                             <p>
                               <span class="fixed-label">服务类型：</span>
-                              <span>{{week.fwlxdm}}</span>
+                              <span>{{week.mzlx}}</span>
                             </p>
                             <p>
                               <span class="fixed-label">出诊时间：</span>
-                              <span>{{slot.sjdmc}}{{week.kssj | timeFormat}}-{{week.jssj | timeFormat}}</span>
+                              <span>{{slot.sjdmc}}{{week.kssj}}-{{week.jssj}}</span>
                             </p>
                             <p>
                               <span class="fixed-label">就诊地址：</span>
@@ -79,60 +89,18 @@
                                        class="el-button pull-right">调整记录</el-button>
                           </div>
                         </div>
-                        <div slot="reference" class="ordered disease">
-                          <p>{{week.kssj | timeFormat}}-{{week.jssj | timeFormat}}</p>
+                        <div slot="reference" class="ordered" :class="[week.mzlx]">
+                          <p>{{week.kssj}}-{{week.jssj}}</p>
                           <p>{{week.ksmc}}</p>
                         </div>
                       </el-popover>
-                    </span>
+                </router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!--打印-->
-    <el-dialog title="打印出班表" :visible.sync="printVisible" size="tiny">
-              <span>
-              <p>起始时间：
-                <el-date-picker type="date" placeholder="选择日期" size="small" :picker-options="pickerOptions0">
-                </el-date-picker>
-              </p>
-              <p>截止日期：
-                <el-date-picker type="date" placeholder="选择日期" size="small">
-                </el-date-picker>
-              </p>
-            </span>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="printVisible = false">取 消</el-button>
-                <el-button type="primary" @click="printVisible = false">打 印</el-button>
-              </span>
-    </el-dialog>
-    <!--导出-->
-    <el-dialog title="导出为Excel" :visible.sync="exportVisible" size="tiny">
-              <span>
-              <p>起始时间：
-                <el-date-picker
-                  type="date"
-                  placeholder="选择日期"
-                  size="small"
-                >
-              </el-date-picker>
-              </p>
-              <p>截止日期：
-              <el-date-picker
-                type="date"
-                placeholder="选择日期"
-                size="small"
-              >
-              </el-date-picker>
-              </p>
-            </span>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="exportVisible = false">取 消</el-button>
-                <el-button type="primary" @click="exportVisible = false">导 出</el-button>
-              </span>
-    </el-dialog>
     <!--出班调整-->
     <el-dialog title="出班调整" :visible.sync="shiftVisible" size="small">
       <div>
@@ -157,6 +125,7 @@
                   :options="departmentList"
                   @active-item-change="handleItemChange"
                   :props="props"
+                  filterable
                 ></el-cascader>
               </el-form-item>
               <el-form-item label="替诊原因">
@@ -165,14 +134,6 @@
             </el-form>
             <!--停诊-->
             <el-form v-if="shiftForm.shiftType == '停诊'" ref="form" :model="shiftForm.stopForm" label-width="110px">
-              <el-form-item label="停诊时间">
-                <el-date-picker
-                  class="width-300"
-                  v-model="shiftForm.stopForm.date"
-                  type="datetime"
-                  placeholder="选择日期时间">
-                </el-date-picker>
-              </el-form-item>
               <el-form-item label="停诊原因">
                 <el-input class="width-300" type="textarea" v-model="shiftForm.stopForm.desc"></el-input>
               </el-form-item>
@@ -278,11 +239,55 @@
                 <el-button type="primary" @click="recordVisible = false">确定</el-button>
               </span>
     </el-dialog>
+    <!--打印-->
+    <el-dialog title="打印出班表" :visible.sync="printVisible" size="tiny">
+              <span>
+              <p>起始时间：
+                <el-date-picker type="date" placeholder="选择日期" size="small" :picker-options="pickerOptions0">
+                </el-date-picker>
+              </p>
+              <p>截止日期：
+                <el-date-picker type="date" placeholder="选择日期" size="small">
+                </el-date-picker>
+              </p>
+            </span>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="printVisible = false">取 消</el-button>
+                <el-button type="primary" @click="printVisible = false">打 印</el-button>
+              </span>
+    </el-dialog>
+    <!--导出-->
+    <el-dialog title="导出为Excel" :visible.sync="exportVisible" size="tiny">
+              <span>
+              <p>起始时间：
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  size="small"
+                >
+              </el-date-picker>
+              </p>
+              <p>截止日期：
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                size="small"
+              >
+              </el-date-picker>
+              </p>
+            </span>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="exportVisible = false">取 消</el-button>
+                <el-button type="primary" @click="exportVisible = false">导 出</el-button>
+              </span>
+    </el-dialog>
+  </div>
   </div>
 </template>
 
 <script>
   import * as arr from 'filters/array.js'
+  import * as time from 'filters/time.js'
   export default {
     data(){
       return {
@@ -290,6 +295,9 @@
         serviceTypeIndex: -1,//当前所选服务
         exportVisible: false,//导出弹窗控制
         printVisible: false,//打印弹窗控制
+        shiftVisible: false,//出班调整弹窗控制
+        allTypeList:[],//服务类型列表
+        headInfo:this.$store.state.scheduling.headofficePostList.ksmc,//头部信息
         pickerOptions0: {
           disabledDate(time) {
             return time.getTime() < Date.now() - 8.64e7;
@@ -299,11 +307,17 @@
         timeSlot: [],//时间段列表
         departmentList: [],//科室列表
         props: {
-          value: 'label',
+          label:'label',
+          value:'value',
           children: 'doctorList'
         },//科室级联
-        tableList: [],//出班列表
-        shiftVisible: false,//出班调整弹窗控制
+        moduleTimeList:[],//出班日期列表
+        moduleTimeListPage:0,//出班日期当前所选页
+        startTime:'',
+        endTime:'',
+        list:[],//出班列表
+        filterListFormatTable:[],//过滤出班列表表格形式
+        tableList: [],//出班列表表格形式
         selectWeek: {},//当前所选单次排班
         shiftForm: {
           shiftType: '替诊',
@@ -330,20 +344,124 @@
         this.init();
       });
     },
+    computed:{
+      moduleTimeListSelect(){
+        return this.moduleTimeList.slice(7*this.moduleTimeListPage,7*(this.moduleTimeListPage+1));
+      },
+      filterList(){
+        if(!this.fwlxdm)return this.list;
+        return this.list.filter(item => item.fwlxdm == this.fwlxdm)
+      }
+    },
+    watch:{
+      moduleTimeListPage:
+        {
+          handler(curVal){
+            let _list = arr.classifyArr(this.filterList, 'ysdm');
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
+            this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          }
+        }
+    },
     methods: {
       init(){
+        //获取今天日期
+        this.getDateNow();
         //获取服务类型
         this.getServiceList();
         //获取时间段列表
         this.getTimeSlot();
-        //获取科室列表
-        this.getDepartmentList();
+        //获取出班时间
+        this.getmModuleTime();
         //获取出报表数据
         this.getTableList();
-        //获取当前时间
-        this.getDateNow();
+        //获取科室列表
+        this.getDepartmentList();
       },
-      //获取当前时间
+      //获取服务类型
+      getServiceList(){
+        this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+      },
+      workPlus(item,week){
+        if(week.mxxh){
+          return
+        }
+        else{
+          this.$store.commit('scheduling/SET_WORKPLUS', {
+            name:item.name,
+            week:week
+          });
+        }
+      },
+      //获取科室列表
+      getDepartmentList(){
+        this.departmentList = this.$store.state.scheduling.departmentList;
+        this.departmentList.map(item => {
+          item.label = item.ksmc;
+          item.value = item.kstybm;
+          this.$set(item, 'doctorList', []);
+        });
+      },
+      //获取统计接口
+      setServieNumber(data){
+        let fwlxtj = data;
+        console.log('fwlxtj',fwlxtj);
+        this.serviceTypeList.map(item => {
+          item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
+        })
+      },
+      //获取时间段列表
+      getTimeSlot(){
+        this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //获取出班时间
+      getmModuleTime(){
+        let startTime=this.$store.state.scheduling.workTableTime.startTime;
+        let endTime=this.$store.state.scheduling.workTableTime.endTime;
+//        let startTime = new Date(Date.parse('2017-09-01'.replace(/-/g,   "/"))).getTime();
+//        let endTime = new Date(Date.parse('2017-09-30'.replace(/-/g,   "/"))).getTime();
+        let weekArr = [];
+        for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
+//
+//        startTime = startTime - 1000*60*60*24*(weekArr[0] - 1);
+//        endTime = endTime + 1000*60*60*24*(7-weekArr[weekArr.length-1]);
+//        weekArr = (Array.apply(null, {length: weekArr[0] - 1}))
+//                  .concat(weekArr)
+//                  .concat(Array.apply(null, {length: 7-weekArr[weekArr.length-1]})).map((v,j) => j%7);
+        weekArr = weekArr.map((item,index) => ({
+          date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+          week:"星期" + "日一二三四五六".charAt(item)
+        }));
+        this.moduleTimeList =weekArr;
+      },
+      //时间转换
+      dateFormat(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+      },
+      //获取出报表数据
+      getTableList(){
+        console.log('time',this.$store.state.scheduling.workTableTime.startTime,this.$store.state.scheduling.workTableTime.endTime)
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
+          ksrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)),
+          ksdmList: [this.$store.state.scheduling.headofficePostList.kstybm],
+          jsrq: this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.endTime))}).then(data => {
+          this.list = data;
+          this.setServieNumber(data);
+          let _list = arr.classifyArr(this.filterList, 'ysdm');
+          let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
+          this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          this.allTypeList=arr.clone(this.filterListFormatTable);
+          this.loading = false;
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //获取当前日期
       getDateNow(){
         let datenow=new Date(Date.now()).getTime();
         let daynow=new Date(datenow).getDay();
@@ -385,71 +503,52 @@
           endTime:endTime
         });
       },
-      //获取服务类型
-      getServiceList(){
-        this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
-        this.serviceTypeList.map(item => {
-          item.number = Math.floor(Math.random() * 100)
+      formatTimeSlot(timeSlot,moduleTimeListSelect){
+        let _timeSlot = arr.clone(timeSlot);
+        let _moduleTimeListSelect = arr.clone(moduleTimeListSelect);
+        _timeSlot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:_moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[0].date},
+            {cbrqlx:_moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[1].date},
+            {cbrqlx:_moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[2].date},
+            {cbrqlx:_moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[3].date},
+            {cbrqlx:_moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[4].date},
+            {cbrqlx:_moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[5].date},
+            {cbrqlx:_moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[6].date}
+          ];
         });
+        return _timeSlot;
       },
-      //获取时间段列表
-      getTimeSlot(){
-        this.timeSlot = this.$store.state.scheduling.timeSlotList;
-      },
-      //获取科室列表
-      getDepartmentList(){
-        this.departmentList = this.$store.state.scheduling.departmentList;
-        this.departmentList.map(item => {
-          item.label = item.ksmc;
-          this.$set(item, 'doctorList', []);
-        });
-        console.log('科室列表 %o', this.departmentList);
-      },
-      //获取出报表数据
-      getTableList(){
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {ksdm: '', mbdm: '', yydm:this.$store.state.login.userInfo.yydm}).then(data => {
-          console.log('出班组模板明细列表 %o', data);
-          this.tableList = this.formatData(arr.classifyArr(data, 'ysdm'));
-          this.loading = false;
-        }).catch(err => {
-          console.log(err);
-        });
-      },
-      //处理数据格式
-      formatData(list){
+      //数据处理
+      formatData(list,timeSlot){
         //医生→时间段→日期
-        let newArr = [];
-        list.map((item, index) => {
-          newArr[index] = {"ysdm": item.name, "slot": []};
-          this.timeSlot.map(slot => {
-            slot.weekday = [{}, {}, {}, {}, {}, {}, {}];
-            item.children.map(week => {
-              newArr[index].ysmc = week.ysmc;
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期一') {
-                slot.weekday[0] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期二') {
-                slot.weekday[1] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期三') {
-                slot.weekday[2] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期四') {
-                slot.weekday[3] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期五') {
-                slot.weekday[4] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期六') {
-                slot.weekday[5] = week;
-              }
-              if (week.sjddm === slot.sjddm && week.cbrqlx === '星期天') {
-                slot.weekday[6] = week;
-              }
+        let newArr = list;
+        let normalTypeData = [{
+          ysmc:"普通门诊",
+          name:"",
+          slot:arr.clone(timeSlot)
+        }];
+        let flag = true;
+        if(!newArr.length){
+          return normalTypeData;
+        }
+        newArr.map(item => {
+          if(!item.name) flag = false;
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+            let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
+            weekTemp.map(week => {
+              item.ysmc = week.ysmc;
+              if(week.sjddm != slot.sjddm)return;
+              let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
+                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+              Object.assign(_day,week);
             })
-            newArr[index].slot.push(slot);
-          });
+          })
         });
+        if(flag) {
+          newArr = normalTypeData.concat(newArr);
+        }
         return newArr;
       },
       //处理出班调整点击事件
@@ -462,9 +561,9 @@
 
       },
       //处理科室医生级联
-      handleItemChange(item){
-        console.log(item);
-        this.getDoctorList().then(data => {
+      handleItemChange(value){
+        console.log('Orz',value);
+        this.getDoctorList(value).then(data => {
           console.log('医生列表 %o', data);
           data.map(item => {
             item.label = item.zcmc;
@@ -476,14 +575,36 @@
         })
       },
       //科室获取医生列表
-      getDoctorList(){
+      getDoctorList(value){
         return new Promise((resolve, reject) => {
-          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {kstybm: '20000000.1.1.0320',yydm:this.$store.state.login.userInfo.yydm}).then(data => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
+            kstybm: value.join(),
+            yydm:this.$store.state.login.userInfo.yydm
+          }).then(data => {
             resolve(data);
           }).catch(err => {
             console.log(err);
           });
         })
+      },
+      pageleft(){
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:this.$store.state.scheduling.workTableTime.startTime-1000*60*60*24*7,
+          endTime:this.$store.state.scheduling.workTableTime.endTime-1000*60*60*24*7
+        });
+        console.log(this.dateFormat(new Date(this.$store.state.scheduling.workTableTime.startTime)));
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
+      },
+      pageright(){
+        this.$store.commit('scheduling/SET_DATETIMENOW', {
+          startTime:this.$store.state.scheduling.workTableTime.startTime+1000*60*60*24*7,
+          endTime:this.$store.state.scheduling.workTableTime.endTime+1000*60*60*24*7
+        });
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
       },
       //出班调整-保存分类别：替诊、停诊、调班
       handleSaveClick(){
@@ -497,7 +618,6 @@
       },
       //替诊保存
       saveReplace(){
-        console.log(this.shiftForm.replaceForm.doctor);
         let params = {
           ksdm: '',
           ksmc: '',
@@ -517,11 +637,9 @@
       },
       //停诊保存
       saveStop(){
-        console.log(this.shiftForm.stopForm);
         let params = {
-          mxxh: '',
-          tzsj: '',
-          tzyy: ''
+          mxxh: this.selectWeek.mxxh,
+          tzyy: this.shiftForm.stopForm.desc
         };
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S05", params).then(data => {
@@ -548,6 +666,29 @@
             console.log(err);
           });
         })
+      },
+      //点击服务类型（全部）时展示全部数据
+      allTyepList(){
+        this.checkLIstActive='';
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.filterListFormatTable=this.allTypeList;
+      },
+      //服务类型筛选
+      listTypeChange(index,item){
+        this.checkLIstActive=index;
+        let newArr=[];
+        newArr=arr.clone(this.allTypeList);
+        for(let i=0;i<newArr.length;i++){
+          for(let x=0;x<newArr[i].slot.length;x++){
+            for(let y=0;y<newArr[i].slot[x].weekday.length;y++){
+              if(item.fwlxdm!==newArr[i].slot[x].weekday[y].fwlxdm){
+                newArr[i].slot[x].weekday[y]={};
+              }
+            }
+          }
+        }
+        this.filterListFormatTable=[];
+        this.filterListFormatTable=newArr;
       }
     },
     filters: {
@@ -559,15 +700,49 @@
   }
 </script>
 <style scoped>
+  .setting-wraaper {
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 885px;
+    background: #fff;
+  }
+  .setting-header {
+    height: 60px;
+    width: 100%;
+    display: inline-block;
+    line-height: 60px;
+    padding: 0 30px 0 30px;
+    background: #3f51b5;
+    color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: default;
+    box-sizing: border-box;
+  }
+  .setting-header > span>i{
+    cursor: pointer;
+  }
+
+  .setting-header > span {
+    font-size: 16px;
+  }
+  .setting-header > .used-time {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 15px;
+  }
+  .setting-header > .used-time > i {
+    margin-right: 5px;
+  }
   .setting-body {
-    margin-top: 20px;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
     display: inline-block;
     background: #fff;
   }
-
   .setting-main {
     width: 100%;
     display: inline-block;
@@ -640,7 +815,13 @@
   .type-filter > span > .TX.active {
     background: rgb(255, 204, 204);
   }
-
+  .type-filter > span > .ZB {
+    border: 1px solid #bcf1d4;
+    background: #e7faf0;
+  }
+  .type-filter > span > .ZB.active {
+    background: #bcf1d4;
+  }
   .type-filter > span > i {
     width: 16px;
     height: 16px;
@@ -669,7 +850,24 @@
     width: 100%;
     padding-left: 170px;
     box-sizing: border-box;
-    margin-top: 10px;
+    position: relative;
+  }
+
+  .table-time>.btn-left,
+  .table-time>.btn-right {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 15px;
+    cursor: pointer;
+  }
+
+  .table-time>.btn-left {
+    left: 260px;
+  }
+
+  .table-time>.btn-right {
+    right: -10px;
   }
 
   .table-time > span {
@@ -681,7 +879,16 @@
     text-align: center;
     box-sizing: border-box;
   }
-
+  .table-time > span>p{
+    height: 23px;
+    line-height: 23px;
+  }
+  .table-time > span>p.day{
+    font-weight: bold;
+  }
+  .table-time > span>p.today{
+    color: rgb(32, 160, 255);
+  }
   .adtable > .AdTableLeft,
   .adtable > .AdTableRight {
     box-sizing: border-box;
@@ -773,9 +980,15 @@
     box-sizing: border-box;
     border-left: 1px solid #D4DEED;
     border-bottom: 1px solid #D4DEED;
-    box-sizing: border-box;
   }
-
+  .table-body > div > span:hover{
+    border: 1px solid #1e90ff;
+  }
+  .table-body>div>span:nth-child(1):hover{
+    border: none;
+    border-left: 1px solid #D4DEED;
+    border-bottom: 1px solid #D4DEED;
+  }
   .fixed-info {
     padding: 5px;
     color: #999;
@@ -819,6 +1032,7 @@
     font-size: 14px;
     padding: 10px 0 10px 0;
     box-sizing: border-box;
+    cursor: default;
   }
 
   .ordered > p {
@@ -827,36 +1041,23 @@
   }
 
   /*default,expert,disease,union,VIP*/
-
-  .ordered.default,
-  .ordered.expert,
-  .ordered.disease,
-  .ordered.union,
-  .ordered.VIP {
-    cursor: pointer;
-  }
-
-  .ordered.default {
+  .ordered.PT {
     background: rgb(185, 185, 185);
     color: #fff;
   }
-
-  .ordered.expert {
+  .ordered.ZJ {
     color: rgb(32, 160, 255);
     background: rgb(192, 229, 255);
   }
-
-  .ordered.disease {
+  .ordered.ZB {
     color: rgb(12, 175, 148);
     background: rgb(231, 250, 240);
   }
-
-  .ordered.union {
+  .ordered.LH {
     color: rgb(232, 166, 35);
     background: rgb(255, 248, 234);
   }
-
-  .ordered.VIP {
+  .ordered.TX {
     color: rgb(255, 73, 73);
     background: rgb(255, 237, 237);
   }

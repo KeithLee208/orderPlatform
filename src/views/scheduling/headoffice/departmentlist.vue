@@ -6,10 +6,6 @@
           <input class="top-searchinput pull-left" placeholder="搜索院区／科室／医生">
           <i class="iconfont icon-sousuo"></i>
         </div>
-        <router-link
-          :to="'/scheduling/headoffice/templatelist'" >
-          <i class="el-icon-close"></i>
-        </router-link>
       </div>
       <router-link tag="span" to="/scheduling/headoffice/templatelist">
         <i class="el-icon-arrow-left"></i>
@@ -132,9 +128,7 @@
       });
       }, //专病病种
       TpListInit() {
-        console.log('this.crumbs',this.crumbs);
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q02", {
-          kstybm: '20000000.1.1.0320',
           yydm:this.$store.state.login.userInfo.yydm
         }).then(data => {
         let newArr = listArray.classifyCheckArr(data, 'sjksmc');

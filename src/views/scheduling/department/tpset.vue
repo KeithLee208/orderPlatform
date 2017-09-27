@@ -27,8 +27,7 @@
               <i></i>
               <p>
                 <span v-if="currentDocSchedule.ysmc!==''" class="name">{{currentDocSchedule.ysmc}}</span>
-                <span v-if="currentDocSchedule.ysmc!==''" class="position">主治医师</span>
-                <span v-if="currentDocSchedule.ysmc ===''" class="name">普通门诊</span>
+                <span v-if="currentDocSchedule.ysmc!=='普通门诊'" class="position">主治医师</span>
               </p>
             </div>
           </div>
