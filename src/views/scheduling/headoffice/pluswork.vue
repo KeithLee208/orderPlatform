@@ -207,7 +207,6 @@
           ksmc:'',
           kssj:'',
           lrsj:'',
-          mbdm:'',
           mxxh:'',
           sjddm:'',
           ysdm:'',
@@ -517,6 +516,7 @@
         this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         let _data = {
+          cbrq:[],
           cbrqlx: [this.currentDocSchedule.slot[i].weekday[j].cbrqlx],//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
@@ -549,28 +549,41 @@
         console.log('提交的表单 %o',form);
         console.log('传过来的参数 %o',this.$store.state.scheduling.headofficePostList,this.$store.state.scheduling.plusWork);
         let newForm = arr.clone(form);
+        newForm.cbrqList = [];
+        newForm.cbrqlx.map(cbrqlx => {
+          newForm.cbrqList.push(this.formOptions.visitTime.list.find(item => item.val == cbrqlx).date);
+        });
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
           newForm.sjddmList.push({
             sjddm:sjddm,
-            kssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].kssj,
-            jssj:this.formOptions.slotTime.list.filter(item => item.sjddm == sjddm)[0].jssj,
+            kssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).kssj,
+            jssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).jssj,
           });
         });
         newForm.userList = [{
           ksdm:newForm.ksdm,
-          ksmc:this.formOptions.department.list.filter(item => item.kstybm == newForm.ksdm)[0].ksmc,
+          ksmc:this.formOptions.department.list.find(item => item.kstybm == newForm.ksdm).ksmc,
           ysdm:newForm.ysdm,
-          ysmc:this.formOptions.doctor.list.filter(item => item.zgtybm == newForm.ysdm)[0].zgxm
+          ysmc:this.formOptions.doctor.list.find(item => item.zgtybm == newForm.ysdm).zgxm
         }];
-        newForm.hxmbList = this.ballList;
+        newForm.hxList = this.ballList;
         newForm.zydmList = [];
-        newForm.cbrqlxList = newForm.cbrqlx;
         delete newForm['cbrqlx'];
+        delete newForm['cbrq'];
+        delete newForm['czry'];
+        delete newForm['fscj'];
+        delete newForm['hxmbList'];
+        delete newForm['ksdm'];
         delete newForm['sjddm'];
         delete newForm['kssj'];
+        delete newForm['ysdm'];
+        delete newForm['yxzt'];
+        delete newForm['zbxh'];
         delete newForm['jssj'];
         delete newForm['ysmc'];
+        delete newForm['mxxh'];
+        delete newForm['lrsj'];
         delete newForm['ksmc'];
         return newForm;
       },
