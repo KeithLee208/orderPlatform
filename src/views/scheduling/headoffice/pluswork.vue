@@ -14,7 +14,7 @@
       <el-form  ref="form" :model="form" label-width="80px">
         <div class="table-time">
           <span></span>
-          <span v-for="item in moduleTimeList">
+          <span v-for="item in formOptions.visitTime.list">
             <p class="day">{{item.week}}</p>
             <p class="date">{{item.date}}</p>
           </span>
@@ -248,13 +248,13 @@
             isShow:true,
             isEdit:true,
             list:[
-              {name:"周一",val:"星期一"},
-              {name:"周二",val:"星期二"},
-              {name:"周三",val:"星期三"},
-              {name:"周四",val:"星期四"},
-              {name:"周五",val:"星期五"},
-              {name:"周六",val:"星期六"},
-              {name:"周日",val:"星期日"}]
+              {name:"星期一",val:"星期一"},
+              {name:"星期二",val:"星期二"},
+              {name:"星期三",val:"星期三"},
+              {name:"星期四",val:"星期四"},
+              {name:"星期五",val:"星期五"},
+              {name:"星期六",val:"星期六"},
+              {name:"星期日",val:"星期日"}]
           },
           slotTime:{
             isShow:true,
@@ -299,7 +299,7 @@
         timeSlot:[],//时间段列表
         moduleTimeList:[],//带日期表头
         templateData:[],//排版模板数据
-        loading:true,//数据读取状态
+        loading:false,//数据读取状态
         ifCover:false,//是否覆盖
         dialogVisible: false,//确认覆盖弹窗显示
         channalList:[],
@@ -333,15 +333,13 @@
       //获取出班时间
       getmModuleTime(){
         let startTime=this.$store.state.scheduling.workTableTime.startTime;
-        let endTime=this.$store.state.scheduling.workTableTime.endTime;
         let weekArr = [];
         for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
-        weekArr = weekArr.map((item,index) => ({
+        this.formOptions.visitTime.list = weekArr.map((item,index) => ({
           date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
-          week:"星期" + "日一二三四五六".charAt(item)
+          week:"星期" + "日一二三四五六".charAt(item),
+          val : "星期" + "日一二三四五六".charAt(item)
         }));
-        this.moduleTimeList =weekArr;
-        console.log('this.moduleTimeList',this.moduleTimeList)
       },
       //获取医生排班模板列表缺省信息
       getDocScheduleListDefault(){
@@ -421,7 +419,9 @@
             this.getDocScheduleListDefault();
           }
           else {
-            this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
+            let _list = arr.classifyArr(data, 'ysdm');
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);console.log('_timeSlot %o',_timeSlot);
+            this.currentDocSchedule = this.formatData(_list,_timeSlot)[0];
             console.log('排班表信息', this.currentDocSchedule);
             this.setDefaultInfo();
           }
@@ -436,48 +436,37 @@
         //医生默认
         this.form.ysdm = this.$store.state.scheduling.plusWork.name;
       },
+      formatTimeSlot(timeSlot,moduleTimeListSelect){
+        let _timeSlot = arr.clone(timeSlot);
+        let _moduleTimeListSelect = arr.clone(moduleTimeListSelect);
+        _timeSlot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:_moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[0].date},
+            {cbrqlx:_moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[1].date},
+            {cbrqlx:_moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[2].date},
+            {cbrqlx:_moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[3].date},
+            {cbrqlx:_moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[4].date},
+            {cbrqlx:_moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[5].date},
+            {cbrqlx:_moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[6].date}
+          ];
+        });
+        return _timeSlot;
+      },
       //数据处理
-      formatData(list){
+      formatData(list,timeSlot){
         //医生→时间段→日期
-        let newArr = [];
-        list.map((item,index) => {
-          newArr[index] = {"ysmc":item.name,"slot":[]};
-          this.timeSlot.map(slot => {
-            slot.weekday = [{},{},{},{},{},{},{}];
-            this.formOptions.visitTime.list.map((item,index) => {
-              slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
-            });
-            console.log('1',item.children);
-            item.children.map(week => {
-              newArr[index].ysmc = week.ysmc;
-              if(week.sjddm != slot.sjddm) return;
-              switch (week.cbrqlx) {
-                case '星期一':
-                  Object.assign(slot.weekday[0],week);
-                  break;
-                case '星期二':
-                  Object.assign(slot.weekday[1],week);
-                  break;
-                case '星期三':
-                  Object.assign(slot.weekday[2],week);
-                  break;
-                case '星期四':
-                  Object.assign(slot.weekday[3],week);
-                  break;
-                case '星期五':
-                  Object.assign(slot.weekday[4],week);
-                  break;
-                case '星期六':
-                  Object.assign(slot.weekday[5],week);
-                  break;
-                case '星期日':
-                  Object.assign(slot.weekday[6],week);
-                  break;
-              }
+        let newArr = list;
+        newArr.map(item => {
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+            let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
+            weekTemp.map(week => {
+              item.ysmc = week.ysmc;
+              if(week.sjddm != slot.sjddm)return;
+              let _day = slot.weekday.find(weekday => weekday.cbrq == week.cbrq);
+              Object.assign(_day,week);
             })
-            newArr[index].slot.push(slot);
-            this.loading=false;
-          });
+          })
         });
         return newArr;
       },
@@ -522,14 +511,13 @@
       //表单填充策略
       setForm(data){
         Object.assign(this.form,data)
-        console.log(this.form);
       },
       //设置新的排班信息
       setNewSchedule(i,j){
         this.schedulingSelectIndex = [i,j];
         this.$message('设置新的出班信息');
         let _data = {
-          cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx,//必填:表单获取
+          cbrqlx: [this.currentDocSchedule.slot[i].weekday[j].cbrqlx],//必填:表单获取
           cbzt: 'ZC',//必填:默认值
           czdz: '',//必填:表单获取
           czry: this.$store.state.login.userInfo.userId,//必填:登录信息
@@ -538,7 +526,7 @@
           fwlxdm:'',//必填:表单获取
           ghfdm:'',//必填:服务类型列表 数据转换
           zlfdm:'',//必填:服务类型列表 数据转换
-          sjddm:this.currentDocSchedule.slot[i].weekday[j].sjddm,//必填:表单获取
+          sjddm:[this.currentDocSchedule.slot[i].weekday[j].sjddm],//必填:表单获取
           kssj:'',//必填:时间段列表 数据转换
           jssj:'',//必填:时间段列表 数据转换
           ysdm:this.$store.state.scheduling.currentSchedulingSet.ysdm,//必填:医生列表 数据转换
@@ -559,6 +547,8 @@
       },
       //数据转换
       formDataFormat(form){
+        console.log('提交的表单 %o',form);
+        console.log('传过来的参数 %o',this.$store.state.scheduling.currentSchedulingSet);
         let newForm = arr.clone(form);
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
