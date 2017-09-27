@@ -705,8 +705,8 @@
       },
       //选择不同医生刷新当前排班模板信息
       handleDocChange(val){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-          ysdm:val
+        this.$store.commit('scheduling/SET_WORKPLUS', {
+          name:val
         });
         this.getDocScheduleList();//获取医生出班模板列表
       },
