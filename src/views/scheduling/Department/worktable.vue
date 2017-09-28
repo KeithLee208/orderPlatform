@@ -110,7 +110,7 @@
             <!--替诊-->
             <el-form v-if="shiftForm.shiftType == '替诊'" ref="form" :model="shiftForm.replaceForm" label-width="110px">
               <el-form-item label="当前医生">
-                <span>{{selectWeek.ysmc}}/{{selectWeek.ksmc}}</span>
+                <span>{{selectWeek.ksmc}}/{{selectWeek.ysmc}}</span>
               </el-form-item>
               <div class="line"></div>
               <el-form-item label="替诊医生">
@@ -604,7 +604,6 @@
       },
       //替诊保存
       saveReplace(){
-        console.log('1',this.shiftForm.replaceForm) ;
         let params = {
           ksdm: this.shiftForm.replaceForm.doctor[0],
           ksmc: this.shiftForm.replaceForm.doctor[1][2],
@@ -616,6 +615,17 @@
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S06", params).then(data => {
             resolve(data);
+            if(data.BizErrorCode=='200.5'){
+              this.$message({
+                message:data.BizErrorMessage+'不可替诊!',
+                type: 'warning'
+              });
+            }
+            else{
+              this.$message('已成功替诊！');
+              this.shiftVisible = false;
+              this.getTableList();
+            }
           }).catch(err => {
             reject(err);
             console.log(err);
@@ -631,6 +641,9 @@
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S05", params).then(data => {
             resolve(data);
+            this.$message('已停诊！');
+            this.shiftVisible = false;
+            this.getTableList();
           }).catch(err => {
             reject(err);
             console.log(err);

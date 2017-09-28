@@ -173,7 +173,7 @@
         :visible.sync="dialogVisible"
         size="tiny"
         :before-close="handleClose">
-        <span>是否确认覆盖?</span>
+        <span>新增时间段内已存在出班明细，是否跳过重复出班明细？</span>
         <span slot="footer" class="dialog-footer">
     <el-button @click="handleCancel">取 消</el-button>
     <el-button type="primary" @click="handleConfirm">确 定</el-button>
@@ -408,6 +408,7 @@
         };
         this.form.ksdm=this.$store.state.scheduling.headofficePostList.kstybm;
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q11", params).then(data => {
+          console.log('data',data);
           for(let i=0;i<this.formOptions.doctor.list.length;i++){
           if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.plusWork.name){
               this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
@@ -481,6 +482,7 @@
         this.setForm(this.form);
         //根据明细获取号序列表
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
+          console.log('data',data);
           this.ballList= data;
           console.log('当前号序',this.ballList);
           this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
@@ -490,6 +492,7 @@
             });//号源升序,整合金额,整合样式
 
           this.ballToChannal();//根据号序列表更新渠道信息
+
         }).catch(err => {
           console.log(err);
         });
@@ -622,12 +625,7 @@
         console.log('保存的数据',insert)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S04", { insert: insert,ifSkip:this.ifCover}).then(data => {
           if(data){
-            if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
-              this.$message(data.BizErrorMessage);
-              return
-            }
-            else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
-              this.$message(data.BizErrorMessage);
+            if(data.BizErrorCode =='HIS.APPOINTMENT.BE10006') {
               this.dialogVisible = true;
               return
             }

@@ -60,7 +60,9 @@
                       <el-popover :open-delay="500" v-if="week.fwlxdm" placement="bottom" width="200" trigger="hover">
                         <div class="fixed-info">
                           <div class="fixed-body">
-                            <div class="fixed-title">出班信息</div>
+                            <div class="fixed-title">出班信息
+                              <span v-if="week.cbzt=='TN'">(停诊)</span>
+                            </div>
                             <p>
                               <span class="fixed-label">就诊科室：</span>
                               <span>{{week.ksmc}}</span>
@@ -82,7 +84,7 @@
                               <span>{{week.hxzs}}</span>
                             </p>
                           </div>
-                          <div class="fixed-footer">
+                          <div class="fixed-footer" v-if="week.cbzt=='ZC'">
                             <el-button @click="handleTableAdjust(week)" type="text" size="small"
                                        class="el-button ">出班调整</el-button>
                             <el-button @click="recordVisible=true" type="text" size="small"
@@ -90,6 +92,7 @@
                           </div>
                         </div>
                         <div slot="reference" class="ordered" :class="[week.mzlx]">
+                          <p v-if="week.cbzt=='TN'" class="abnormal"></p>
                           <p>{{week.kssj}}-{{week.jssj}}</p>
                           <p>{{week.ksmc}}</p>
                         </div>
@@ -121,7 +124,7 @@
               <div class="line"></div>
               <el-form-item label="替诊医生">
                 <el-cascader
-                  :model="shiftForm.replaceForm.doctor"
+                  v-model="shiftForm.replaceForm.doctor"
                   :options="departmentList"
                   @active-item-change="handleItemChange"
                   :props="props"
@@ -315,6 +318,7 @@
         moduleTimeListPage:0,//出班日期当前所选页
         startTime:'',
         endTime:'',
+        nowTime:'',
         list:[],//出班列表
         filterListFormatTable:[],//过滤出班列表表格形式
         tableList: [],//出班列表表格形式
@@ -322,7 +326,7 @@
         shiftForm: {
           shiftType: '替诊',
           replaceForm: {
-            doctor: '',
+            doctor:[],
             desc: ''
           },
           stopForm: {
@@ -383,15 +387,10 @@
         this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
       },
       workPlus(item,week){
-        if(week.mxxh){
-          return
-        }
-        else{
           this.$store.commit('scheduling/SET_WORKPLUS', {
             name:item.name,
             week:week
           });
-        }
       },
       //获取科室列表
       getDepartmentList(){
@@ -447,6 +446,7 @@
           let _list = arr.classifyArr(this.filterList, 'ysdm');
           let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
           this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          console.log(this.filterListFormatTable);
           this.allTypeList=arr.clone(this.filterListFormatTable);
           this.loading = false;
         }).catch(err => {
@@ -456,6 +456,7 @@
       //获取当前日期
       getDateNow(){
         let datenow=new Date(Date.now()).getTime();
+        console.log('datenow',datenow);
         let daynow=new Date(datenow).getDay();
         let startTime='';
         let endTime='';
@@ -554,15 +555,29 @@
       },
       //处理科室医生级联
       handleItemChange(value){
-        console.log('Orz',value);
         this.getDoctorList(value).then(data => {
-          console.log('医生列表 %o', data);
           data.map(item => {
-            item.label = item.zcmc;
+            item.label = item.zgxm;
+            item.value = [item.zgtybm,item.zgxm,item.ksmc];
           });
+          let ordinary={
+            zgxm:'普通门诊',
+            zgtybm:'',
+            label:'普通门诊',
+            value:['','普通门诊',data[1].ksmc]
+          };
+          data.push(ordinary);
+          console.log('data2',data);
           this.departmentList.map(item => {
-            item.label = item.ksmc;
-            item.doctorList = data;
+            if(data.length!==0){
+              if(item.kstybm==data[0].kstybm){
+                item.label = item.ksmc;
+                item.doctorList = data;
+              }
+            }
+            else{
+
+            }
           });
         })
       },
@@ -611,16 +626,27 @@
       //替诊保存
       saveReplace(){
         let params = {
-          ksdm: '',
-          ksmc: '',
-          mxxh: '',
-          tzyy: '',
-          ysdm: '',
-          ysmc: ''
+          ksdm: this.shiftForm.replaceForm.doctor[0],
+          ksmc: this.shiftForm.replaceForm.doctor[1][2],
+          mxxh: this.selectWeek.mxxh,//明细序号
+          tzyy: this.shiftForm.replaceForm.desc,
+          ysdm: this.shiftForm.replaceForm.doctor[1][0],
+          ysmc: this.shiftForm.replaceForm.doctor[1][1]
         };
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S06", params).then(data => {
             resolve(data);
+            if(data.BizErrorCode=='200.5'){
+              this.$message({
+                message:data.BizErrorMessage+'不可替诊!',
+                type: 'warning'
+              });
+            }
+            else{
+              this.$message('已成功替诊！');
+              this.shiftVisible = false;
+              this.getTableList();
+            }
           }).catch(err => {
             reject(err);
             console.log(err);
@@ -636,6 +662,9 @@
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S05", params).then(data => {
             resolve(data);
+            this.$message('已停诊！');
+            this.shiftVisible = false;
+            this.getTableList();
           }).catch(err => {
             reject(err);
             console.log(err);
@@ -987,8 +1016,7 @@
   }
 
   .fixed-body {
-    border-bottom: 1px dashed #e0e0e0;
-    padding-bottom: 10px;
+
   }
 
   .fixed-body > p {
@@ -1014,7 +1042,9 @@
   }
 
   .fixed-footer {
+    border-top: 1px dashed #e0e0e0;
     margin-top: 15px;
+    padding-top: 10px;
   }
 
   .ordered {
@@ -1025,13 +1055,22 @@
     padding: 10px 0 10px 0;
     box-sizing: border-box;
     cursor: default;
+    position: relative;
   }
 
   .ordered > p {
     height: 20px;
     line-height: 20px;
   }
-
+  .ordered>.abnormal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 10px solid red;
+    border-right: 10px solid transparent;
+  }
   /*default,expert,disease,union,VIP*/
   .ordered.PT {
     background: rgb(185, 185, 185);

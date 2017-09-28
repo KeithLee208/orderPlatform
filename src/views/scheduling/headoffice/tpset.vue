@@ -628,7 +628,7 @@
           delete: [{
             mxxh: item.mxxh
           }],
-          ifCover: trueF
+          ifCover: true
         }).then(data => {
           console.log('data',data);
           if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
