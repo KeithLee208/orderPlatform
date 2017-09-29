@@ -1,8 +1,7 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link
-        to="/scheduling/headoffice/worktable" class="pull-right">
+      <router-link to="/scheduling/headoffice/worktable" class="pull-right">
         <i class="el-icon-close"></i>
       </router-link>
       <span>设置临时出班</span>
@@ -36,6 +35,7 @@
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="(week,indexJ) in slot.weekday">
                     <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                       <p v-if="week.cbzt=='TN'" class="abnormal"></p>
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                     </span>
@@ -193,6 +193,7 @@
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
+          cbrq:[],
           cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
@@ -347,7 +348,7 @@
         this.currentDocSchedule.slot.map(slot => {
           slot.weekday = [];
           this.formOptions.visitTime.list.map((item,index) => {
-            slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
+            slot.weekday[index] = {cbrqlx:item.val,sjddm:slot.sjddm};
           });
         });
         this.loading = false;
@@ -408,7 +409,6 @@
         };
         this.form.ksdm=this.$store.state.scheduling.headofficePostList.kstybm;
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q11", params).then(data => {
-          console.log('data',data);
           for(let i=0;i<this.formOptions.doctor.list.length;i++){
           if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.plusWork.name){
               this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
@@ -419,7 +419,7 @@
           }
           else {
             let _list = arr.classifyArr(data, 'ysdm');
-            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);console.log('_timeSlot %o',_timeSlot);
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);
             this.currentDocSchedule = this.formatData(_list,_timeSlot)[0];
             this.setDefaultInfo();
           }
@@ -474,6 +474,7 @@
       },
       //获取单次出班信息
       getSingleSchedule(i,j,item){
+        console.log('item',item);
         this.schedulingSelectIndex = [i,j];//更新所选格子
         this.form = arr.clone(item);
         this.form.cbrqlx = [this.form.cbrqlx];//处理多选出班日期
@@ -481,10 +482,8 @@
         this.form.money = this.getServiceMoney(this.form.fwlxdm);
         this.setForm(this.form);
         //根据明细获取号序列表
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
-          console.log('data',data);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q12", {mxxh:item.mxxh}).then(data => {
           this.ballList= data;
-          console.log('当前号序',this.ballList);
           this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
             .map(item => {
               item.money = this.getServiceMoney(item.fwlxdm);
@@ -541,7 +540,7 @@
           hxmbList:'',
           money:0
         };
-        console.log('data',_data);
+        console.log('1',_data);
         this.ballList=[];
         this.channalList =  this.channalListFormat(arr.clone( this.$store.state.scheduling.channalList));
         this.setForm(_data);
@@ -555,6 +554,7 @@
         newForm.cbrqlx.map(cbrqlx => {
           newForm.cbrqList.push(this.formOptions.visitTime.list.find(item => item.val == cbrqlx).date);
         });
+        newForm.cbzt='ZC';
         newForm.sjddmList = [];
         newForm.sjddm.map(sjddm => {
           newForm.sjddmList.push({
@@ -603,6 +603,10 @@
           strategy: 'isNonEmpty',
           errorMsg: '请选择服务类型'
         }]);
+        _validator.add(this.form.ballList, [{
+          strategy: 'isNonEmpty',
+          errorMsg: '请填写及生成号序'
+        }]);
         var errorMsg = _validator.start();
         return errorMsg;
       },
@@ -624,12 +628,10 @@
         let insert = this.formDataFormat(this.form);
         console.log('保存的数据',insert)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S04", { insert: insert,ifSkip:this.ifCover}).then(data => {
-          if(data){
-            if(data.BizErrorCode =='HIS.APPOINTMENT.BE10006') {
+            if(data&&data.BizErrorCode =='HIS.APPOINTMENT.BE10006') {
               this.dialogVisible = true;
               return
             }
-          }
           else {
             this.$message('保存成功');
             this.isCover = false;
@@ -988,6 +990,15 @@
   .ordered > p {
     height: 20px;
     line-height: 20px;
+  }
+  .ordered>.abnormal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 10px solid red;
+    border-right: 10px solid transparent;
   }
   /*default,expert,disease,union,VIP*/
   .ordered.active{
