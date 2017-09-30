@@ -8,6 +8,9 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import wnhttp from "../api/wnhttp";
+import 'babel-polyfill'
+import promise from 'es6-promise';
+promise.polyfill();
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(wnhttp, { mode: 'dev' });

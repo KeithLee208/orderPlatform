@@ -648,7 +648,6 @@
           this.formOptions.disease.list=[];
         }
         let selectService = this.form.fwlxdm ? this.formOptions.serviceType.list.filter(item => item.fwlxdm == this.form.fwlxdm)[0]:{};
-        console.log(selectService)
         this.form.ghfdm = selectService.sfxm.filter(item => item.lx == 'GHF')[0].mxxh;
         this.form.zlfdm = selectService.sfxm.filter(item => item.lx == 'ZLF')[0].mxxh;
         this.form.money = this.getServiceMoney(this.form.fwlxdm);
