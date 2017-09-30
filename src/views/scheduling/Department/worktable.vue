@@ -555,14 +555,24 @@
             item.label = item.zgxm;
             item.value = [item.zgtybm,item.zgxm,item.ksmc];
           });
-          console.log('data',data);
+          let ordinary={
+            zgxm:'普通门诊',
+            zgtybm:'',
+            label:'普通门诊',
+            value:['','普通门诊',data[1].ksmc]
+          };
+          data.push(ordinary);
+          console.log('data2',data);
           this.departmentList.map(item => {
             if(data.length!==0){
-             if(item.kstybm==data[0].kstybm){
-            item.label = item.ksmc;
-            item.doctorList = data;
+              if(item.kstybm==data[0].kstybm){
+                item.label = item.ksmc;
+                item.doctorList = data;
               }
-             }
+            }
+            else{
+
+            }
           });
         })
       },
@@ -620,7 +630,7 @@
         return new Promise((resolve, reject) => {
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S06", params).then(data => {
             resolve(data);
-            if(data.BizErrorCode=='200.5'){
+            if(data&&data.BizErrorCode=='200.5'){
               this.$message({
                 message:data.BizErrorMessage+'不可替诊!',
                 type: 'warning'
