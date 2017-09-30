@@ -18,7 +18,9 @@
         <span>密码</span>
         <el-input class="login-input"  v-model="ruleForm.pwd" :type="pwdview" icon="more" :on-icon-click="eyeClick"></el-input>
           </el-form-item>
-        <el-button class="login-btn" type="primary"  @click="submitForm('ruleForm')">登录</el-button>
+          <router-link to='index'>
+          <el-button class="login-btn" type="primary"  @click="submitForm('ruleForm')">登录</el-button>
+          </router-link>
         </el-form>
       </div>
     </div>
@@ -72,8 +74,8 @@
 </script>
 
 <style scoped>
-  @import './../static/css/reset.css';
-  @import './../static/font/iconfont.css';
+  @import '../../static/css/reset.css';
+  @import '../../static/font/iconfont.css';
   #login{
     width: 800px;
     height: 580px;
@@ -91,7 +93,7 @@
   .left{
     width: 490px;
     height: 100%;
-    background: url("./../static/img/login-bg.jpg") no-repeat no-repeat center;
+    background: url("../../static/img/login-bg.jpg") no-repeat no-repeat center;
     background-size: 490px 580px;
     float: left;
     box-sizing: border-box;
@@ -107,7 +109,7 @@
     height: 100px;
     width: 100%;
     display: inline-block;
-    background: url("./../static/img/login-logo.png") no-repeat no-repeat center;
+    background: url("../../static/img/login-logo.png") no-repeat no-repeat center;
     background-size: 95px 95px;
     margin: 120px 0 30px 0;
   }
@@ -149,6 +151,9 @@
   .describe{
     font-size: 16px;
   }
+
+</style>
+<style>
   .login-input>input{
     border-radius: 0px;
     border: 1px solid transparent !important;
@@ -159,8 +164,6 @@
   .login-input>input:focus{
     border-bottom: 1px solid rgb(139,192,240) !important;
   }
-</style>
-<style>
   .el-form-item__content>span{
     color: #999;
     font-size: 10px;

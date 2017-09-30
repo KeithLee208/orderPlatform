@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import login from './login'
+import login from 'views/login.vue'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
@@ -14,12 +14,12 @@ Vue.use(wnhttp, { mode: 'dev' });
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
+  render: h => h(login),
   router,
   store,
   data: {
     eventHub: new Vue()
   },
   template: '<App/>',
-  components: { App }
+  components: { login }
 })

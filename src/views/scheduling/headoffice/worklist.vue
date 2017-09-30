@@ -8,7 +8,7 @@
               <div>
                 <el-form ref="form" :model="form" label-width="80px">
                   <el-form-item label="选择模板">
-                    <el-select v-model="settingForm.mbdm" style="width: 100%" placeholder="请选择模板">
+                    <el-select v-model="settingForm.mbdm"  placeholder="请选择模板">
                       <el-option v-for="item in temList" :label="item.mbmc" :value="item.mbdm"></el-option>
                     </el-select>
                   </el-form-item>
@@ -17,7 +17,7 @@
                     </el-date-picker>
                   </el-form-item>
                   <el-form-item label="结束时间">
-                    <el-date-picker v-model="settingForm.jssj" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker>
+                    <el-date-picker v-model="settingForm.jssj" type="date" placeholder="选择日期" ></el-date-picker>
                   </el-form-item>
                 </el-form>
             </div>
