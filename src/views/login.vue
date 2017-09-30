@@ -18,7 +18,7 @@
         <span>密码</span>
         <el-input class="login-input"  v-model="ruleForm.pwd" :type="pwdview" icon="more" :on-icon-click="eyeClick"></el-input>
           </el-form-item>
-          <router-link to='index'>
+          <router-link to='/'>
           <el-button class="login-btn" type="primary"  @click="submitForm('ruleForm')">登录</el-button>
           </router-link>
         </el-form>

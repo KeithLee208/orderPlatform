@@ -5,12 +5,12 @@
 </template>
 
 <script>
-  import WHeader from 'components/base/header/index'
-  import WFooter from 'components/base/footer/index'
   export default {
       name: 'app',
-      components: {
-        WHeader, WFooter
+      created(){
+        this.$nextTick(() => {
+          this.$router.push('login')
+        })
       }
     }
 </script>

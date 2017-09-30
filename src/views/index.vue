@@ -2,7 +2,7 @@
   <div>
     <WHeader></WHeader>
     <div class="content-warrper">
-      <router-view></router-view>
+       <router-view></router-view>
     </div>
     <WFooter></WFooter>
   </div>
