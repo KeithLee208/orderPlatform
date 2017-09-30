@@ -22,7 +22,10 @@ import orderlist from '../views/order/orderlist'
 /**
  * Created by sven on 2017/8/21.
  */
-
+//登录
+import loing from 'views/login.vue'
+//登录默认
+import LoginIndex from 'views/index.vue'
 // 科室出班模板
 import dTemplateList from 'views/scheduling/department/templatelist'//模板列表
 import dTemplateTable from 'views/scheduling/department/tptable.vue'//模板详情
@@ -50,6 +53,11 @@ Vue.use(Router)
 export default new Router({
   linkActiveClass: 'nav-active',
   routes: [
+    {
+      path:'/index',
+      name:'LoginIndex',
+      component:LoginIndex
+    },
     {
       path: '/order',
       name: 'order',

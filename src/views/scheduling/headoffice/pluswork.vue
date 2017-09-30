@@ -1,8 +1,7 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link
-        to="/scheduling/headoffice/worktable" class="pull-right">
+      <router-link to="/scheduling/headoffice/worktable" class="pull-right">
         <i class="el-icon-close"></i>
       </router-link>
       <span>设置临时出班</span>
@@ -36,6 +35,7 @@
                 <span>{{slot.sjdmc}}</span>
                 <span v-for="(week,indexJ) in slot.weekday">
                     <span v-if="week.mxxh" class="ordered" :class="[week.mzlx,equalsArray(schedulingSelectIndex,[indexI,indexJ]) ? 'select':'']"  @click="getSingleSchedule(indexI,indexJ,week)">
+                       <p v-if="week.cbzt=='TN'" class="abnormal"></p>
                       <p>{{week.kssj}}-{{week.jssj}}</p>
                       <p>{{week.ksmc}}</p>
                     </span>
@@ -173,7 +173,7 @@
         :visible.sync="dialogVisible"
         size="tiny"
         :before-close="handleClose">
-        <span>是否确认覆盖?</span>
+        <span>新增时间段内已存在出班明细，是否跳过重复出班明细？</span>
         <span slot="footer" class="dialog-footer">
     <el-button @click="handleCancel">取 消</el-button>
     <el-button type="primary" @click="handleConfirm">确 定</el-button>
@@ -193,6 +193,7 @@
       return {
         schedulingSelectIndex:[-1,-1],
         form:{
+          cbrq:[],
           cbrqlx: [],
           cbzt: 'ZC',
           czdz: '',
@@ -347,7 +348,7 @@
         this.currentDocSchedule.slot.map(slot => {
           slot.weekday = [];
           this.formOptions.visitTime.list.map((item,index) => {
-            slot.weekday[index] = {cbrqlx:[item.val],sjddm:[slot.sjddm]};
+            slot.weekday[index] = {cbrqlx:item.val,sjddm:slot.sjddm};
           });
         });
         this.loading = false;
@@ -417,7 +418,7 @@
           }
           else {
             let _list = arr.classifyArr(data, 'ysdm');
-            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);console.log('_timeSlot %o',_timeSlot);
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.formOptions.visitTime.list);
             this.currentDocSchedule = this.formatData(_list,_timeSlot)[0];
             this.setDefaultInfo();
           }
@@ -472,6 +473,7 @@
       },
       //获取单次出班信息
       getSingleSchedule(i,j,item){
+        console.log('item',item);
         this.schedulingSelectIndex = [i,j];//更新所选格子
         this.form = arr.clone(item);
         this.form.cbrqlx = [this.form.cbrqlx];//处理多选出班日期
@@ -479,9 +481,8 @@
         this.form.money = this.getServiceMoney(this.form.fwlxdm);
         this.setForm(this.form);
         //根据明细获取号序列表
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q08", {mxxh:item.mxxh}).then(data => {
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q12", {mxxh:item.mxxh}).then(data => {
           this.ballList= data;
-          console.log('当前号序',this.ballList);
           this.ballList.sort((a,b) => a['hx']*1 > b['hx']*1)
             .map(item => {
               item.money = this.getServiceMoney(item.fwlxdm);
@@ -489,6 +490,7 @@
             });//号源升序,整合金额,整合样式
 
           this.ballToChannal();//根据号序列表更新渠道信息
+
         }).catch(err => {
           console.log(err);
         });
@@ -537,7 +539,7 @@
           hxmbList:'',
           money:0
         };
-        console.log('data',_data);
+        console.log('1',_data);
         this.ballList=[];
         this.channalList =  this.channalListFormat(arr.clone( this.$store.state.scheduling.channalList));
         this.setForm(_data);
@@ -548,11 +550,15 @@
         console.log('传过来的参数 %o',this.$store.state.scheduling.headofficePostList,this.$store.state.scheduling.plusWork);
         let newForm = arr.clone(form);
         newForm.cbrqList = newForm.cbrqlx.map(cbrqlx => this.formOptions.visitTime.list.find(visiTime => visiTime.val == cbrqlx).date);
-        newForm.sjddmList = newForm.sjddm.map(sjddm => ({
-          sjddm:sjddm,
-          kssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).kssj,
-          jssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).jssj
-        }));
+        newForm.cbzt='ZC';
+        newForm.sjddmList = [];
+        newForm.sjddm.map(sjddm => {
+          newForm.sjddmList.push({
+            sjddm:sjddm,
+            kssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).kssj,
+            jssj:this.formOptions.slotTime.list.find(item => item.sjddm == sjddm).jssj,
+          });
+        });
         newForm.userList = [{
           ksdm:newForm.ksdm,
           ksmc:this.formOptions.department.list.find(item => item.kstybm == newForm.ksdm).ksmc,
@@ -593,6 +599,10 @@
           strategy: 'isNonEmpty',
           errorMsg: '请选择服务类型'
         }]);
+        _validator.add(this.form.ballList, [{
+          strategy: 'isNonEmpty',
+          errorMsg: '请填写及生成号序'
+        }]);
         var errorMsg = _validator.start();
         return errorMsg;
       },
@@ -614,17 +624,10 @@
         let insert = this.formDataFormat(this.form);
         console.log('保存的数据',insert);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S04", { insert: insert,ifSkip:this.ifCover}).then(data => {
-          if(data){
-            if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
-              this.$message(data.BizErrorMessage);
-              return
-            }
-            else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
-              this.$message(data.BizErrorMessage);
+            if(data&&data.BizErrorCode =='HIS.APPOINTMENT.BE10006') {
               this.dialogVisible = true;
               return
             }
-          }
           else {
             this.$message('保存成功');
             this.isCover = false;
@@ -982,6 +985,15 @@
   .ordered > p {
     height: 20px;
     line-height: 20px;
+  }
+  .ordered>.abnormal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 10px solid red;
+    border-right: 10px solid transparent;
   }
   /*default,expert,disease,union,VIP*/
   .ordered.active{

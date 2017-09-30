@@ -1,6 +1,10 @@
 <template>
-  <div id="app">
+  <div>
+    <WHeader></WHeader>
+    <div class="content-warrper">
       <router-view></router-view>
+    </div>
+    <WFooter></WFooter>
   </div>
 </template>
 
@@ -8,16 +12,15 @@
   import WHeader from 'components/base/header/index'
   import WFooter from 'components/base/footer/index'
   export default {
-      name: 'app',
-      components: {
-        WHeader, WFooter
-      }
+    components: {
+      WHeader, WFooter
     }
+  }
 </script>
 
 <style>
-  @import './../static/css/reset.css';
-  @import './../static/font/iconfont.css';
+  @import '../../static/css/reset.css';
+  @import '../../static/font/iconfont.css';
   body {
     overflow-x: hidden;
     background-color: #f9f9f9;
@@ -45,9 +48,9 @@
   .pull-right{
     float: right;
   }
- .pull-width{
-   width: 100%;
- }
+  .pull-width{
+    width: 100%;
+  }
   .color-333{
     color: #333;
   }

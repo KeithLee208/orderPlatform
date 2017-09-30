@@ -599,17 +599,16 @@
         let insert = this.formDataFormat(this.form);
         console.log('保存的数据',insert)
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", { insert: insert,ifSkip:this.ifCover}).then(data => {
-          if(data){
-            if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
+            if(data&&data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
               this.$message(data.BizErrorMessage);
               return
             }
-            else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
+            else if(data&&data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
               this.$message(data.BizErrorMessage);
               this.dialogVisible = true;
               return
             }
-          }
+
           else {
             this.$message('保存成功');
             this.isCover = false;
@@ -628,7 +627,7 @@
           delete: [{
             mxxh: item.mxxh
           }],
-          ifCover: trueF
+          ifCover: true
         }).then(data => {
           console.log('data',data);
           if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
