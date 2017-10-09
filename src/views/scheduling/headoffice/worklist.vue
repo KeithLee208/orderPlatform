@@ -98,7 +98,7 @@
         this.settingForm.kssj=this.dateFormat(this.settingForm.kssj);
         this.settingForm.jssj=this.dateFormat(this.settingForm.jssj);
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S03", this.settingForm).then(data => {
-          console.log(data);
+          this.$message('设置出班成功');
         }).catch(err => {
           console.log(err);
         });

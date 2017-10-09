@@ -54,6 +54,11 @@ export default new Router({
   linkActiveClass: 'nav-active',
   routes: [
     {
+      path:'/login',
+      name:'login',
+      component:login
+    },
+    {
       path:'/',
       name:'LoginIndex',
       component:LoginIndex,

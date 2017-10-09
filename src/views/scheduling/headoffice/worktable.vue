@@ -84,7 +84,7 @@
                             <span>{{week.hxzs}}</span>
                           </p>
                         </div>
-                        <div class="fixed-footer" v-if="week.cbzt=='ZC'">
+                        <div class="fixed-footer" v-if="week.cbzt!=='TN'">
                           <el-button @click="handleTableAdjust(week)" type="text" size="small"
                                      class="el-button ">出班调整</el-button>
                           <el-button @click="recordVisible=true" type="text" size="small"
