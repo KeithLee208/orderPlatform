@@ -6,6 +6,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import login from './modules/login'
 import scheduling from './modules/scheduling'
+import order from './modules/order'
 import promise from 'es6-promise';
 promise.polyfill();
 Vue.use(Vuex);
@@ -13,6 +14,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     login,
-    scheduling
+    scheduling,
+    order
   }
 })
