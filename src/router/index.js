@@ -59,11 +59,6 @@ export default new Router({
       component:LoginIndex,
       children:[
         {
-          path:'/login',
-          name:'login',
-          component:login
-        },
-        {
           path: '/scheduling',
           name: 'scheduling',
           component: scheduling,
@@ -99,9 +94,9 @@ export default new Router({
       ]
     },
     {
-      path: '/order',
-      name: 'order',
-      component: order
+      path: '/login',
+      name: 'login',
+      component: login
     },
     {
       path: '/order/orderdetail',
