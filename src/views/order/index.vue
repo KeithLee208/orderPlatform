@@ -123,20 +123,20 @@
         </el-form>
       <div>
         <el-form :inline="true">
-          <el-form-item label="门诊类型">
-            <el-input size="small" placeholder=""></el-input>
-          </el-form-item>
           <el-form-item label="预约科室">
-            <el-select size="small" v-model="value" placeholder="">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            <el-select @change="departmentSelect" size="small" v-model="filterForm.departmentValue" placeholder="">
+              <el-option v-for="item in departmentList" :key="item.kstybm" :label="item.ksmc" :value="item.kstybm">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择医生">
-            <el-select size="small" v-model="value" placeholder="">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item  label="选择医生">
+            <el-select :disabled='filterForm.doctorDisable' size="small" v-model="filterForm.doctorValue" placeholder="">
+              <el-option v-for="item in doctorList" :key="item.zgtybm" :label="item.zgxm" :value="item.zgtybm">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="门诊类型">
+            <el-input disabled='filterForm.doctorDisable' size="small" placeholder=""></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -470,6 +470,15 @@
         moduleTimeList:[],
         list:[],//出班列表
         filterListFormatTable:[],//过滤出班列表表格形式
+        departmentList:[],//科室列表
+        doctorList:[],//科室列表
+        filterForm:{
+          departmentValue:'',
+          doctorValue:'',
+          doctorDisable:true,
+          typeValue:'',
+          typeDisable:true
+        },
         options: [
           {
             value: '选项1',
@@ -553,14 +562,56 @@
     },
     methods: {
       init(){
-        this.getDateNow();
-        this.getmModuleTime();
-        this.getTableList();
-        this.getTimeSlot();
+        this.getTimeSlot();//获取时间段
+        this.getDepartmentList(); //获取科室列表
+        this.getDateNow();//当前时间
+        this.getmModuleTime();//获取当前表格表头时间
+        this.getTableList();//获取出班表数据
+      },
+      departmentSelect(value){
+        this.getDoctorList(value).then(data => {
+          if(data==''){
+            this.doctorList=[];
+            this.filterForm.doctorValue='';
+            this.filterForm.doctorDisable=true;
+          }
+          let ordinary={
+             zgxm:'普通门诊',
+             zgtybm:'',
+             label:'普通门诊',
+             value:['','普通门诊',data[1].ksmc]
+            };
+          data.push(ordinary);
+          this.doctorList=data;
+          this.filterForm.doctorDisable=false;
+        })
       },
       //获取时间段列表
       getTimeSlot(){
         this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //获取科室列表
+      getDepartmentList(){
+        this.departmentList = this.$store.state.scheduling.departmentList;
+        console.log('this.departmentList',this.departmentList);
+//        this.departmentList.map(item => {
+//          item.label = item.ksmc;
+//          item.value = item.kstybm;
+//          this.$set(item, 'doctorList', []);
+//        });
+      },
+      //科室获取医生列表
+      getDoctorList(value){
+        return new Promise((resolve, reject) => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
+            kstybm: value,
+            yydm:this.$store.state.login.userInfo.yydm
+          }).then(data => {
+            resolve(data);
+          }).catch(err => {
+            console.log(err);
+          });
+        })
       },
       //获取当前日期
       getDateNow(){
