@@ -124,19 +124,22 @@
       <div>
         <el-form :inline="true">
           <el-form-item label="预约科室">
-            <el-select @change="departmentSelect" size="small" v-model="filterForm.departmentValue" placeholder="">
+            <el-select @change="departmentSelect" filterable size="small" v-model="filterForm.departmentValue" placeholder="">
               <el-option v-for="item in departmentList" :key="item.kstybm" :label="item.ksmc" :value="item.kstybm">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item  label="选择医生">
-            <el-select :disabled='filterForm.doctorDisable' size="small" v-model="filterForm.doctorValue" placeholder="">
+            <el-select @change="doctorSelect" filterable :disabled='filterForm.doctorDisable' size="small" v-model="filterForm.doctorValue" placeholder="">
               <el-option v-for="item in doctorList" :key="item.zgtybm" :label="item.zgxm" :value="item.zgtybm">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="门诊类型">
-            <el-input disabled='filterForm.doctorDisable' size="small" placeholder=""></el-input>
+            <el-select @change="typeSelect" :disabled='filterForm.typeDisable' size="small" v-model="filterForm.typeValue" placeholder="">
+              <el-option v-for="item in serviceTypeList" :key="item.fwlxdm" :label="item.fwlxmc" :value="item.fwlxdm">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -469,9 +472,12 @@
         btntext: '展开',
         moduleTimeList:[],
         list:[],//出班列表
+        ListFormatTable:[],//筛选前的表格
+        ListDoctorTable:[],//选择医生后的表格
         filterListFormatTable:[],//过滤出班列表表格形式
         departmentList:[],//科室列表
         doctorList:[],//科室列表
+        serviceTypeList:[],//服务类型列表
         filterForm:{
           departmentValue:'',
           doctorValue:'',
@@ -568,23 +574,70 @@
         this.getmModuleTime();//获取当前表格表头时间
         this.getTableList();//获取出班表数据
       },
+      //获取服务类型
+      getServiceList(){
+        this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+        console.log('this.serviceTypeList',this.serviceTypeList);
+
+      },
+      //科室下拉值改变触发
       departmentSelect(value){
+        this.$store.commit('order/SET_DEPARTMENTVALUE', value);
+        this. getTableList();
         this.getDoctorList(value).then(data => {
           if(data==''){
             this.doctorList=[];
             this.filterForm.doctorValue='';
-            this.filterForm.doctorDisable=true;
           }
           let ordinary={
              zgxm:'普通门诊',
              zgtybm:'',
              label:'普通门诊',
-             value:['','普通门诊',data[1].ksmc]
             };
           data.push(ordinary);
           this.doctorList=data;
+          this.filterForm.typeValue='';
+          this.filterForm.typeDisable=true;
           this.filterForm.doctorDisable=false;
+        });
+        this.getServiceList();
+      },
+      //医生下拉值改变触发
+      doctorSelect(value){
+        let listArr=arr.clone(this.ListFormatTable);
+        let newArr=[];
+        listArr.map(item=>{
+          if(item.name==value){
+            newArr.push(item);
+          }
         })
+        if (newArr=='')
+        {
+          this.$message('当前时间段无此医生出班信息')
+          this.filterForm.typeDisable=true;
+          return
+        }
+        else{
+          this.filterListFormatTable=newArr;
+          this.ListDoctorTable=newArr;
+          this.filterForm.typeDisable=false;
+        }
+      },
+      //门诊类型下拉值改变触发
+      typeSelect(value){
+        let listArr=arr.clone(this.ListDoctorTable);
+        listArr.map(item=>{
+         item.slot.map(item2=>{
+          item2.weekday.map(item3=>{
+            console.log(item3.fwlxdm, value);
+            if(item3.fwlxdm!==value){
+                item3.fwlxdm='';
+            }
+          })
+         })
+        })
+//        console.log(listArr);return
+        this.filterListFormatTable=listArr;
       },
       //获取时间段列表
       getTimeSlot(){
@@ -593,7 +646,6 @@
       //获取科室列表
       getDepartmentList(){
         this.departmentList = this.$store.state.scheduling.departmentList;
-        console.log('this.departmentList',this.departmentList);
 //        this.departmentList.map(item => {
 //          item.label = item.ksmc;
 //          item.value = item.kstybm;
@@ -697,11 +749,12 @@
       getTableList(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
           ksrq: this.dateFormat(new Date(this.$store.state.order.orderTable.startTime)),
-          ksdmList: [this.$store.state.login.userInfo.ksdm],
+          ksdmList: [this.$store.state.order.departmentValue],
           jsrq: this.dateFormat(new Date(this.$store.state.order.orderTable.endTime))}).then(data => {
           this.list = data;
           let _list = arr.classifyArr(this.list, 'ysdm');
           let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeList);
+          this.ListFormatTable=this.formatData(_list,_timeSlot);
           this.filterListFormatTable = this.formatData(_list,_timeSlot);
           this.allTypeList=arr.clone(this.filterListFormatTable);
           this.loading = false;
@@ -972,7 +1025,7 @@
     width: 60px;
     height: 60px;
     float: left;
-    margin: 10px 0px;
+    margin: 60px 0px;
     background: url('../../../static/img/man.png') center center no-repeat;
   }
 
@@ -981,6 +1034,7 @@
     width: 100px;
     height: 166px;
     text-align: center;
+    margin: 45px 0px;
     padding: 70px 0;
     box-sizing: border-box;
   }
@@ -1053,8 +1107,8 @@
   }
 
   .ordered > p {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
   }
   /*default,expert,disease,union,VIP*/
 
