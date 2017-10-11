@@ -826,7 +826,6 @@
           wb:this.addForm.wb,
           fscj:this.addForm.fscj
         }
-        console.log('param',param);
         this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y07", param).then(data => {
           console.log(data);return;
           if(data==''){

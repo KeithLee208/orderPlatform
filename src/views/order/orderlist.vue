@@ -73,64 +73,6 @@
         <span class="cancel"><i></i>已取消</span>
       </div>
       <div class="order-table">
-        <!--<el-table-->
-          <!--:data="tableData"-->
-          <!--style="width: 100%">-->
-          <!--<el-table-column-->
-            <!--prop="name"-->
-            <!--label="患者姓名"-->
- <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="num"-->
-            <!--label="卡号"-->
-            <!--class-name="abe2"-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="type"-->
-
-            <!--label="服务类型">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="channel"-->
-
-            <!--label="预约渠道">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-
-            <!--prop="hospital"-->
-            <!--label="预约医院">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="department"-->
-            <!--label="预约科室">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="doctor"-->
-            <!--width="85"-->
-            <!--label="预约医生">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="time1"-->
-            <!--width="110"-->
-            <!--label="预约时间">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--prop="state"-->
-            <!--label="预约状态">-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-            <!--label="操作">-->
-            <!--<template scope="scope">-->
-              <!--<div>-->
-                <!--<i class="icon iconfont icon-shanchu"></i>-->
-                <!--<i class="icon iconfont icon-dayin"></i>-->
-                <!--<i class="icon iconfont icon-jiazai"></i>-->
-              <!--</div>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
         <table class="table textalign-c" style="width: 100%;">
           <thead>
           <tr class="even">
@@ -147,51 +89,24 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>张云云</td>
-            <td>3343669984</td>
-            <td>普通门诊</td>
-            <td>院内预约</td>
-            <td>静中心东院区</td>
-            <td>胸外科1</td>
-            <td>李芸芸</td>
+          <tr v-for="item in orderlist">
+            <td>{{item.bingRenXinXiEntity.hzxm}}</td>
+            <td>{{item.bingRenXinXiEntity.hzsfzh}}</td>
+            <td>{{item.fuWuLeiXingEntity.fwlxmc}}</td>
+            <td>{{item.microRegistrationChuBanMingXiHaoXuEntity.qddm}}</td>
+            <td>{{item.bingRenXinXiEntity.yydm}}</td>
+            <td>{{item.microChuBanMingXiEntity.ksdm}}</td>
+            <td>{{item.microChuBanMingXiEntity.ysmc}}</td>
             <td>
-              <p>2017/05/03</p>
-              <p>上午8:00-12:00</p>
+              <p>{{item.microChuBanMingXiEntity.cbrq}}</p>
+              <p>{{item.microChuBanMingXiEntity.shiJianDuanEntity.sjdmc}}{{item.microChuBanMingXiEntity.shiJianDuanEntity.kssj}}-{{item.microChuBanMingXiEntity.shiJianDuanEntity.jssj}}</p>
             </td>
             <td>
-              <span class="allcan">待挂号</span>
-            </td>
-            <td>
-              <el-tooltip class="item" effect="dark" content="取消" placement="bottom">
-                <i @click="cancelShow=true" class="icon iconfont icon-shanchu"></i>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
-                <i class="icon iconfont icon-jiazai"></i>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="打印" placement="bottom">
-                <i class="icon iconfont icon-dayin"></i>
-              </el-tooltip>
-            </td>
-          </tr>
-          <tr>
-            <td>张云云</td>
-            <td>3343669984</td>
-            <td>普通门诊</td>
-            <td>院内预约</td>
-            <td>静中心东院区</td>
-            <td>胸外科1</td>
-            <td>李芸芸</td>
-            <td>
-              <p>2017/05/03</p>
-              <p>上午8:00-12:00</p>
-            </td>
-            <td>
-              <span class="cant">待挂号 </span>
+              <span v-if="item.yyjd=='DJ'" class="allcan">待挂号</span>
             </td>
             <td>
               <el-tooltip class="item" effect="dark" content="取消" placement="bottom">
-                <i class="icon iconfont icon-shanchu"></i>
+                <i @click="orderCancel(item)" class="icon iconfont icon-shanchu"></i>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
                 <i class="icon iconfont icon-jiazai"></i>
@@ -209,8 +124,8 @@
     <el-dialog title="取消预约" :visible.sync="cancelShow" size="small">
       <div class="time-wrapper">
         <div class="user-info">
-          <span>姓名：张文文</span>
-          <span>卡号：3343669984</span>
+          <span>姓名：{{selectOrder.bingRenXinXiEntity.hzxm}}</span>
+          <span>卡号：{{selectOrder.bingRenXinXiEntity.hzsfzh}}</span>
         </div>
         <div class="time-line">
           <div class="time-left">
@@ -327,10 +242,226 @@
             time:'2017/05/03 上午8:00-12:00',
             state:'待挂号'
         }
-        ]
+        ],
+        orderlist:  [
+          {
+            bingRenXinXiEntity: {
+              czry: "00",
+              fscj: "",
+              hzcsrq: "",
+              hzdm: "00001",
+              hzsfzh: "112365888",
+              hzxb: "男",
+              hzxm: "三毛",
+              jhrsfzh: "88559966",
+              lrsj: "2017080615:30:00",
+              lxdh: "133",
+              lxdz: "我让你二",
+              py: "SS",
+              wb: "SS",
+              yxzt: "YX",
+              yydm: "001"
+            },
+            czry: "00",
+            fscj: "",
+            fuWuLeiXingEntity: {
+              czry: "00",
+              fscj: "",
+              fwlxdm: "002",
+              fwlxmc: "专家1",
+              ghfdm: "001",
+              lrsj: "2017083011:16:00",
+              mzlx: "003",
+              yxzt: "YX",
+              yydm: "001",
+              zlfdm: "002"
+            },
+            lrrq: "2017083011:13:00",
+            microChuBanMingXiEntity: {
+              cbrq: "2017083011:16:00",
+              cbzt: "ZC",
+              czdz: "22楼E区",
+              czry: "00",
+              feiYongMingXiEntityList: [
+                {
+                  czry: "00",
+                  dj: "21",
+                  fscj: "",
+                  fylb: "01",
+                  lrsj: "2017083011:16:00",
+                  mxmc: "挂号费",
+                  mxxh: "001",
+                  py: "YYT",
+                  wb: "YYT",
+                  yxzt: "YX",
+                  yydm: "001"
+                },
+                {
+                  czry: "00",
+                  dj: "20",
+                  fscj: "",
+                  fylb: "01",
+                  lrsj: "2017083011:16:00",
+                  mxmc: "诊疗费",
+                  mxxh: "001",
+                  py: "YYT",
+                  wb: "YYT",
+                  yxzt: "YX",
+                  yydm: "001"
+                }
+              ],
+              fscj: "",
+              fuWuLeiXingEntity: {
+                czry: "00",
+                fscj: "",
+                fwlxdm: "002",
+                fwlxmc: "专家1",
+                ghfdm: "001",
+                lrsj: "2017083011:16:00",
+                mzlx: "003",
+                yxzt: "YX",
+                yydm: "001",
+                zlfdm: "002"
+              },
+              ghfdm: "001",
+              hxzs: "50",
+              jssj: "23:00",
+              ksdm: "001",
+              ksmc: "随便科",
+              kssj: "19:00",
+              lrsj: "2017083011:16:00",
+              mbdm: "01",
+              microChuBanMingXiHaoXuEntityList: [
+                {
+                  czry: "00",
+                  dj: "41",
+                  fscj: "",
+                  fwlxdm: "001",
+                  ghfdm: "001",
+                  hx: 1,
+                  hxly: "01",
+                  hxzt: "DJ",
+                  lrsj: "2017083011:16:00",
+                  mbdm: "001",
+                  mxxh: "12306",
+                  qddm: "01",
+                  xh: 1,
+                  yxzt: "YX",
+                  zlfdm: "002",
+                  zydm: "001"
+                }
+              ],
+              mxxh: "12307",
+              shiJianDuanEntity: {
+                czry: "00",
+                fscj: "",
+                jssj: "23:00",
+                kssj: "19:00",
+                lrsj: "2017083011:16:00",
+                sjddm: "003",
+                sjdmc: "晚上",
+                sysj: "20:00",
+                yxzt: "YX",
+                yydm: "001"
+              },
+              syhxs: "49",
+              ysdm: "002",
+              ysmc: "大医生",
+              ysyhxs: "1",
+              yxzt: "YX",
+              yydm: "001",
+              zbxh: "001",
+              zhuanBingEntityList: [
+                {
+                  czry: "00",
+                  fscj: "",
+                  lrsj: "2017083011:16:00",
+                  yxzt: "YX",
+                  yydm: "001",
+                  zydm: "002",
+                  zymc: "呼呼"
+                },
+                {
+                  czry: "00",
+                  fscj: "",
+                  lrsj: "2017083011:16:00",
+                  yxzt: "YX",
+                  yydm: "001",
+                  zydm: "0005",
+                  zymc: "哈哈哈"
+                }
+              ],
+              zlfdm: "002"
+            },
+            microRegistrationChuBanMingXiHaoXuEntity: {
+              czry: "00",
+              dj: "41",
+              fscj: "",
+              fwlxdm: "001",
+              ghfdm: "001",
+              hx: "1",
+              hxly: "01",
+              hxzt: "DJ",
+              lrsj: "2017083019:00:00",
+              mbdm: "001",
+              mxxh: "001",
+              qddm: "01",
+              xh: "1",
+              yxzt: "YX",
+              zlfdm: "002",
+              zydm: "001"
+            },
+            qrrq: "",
+            shiJianDuanEntity: {
+              czry: "00",
+              fscj: "",
+              jssj: "23:00",
+              kssj: "19:00",
+              lrsj: "2017083011:16:00",
+              sjddm: "003",
+              sjdmc: "晚上",
+              sysj: "20:00",
+              yxzt: "YX",
+              yydm: "001"
+            },
+            xh: "12306",
+            yxzt: "YX",
+            yydm: "001",
+            yyjd: "DJ",
+            yyxh: "1"
+          }
+        ],
+        selectOrder:{bingRenXinXiEntity:{}}
       }
     },
     methods:{
+      orderInquiry(){
+        let param={
+          fwlxdm:'',
+          ghsj:'',
+          hzdm:'',
+          ksdm:'',
+          qddm:'',
+          ysdm:'',
+          yydm:'',
+          yyrq:''
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Q07", param).then(data => {
+          console.log(data);return;
+          if(data==''){
+
+          }else {
+
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      orderCancel(item){
+        console.log(item);
+        this.cancelShow=true;
+        this.selectOrder=item;
+      },
       collapse(){
         if(this.btntext=='展开'){
           this.detailShow=true;
