@@ -11,7 +11,19 @@
 <script>
   import WHeader from 'components/base/header/index'
   import WFooter from 'components/base/footer/index'
+  import axios from "axios";
   export default {
+    created(){
+      this.$nextTick(() => {
+          this.init();
+      })
+    },
+    methods:{
+      init(){
+        this.$store.commit('login/SET_USERINFO',this.$wnstorage.get('userInfo'));
+        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}); //获取字典数据
+      },
+    },
     components: {
       WHeader, WFooter
     }

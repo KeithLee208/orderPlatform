@@ -123,20 +123,20 @@
         </el-form>
       <div>
         <el-form :inline="true">
-          <el-form-item label="门诊类型">
-            <el-input size="small" placeholder=""></el-input>
-          </el-form-item>
           <el-form-item label="预约科室">
-            <el-select size="small" v-model="value" placeholder="">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            <el-select @change="departmentSelect" size="small" v-model="filterForm.departmentValue" placeholder="">
+              <el-option v-for="item in departmentList" :key="item.kstybm" :label="item.ksmc" :value="item.kstybm">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择医生">
-            <el-select size="small" v-model="value" placeholder="">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          <el-form-item  label="选择医生">
+            <el-select :disabled='filterForm.doctorDisable' size="small" v-model="filterForm.doctorValue" placeholder="">
+              <el-option v-for="item in doctorList" :key="item.zgtybm" :label="item.zgxm" :value="item.zgtybm">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="门诊类型">
+            <el-input disabled='filterForm.doctorDisable' size="small" placeholder=""></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -150,56 +150,34 @@
         <span class="cant"><i></i>预约已满</span>
       </div>
       <div class="table-time">
-        <div class="btn-left">
+        <div  class="btn-left" @click="pageleft">
           <i class="icon iconfont icon-xiangzuo"></i>
         </div>
-        <div class="btn-right">
+        <div class="btn-right" @click="pageright">
           <i class="icon iconfont icon-xiangzuo"></i>
         </div>
-                <span>
-            <p class="day">周一</p>
-            <p class="date">05/01 劳动节</p>
-          </span>
-                <span>
-           <p class="day today">周二</p>
-           <p class="date today">05/02 今天</p>
-          </span>
-                <span>
-             <p class="day">周三</p>
-             <p class="date">05/03</p>
-          </span>
-                <span>
-            <p class="day">周四</p>
-            <p class="date">05/04</p>
-          </span>
-                <span>
-             <p class="day">周五</p>
-             <p class="date">05/05</p>
-          </span>
-                <span>
-             <p class="day">周六</p>
-             <p class="date">05/06</p>
-          </span>
-                <span>
-             <p class="day">周日</p>
-             <p class="date">05/07 XXX节</p>
+        <span></span>
+        <span v-for="item in moduleTimeList">
+            <p class="day">{{item.week}}</p>
+            <p class="date">{{item.date}}</p>
           </span>
       </div>
-      <div class="AdTable">
+      <div v-for="item in filterListFormatTable" class="AdTable">
         <div class="AdTableLeft">
           <div>
             <i></i>
             <p>
-              <span class="name">主治医师</span>
-              <span class="position">张文</span>
+              <span class="name">{{item.ysmc}}</span>
+              <span v-if="item.ysmc!=='普通门诊'" class="position">主治医师</span>
             </p>
           </div>
         </div>
         <div class="AdTableRight">
           <div class="table-body">
-            <div class="border-top-1">
-            <span>
-             <el-popover :open-delay="500" placement="right" width="250" trigger="hover">
+            <div v-for="(slot,index) in item.slot" :class="[index ===0 ? 'border-top-1':'']">
+              <span>{{slot.sjdmc}}</span>
+              <span v-for="week in slot.weekday">
+             <el-popover :open-delay="500" v-if="week.fwlxdm" placement="right" width="250" trigger="hover">
                 <div class="fixed-info">
                     <div class="fixed-body">
                         <div class="fixed-title">出班信息1</div>
@@ -280,113 +258,38 @@
                           <div class="fixed-line"></div>
                     </div>
                   </div>
-                <div slot="reference" class="ordered cant">
-                      <p>上午</p>
-                      <p>20元｜已约2/46</p>
-             </div>
+                        <div slot="reference" class="ordered" :class="[week.mzlx]">
+                          <p>{{week.kssj}}-{{week.jssj}}</p>
+                          <p>{{week.ksmc}}</p>
+                        </div>
              </el-popover>
             </span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
            </div>
          </div>
           </div>
        </div>
     </div>
-  <el-dialog title="患者信息登记" :visible.sync="AddVisible" size="large">
-        <span>
-              <el-form :inline="true" label-width="100px" class="demo-form-inline">
-                 <el-row>
-                <el-col :span="8">
+  <el-dialog title="患者信息登记" :visible.sync="AddVisible" size="tiny">
+              <el-form  label-width="100px" style="width: 95%">
                   <el-form-item label="姓名：">
-                    <el-input placeholder="请输入姓名"></el-input>
+                    <el-input v-model="addForm.hzxm" placeholder="请输入姓名"></el-input>
                   </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="身份证号：">
-                     <el-input placeholder="请输入身份证号"></el-input>
+                  <el-form-item  label="身份证号：">
+                     <el-input v-model="addForm.hzsfzh" placeholder="请输入身份证号"></el-input>
                   </el-form-item>
-                </el-col>
-                <el-col :span="8">
                   <el-form-item label="联系电话：">
-                     <el-input  placeholder="请输入联系电话"></el-input>
+                     <el-input v-model="addForm.lxdh" placeholder="请输入联系电话"></el-input>
                   </el-form-item>
-                </el-col>
-              </el-row>
-                 <el-row>
-                <el-col :span="8">
                   <el-form-item label="性别：">
-                    <el-input  placeholder="请输入性别"></el-input>
+                    <el-input v-model="addForm.hzxb" placeholder="请输入性别"></el-input>
                   </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="婚姻状况：">
-                     <el-input placeholder="请输入费用列别"></el-input>
+                  <el-form-item  label="联系地址：">
+                    <el-input v-model="addForm.lxdz"  placeholder="联系地址"></el-input>
                   </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="初复诊：">
-                     <el-input  placeholder="请输入初复诊"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-                 <el-row>
-                <el-col :span="8">
-                  <el-form-item label="联系地址：">
-                    <el-input  placeholder="请输入民族"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="费用类别：">
-                     <el-input  placeholder="请输入联系地址"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="患者职业：">
-                     <el-input  placeholder="请输入患者职业"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-                 <el-row>
-                <el-col :span="8">
-                  <el-form-item label="民族：">
-                    <el-input  placeholder="请输入婚姻状况"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-                 <el-row>
-                  <el-col :span="8">
-                  <el-form-item label="户口地|省：">
-                    <el-input  placeholder="请输入户口所在地"></el-input>
-                  </el-form-item>
-                </el-col>
-                  <el-col :span="16">
-                  <el-form-item label="详细地址：">
-                    <el-input class="width-469" placeholder="请输入详细地址"></el-input>
-                  </el-form-item>
-                </el-col>
-                </el-row>
-                 <el-row>
-                  <el-col :span="8">
-                  <el-form-item label="居住地|省：">
-                    <el-input  placeholder="请输入居住地址"></el-input>
-                  </el-form-item>
-                </el-col>
-                  <el-col :span="16">
-                  <el-form-item label="详细地址：">
-                    <el-input  class="width-469"  placeholder="请输入详细地址"></el-input>
-                  </el-form-item>
-                </el-col>
-                </el-row>
              </el-form>
-            </span>
         <span slot="footer" class="dialog-footer">
                 <el-button @click="AddVisible = false">取 消</el-button>
-                <el-button type="primary" @click="PrintVisible = false">保存</el-button>
+                <el-button type="primary" @click="addInfo">保存</el-button>
               </span>
 
   </el-dialog>
@@ -556,12 +459,26 @@
 </template>
 
 <script>
+  import * as arr from 'filters/array.js'
+  import * as time from 'filters/time.js'
   export default {
     data() {
       return {
         detailShow: false,
         plusshow: false,
         btntext: '展开',
+        moduleTimeList:[],
+        list:[],//出班列表
+        filterListFormatTable:[],//过滤出班列表表格形式
+        departmentList:[],//科室列表
+        doctorList:[],//科室列表
+        filterForm:{
+          departmentValue:'',
+          doctorValue:'',
+          doctorDisable:true,
+          typeValue:'',
+          typeDisable:true
+        },
         options: [
           {
             value: '选项1',
@@ -580,6 +497,21 @@
             label: '341282198912250777'
           }],
         value: '',
+        addForm:{
+          hzdm:"",
+          hzxm:"嘟嘟卖萌",
+          hzsfzh:"622226198608252025",
+          hzxb:"男",
+          hzcsrq:"20100101",
+          lxdh:"159",
+          jhrsfzh:"622226198608252025",
+          lxdz:"蜀山区",
+          yydm:this.$store.state.login.userInfo.yydm,
+          yxzt:"YX",
+          py:"hhh",
+          wb:"hhh",
+          fscj:""
+        },
         AddVisible: false,
         ListVisible: false,
         PrintVisible: false,
@@ -604,7 +536,258 @@
         num6: 1
       }
     },
+    computed:{
+      moduleTimeListSelect(){
+        return this.moduleTimeList.slice(7*this.moduleTimeListPage,7*(this.moduleTimeListPage+1));
+      },
+      filterList(){
+        if(!this.fwlxdm)return this.list;
+        return this.list.filter(item => item.fwlxdm == this.fwlxdm)
+      }
+    },
+    watch:{
+      moduleTimeListPage:
+        {
+          handler(curVal){
+            let _list = arr.classifyArr(this.filterList, 'ysdm');
+            let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeListSelect);
+            this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          }
+        }
+    },
+    created(){
+      this.$nextTick(() => {
+        this.init();
+      });
+    },
     methods: {
+      init(){
+        this.getTimeSlot();//获取时间段
+        this.getDepartmentList(); //获取科室列表
+        this.getDateNow();//当前时间
+        this.getmModuleTime();//获取当前表格表头时间
+        this.getTableList();//获取出班表数据
+      },
+      departmentSelect(value){
+        this.getDoctorList(value).then(data => {
+          if(data==''){
+            this.doctorList=[];
+            this.filterForm.doctorValue='';
+            this.filterForm.doctorDisable=true;
+          }
+          let ordinary={
+             zgxm:'普通门诊',
+             zgtybm:'',
+             label:'普通门诊',
+             value:['','普通门诊',data[1].ksmc]
+            };
+          data.push(ordinary);
+          this.doctorList=data;
+          this.filterForm.doctorDisable=false;
+        })
+      },
+      //获取时间段列表
+      getTimeSlot(){
+        this.timeSlot = this.$store.state.scheduling.timeSlotList;
+      },
+      //获取科室列表
+      getDepartmentList(){
+        this.departmentList = this.$store.state.scheduling.departmentList;
+        console.log('this.departmentList',this.departmentList);
+//        this.departmentList.map(item => {
+//          item.label = item.ksmc;
+//          item.value = item.kstybm;
+//          this.$set(item, 'doctorList', []);
+//        });
+      },
+      //科室获取医生列表
+      getDoctorList(value){
+        return new Promise((resolve, reject) => {
+          this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
+            kstybm: value,
+            yydm:this.$store.state.login.userInfo.yydm
+          }).then(data => {
+            resolve(data);
+          }).catch(err => {
+            console.log(err);
+          });
+        })
+      },
+      //获取当前日期
+      getDateNow(){
+        let datenow=new Date(Date.now()).getTime();
+        let daynow=new Date(datenow).getDay();
+        let startTime='';
+        let endTime='';
+        let day=1000*60*60*24;
+        switch (daynow){
+          case 1:
+            startTime=datenow;
+            endTime=datenow+day*6;
+            break;
+          case 2:
+            startTime=datenow-day*1;
+            endTime=datenow+day*5;
+            break;
+          case 3:
+            startTime=datenow-day*2;
+            endTime=datenow+day*4;
+            break;
+          case 4:
+            startTime=datenow-day*3;
+            endTime=datenow+day*3;
+            break;
+          case 5:
+            startTime=datenow-day*4;
+            endTime=datenow+day*2;
+            break;
+          case 6:
+            startTime=datenow-day*5;
+            endTime=datenow+day*1;
+            break;
+          case 0:
+            startTime=datenow-day*6;
+            endTime=datenow;
+            break;
+        }
+        this.$store.commit('order/SET_ORDERTABLETIME', {
+          startTime:startTime,
+          endTime:endTime
+        });
+      },
+      //时间转换
+      dateFormat(date){
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? '0' + m : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y + '-' + m + '-' + d;
+      },
+      //获取出班时间
+      getmModuleTime(){
+        let startTime=this.$store.state.order.orderTable.startTime;
+        let endTime=this.$store.state.order.orderTable.endTime;
+        let weekArr = [];
+        for(let i = 0;i<=6;i++)weekArr.push(new Date(startTime + 1000*60*60*24*i).getDay());
+        weekArr = weekArr.map((item,index) => ({
+          date:time.timeFormat(new Date(startTime + 1000*60*60*24*index)),
+          week:"星期" + "日一二三四五六".charAt(item)
+        }));
+        this.moduleTimeList =weekArr;},
+      pageleft(){
+        this.$store.commit('order/SET_ORDERTABLETIME', {
+          startTime:this.$store.state.order.orderTable.startTime-1000*60*60*24*7,
+          endTime:this.$store.state.order.orderTable.endTime-1000*60*60*24*7
+        });
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
+      },
+      pageright(){
+        this.$store.commit('order/SET_ORDERTABLETIME', {
+          startTime:this.$store.state.order.orderTable.startTime+1000*60*60*24*7,
+          endTime:this.$store.state.order.orderTable.endTime+1000*60*60*24*7
+        });
+        this.serviceTypeIndex=-1;//还原服务类型筛选
+        this.getmModuleTime();//设置新的开始结束时间
+        this.getTableList();//请求出班表数据
+      },
+      //获取出报表数据
+      getTableList(){
+        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q09", {
+          ksrq: this.dateFormat(new Date(this.$store.state.order.orderTable.startTime)),
+          ksdmList: [this.$store.state.login.userInfo.ksdm],
+          jsrq: this.dateFormat(new Date(this.$store.state.order.orderTable.endTime))}).then(data => {
+          this.list = data;
+          let _list = arr.classifyArr(this.list, 'ysdm');
+          let _timeSlot = this.formatTimeSlot(this.timeSlot,this.moduleTimeList);
+          this.filterListFormatTable = this.formatData(_list,_timeSlot);
+          this.allTypeList=arr.clone(this.filterListFormatTable);
+          this.loading = false;
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      formatTimeSlot(timeSlot,moduleTimeListSelect){
+        let _timeSlot = arr.clone(timeSlot);
+        let _moduleTimeListSelect = arr.clone(moduleTimeListSelect);
+        _timeSlot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:_moduleTimeListSelect[0].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[0].date},
+            {cbrqlx:_moduleTimeListSelect[1].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[1].date},
+            {cbrqlx:_moduleTimeListSelect[2].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[2].date},
+            {cbrqlx:_moduleTimeListSelect[3].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[3].date},
+            {cbrqlx:_moduleTimeListSelect[4].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[4].date},
+            {cbrqlx:_moduleTimeListSelect[5].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[5].date},
+            {cbrqlx:_moduleTimeListSelect[6].week,sjddm:slot.sjddm,cbrq:_moduleTimeListSelect[6].date}
+          ];
+        });
+        return _timeSlot;
+      },
+      //数据处理
+      formatData(list,timeSlot){
+        //医生→时间段→日期
+        let newArr = list;
+        let normalTypeData = [{
+          ysmc:"普通门诊",
+          name:"",
+          slot:arr.clone(timeSlot)
+        }];
+        let flag = true;
+        if(!newArr.length){
+          return normalTypeData;
+        }
+        newArr.map(item => {
+          if(!item.name) flag = false;
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+            let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm && child.ysdm == item.name);
+            weekTemp.map(week => {
+              item.ysmc = week.ysmc;
+              if(week.sjddm != slot.sjddm)return;
+              let _day = slot.weekday.filter(weekday => weekday.cbrq == week.cbrq).length ?
+                slot.weekday.filter(weekday => weekday.cbrq == week.cbrq)[0]:{};
+              Object.assign(_day,week);
+            })
+          })
+        });
+        if(flag) {
+          newArr = normalTypeData.concat(newArr);
+        }
+        return newArr;
+      },
+      addInfo(){
+        let param={
+          hzdm:this.addForm.hzdm,
+          hzxm:this.addForm.hzxm,
+          hzsfzh:this.addForm.hzsfzh,
+          hzxb:this.addForm.hzxb,
+          hzcsrq:this.addForm.hzcsrq,
+          lxdh:this.addForm.lxdh,
+          jhrsfzh:this.addForm.jhrsfzh,
+          lxdz:this.addForm.lxdz,
+          yydm:this.addForm.yydm,
+          yxzt:this.addForm.yxzt,
+          py:this.addForm.py,
+          wb:this.addForm.wb,
+          fscj:this.addForm.fscj
+        }
+        console.log('param',param);
+        this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y07", param).then(data => {
+          console.log(data);return;
+          if(data==''){
+            this.TpCard='';
+            this.$message('暂无模板列表数据');
+            this.loading=false;
+          }else {
+            this.TpCard = data;
+            this.loading=false;
+          }
+        }).catch(err => {
+
+        });
+      },
       collapse() {
         if (this.btntext == '展开') {
           this.detailShow = true;
@@ -704,7 +887,6 @@
     display: inline-block;
     width: 100%;
   }
-
   .table-time {
     display: inline-block;
     width: 100%;
@@ -731,33 +913,24 @@
   }
 
   .table-time > span {
-    width: 14.285%;
-    height: 55px;
-    padding: 5px 0;
+    width: 12.5%;
+    height: 45px;
+    line-height: 45px;
     float: left;
     font-size: 14px;
     text-align: center;
     box-sizing: border-box;
-    margin: 10px 0 0;
   }
-
-  .table-time > span>p {
+  .table-time > span>p{
     height: 23px;
     line-height: 23px;
   }
-
-  .table-time > span>p.day {
+  .table-time > span>p.day{
     font-weight: bold;
   }
-
-  .table-time > span>p.date {
-    color: #999;
-  }
-
-  .table-time > span>p.today {
+  .table-time > span>p.today{
     color: rgb(32, 160, 255);
   }
-
   .AdTable > .AdTableLeft,
   .AdTable > .AdTableRight {
     box-sizing: border-box;
@@ -766,13 +939,12 @@
 
   .AdTable > .AdTableLeft {
     width: 160px;
-    height: 80px;
+    height: 166px;
     position: absolute;
     left: 0;
   }
 
   .AdTable > .AdTableRight {
-    height: 80px;
     width: 100%;
     padding-left: 160px;
     box-sizing: border-box;
@@ -786,14 +958,14 @@
 
   .AdTable {
     position: relative;
+    margin: 0 0 10px 0;
     display: inline-block;
     width: 100%;
-    float: left;
   }
 
   .AdTableLeft > div {
-    height: 80px;
-    line-height: 80px;
+    height: 166px;
+    line-height: 166px;
   }
 
   .AdTableLeft > div > i {
@@ -804,12 +976,31 @@
     background: url('../../../static/img/man.png') center center no-repeat;
   }
 
+  .AdTableLeft > div > p {
+    float: left;
+    width: 100px;
+    height: 166px;
+    text-align: center;
+    padding: 70px 0;
+    box-sizing: border-box;
+  }
+
   .AdTableLeft > div > p > span {
     height: 20px;
     line-height: 20px;
     width: 100px;
     display: inline-block;
     float: left;
+  }
+
+  .AdTableLeft > div > p > .name {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .AdTableLeft > div > p > .position {
+    color: #999;
   }
 
   .table-body > div {
@@ -823,14 +1014,14 @@
   }
 
   .table-body > div > span {
-    width: 14.285%;
-    height: 80px;
-    line-height: 80px;
+    width: 12.5%;
+    height: 60px;
+    line-height: 60px;
     float: left;
     text-align: center;
+    box-sizing: border-box;
     border-left: 1px solid #D4DEED;
     border-bottom: 1px solid #D4DEED;
-    box-sizing: border-box;
   }
 
   .AdTableLeft > div > p {

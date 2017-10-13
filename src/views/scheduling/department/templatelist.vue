@@ -3,7 +3,7 @@
     <div v-if="TpCard" v-loading="loading" element-loading-text="拼命加载中" class="page-main">
       <router-link to="/scheduling/Department/tptable"
                    exact tag="span">
-      <tpcard @click.native="handleLinkTo(num)" v-for="num in TpCard" :card="num">
+      <tpcard @click.native="handleLinkTo(card)" v-for="card in TpCard" :card="card">
       </tpcard>
       </router-link>
     </div>
@@ -57,6 +57,7 @@
 
         });
       },
+      //卡片点击事件
       handleLinkTo(card){
         //面包屑交互
         this.$store.commit('scheduling/SET_CRUMBS',{
@@ -64,7 +65,14 @@
           val:[card.mbmc]
         });
         this.$store.commit('scheduling/SET_CURRENTSELECTTEMPLATE',card);
-        console.log('当前所选模板信息 %o',this.$store.state.scheduling.currentsSelectTemplate);
+        /**
+         - 定义事件通道，科室权限点击卡片
+         - @param mbmc 模板名称
+         - @param mbdm 模板编码
+         - @param 通道命名：scheduling/department/tptable/getMBBM[模块名称/文件夹名称/文件名称/方法名称]
+         - @author sven 2017/10/12
+         */
+        this.$root.eventHub.$emit('scheduling/department/tptable/getMBBM',{mbmc:card.mbmc,mbdm:card.mbdm});
       },
     }
   }

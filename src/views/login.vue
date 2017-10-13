@@ -9,18 +9,16 @@
       </div>
       <div class="login-box">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
-          <el-form-item prop="name">
+          <el-form-item prop="u">
           <span>用户名</span>
-            <el-input class="login-input"  v-model="ruleForm.name">
+            <el-input class="login-input"  v-model="ruleForm.u">
             </el-input>
           </el-form-item>
-          <el-form-item prop="pwd">
+          <el-form-item prop="p">
         <span>密码</span>
-        <el-input class="login-input"  v-model="ruleForm.pwd" :type="pwdview" icon="more" :on-icon-click="eyeClick"></el-input>
+        <el-input class="login-input"  v-model="ruleForm.p" :type="pwdview" icon="more" :on-icon-click="eyeClick"></el-input>
           </el-form-item>
-          <router-link to='/'>
-          <el-button class="login-btn" type="primary"  @click="submitForm('ruleForm')">登录</el-button>
-          </router-link>
+            <el-button class="login-btn" type="primary"  @click="submitForm('ruleForm')">登录</el-button>
         </el-form>
       </div>
     </div>
@@ -28,18 +26,19 @@
 </template>
 
 <script>
+  import axios from "axios";
   export default {
     data() {
       return {
         ruleForm:{
-          name:'',
-          pwd:''
+          u:'02',
+          p:'111111'
         },
         rules:{
-          name: [
+          u: [
             { required: true, message: '请输入用户名', trigger: 'change' }
           ],
-          pwd: [
+          p: [
             { required: true, message: '请输入密码', trigger: 'change' }
           ],
         },
@@ -59,14 +58,42 @@
         else this.pwdview='password';
       },
       submitForm(formName) {
-        console.log(formName)
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.login().then(() => {
+              this.$router.push('/');
+              this.$message('登录成功');
+            });
           } else {
-            console.log('error submit!!');
+            this.$message('登录失败');
             return false;
           }
+        });
+      },
+      login(){
+        return new Promise((resolve, reject) => {
+          let target = 'http://172.16.0.131:8888/auth/login';
+          let OFFICE='00';//门办用户名
+          let DEPARTMENT='02';//科室用户名
+          axios({
+            url: target,
+            method: 'get',
+            params:{
+              p:111111,
+              u:DEPARTMENT,
+            },
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Content-Type': 'application/json;charset=UTF-8'
+            }
+          }).then(res => {
+            sessionStorage.setItem('jwtToken',res.data.Response.body.jwtToken);
+            this.$wnstorage.set('userInfo',res.data.Response.body);
+            this.$store.commit('login/SET_USERINFO',res.data.Response.body);
+            resolve();
+          }).catch(error => {
+            reject(error);
+          });
         });
       }
     }

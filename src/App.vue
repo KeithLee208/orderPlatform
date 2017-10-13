@@ -9,7 +9,7 @@
       name: 'app',
       created(){
         this.$nextTick(() => {
-          this.$router.push('login')
+//          this.$router.push('login')
         })
       }
     }

@@ -2,10 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import ccard from '../views/scheduling/clinic/tpcard'
 import cworklist from '../views/scheduling/clinic/worklist'
-import cworktable from '../views/scheduling/clinic/worktable'
 import ctptable from '../views/scheduling/clinic/tptable.vue'
 import ctplist from '../views/scheduling/clinic/tplist.vue'
-// import dcard from '../views/scheduling/department/tpcard'
 import attendacncelist from '../views/scheduling/Medical/attendacncelist'
 import count from '../views/count/index'
 import RegistrationClassification from '../views/count/registrationclassification'
@@ -13,12 +11,7 @@ import ReservationRegistration from '../views/count/reservationregistration'
 import setting from '../views/setting/index'
 import timetable from '../views/scheduling/clinic/timetable'
 import tpset from '../views/scheduling/clinic/tpset'
-/*科室出班模板*/
 import sortcostset from '../views/scheduling/clinic/sortcostset'
-import orderdetail from '../views/order/orderdetail'
-import orderlist from '../views/order/orderlist'
-
-
 /**
  * Created by sven on 2017/8/21.
  */
@@ -26,6 +19,7 @@ import orderlist from '../views/order/orderlist'
 import login from 'views/login.vue'
 //登录默认
 import LoginIndex from 'views/index.vue'
+/*-----------------------------------排班模块------------------------------------------*/
 // 科室出班模板
 import dTemplateList from 'views/scheduling/department/templatelist'//模板列表
 import dTemplateTable from 'views/scheduling/department/tptable.vue'//模板详情
@@ -44,6 +38,9 @@ import dWorkTable from  'views/scheduling/department/worktable' //批量设置�
 import hWorkList from  'views/scheduling/headoffice/worklist' //批量设置费用及号序
 import hWorkTable from  'views/scheduling/headoffice/worktable' //批量设置费用及号序
 import hPlusWork from  'views/scheduling/headoffice/pluswork' //临时出班
+/*-----------------------------------预约模块------------------------------------------*/
+import orderDetail from 'views/order/orderdetail.vue'
+import orderList from 'views/order/orderlist'
 
 const scheduling = r => require.ensure([], () => r(require('views/scheduling/index')), 'scheduling');
 const order = r => require.ensure([], () => r(require('views/order/index')), 'order');
@@ -63,21 +60,12 @@ export default new Router({
       name:'LoginIndex',
       component:LoginIndex,
       children:[
+        //排班模块
         {
           path: '/scheduling',
           name: 'scheduling',
           component: scheduling,
           children:[
-            { path: '/scheduling/department/timetable', component: timetable},
-            // { path: '/scheduling/department/tpcard', component: dcard},
-            { path: '/scheduling/attendacncelist', component: attendacncelist},
-            { path: '/scheduling/clinic/worklist', component: cworklist},
-            { path: '/scheduling/clinic/timetable', component: timetable},
-            { path: '/scheduling/clinic/tpcard', component: ccard},
-            { path: '/scheduling/clinic/tptable', component: ctptable},
-            { path: '/scheduling/clinic/tplist', component: ctplist},
-            { path: '/scheduling/clinic/tpset', component: tpset},
-            { path: '/scheduling/clinic/sortcostset', component: sortcostset},
             //科室出班模板
             {path:'/scheduling/department/templateList',component: dTemplateList},
             {path:'/scheduling/department/tptable',component: dTemplateTable},
@@ -95,38 +83,36 @@ export default new Router({
             {path:'/scheduling/headoffice/worktable',component: hWorkTable},
             {path:'/scheduling/headoffice/pluswork',component: hPlusWork}
           ]
+        },
+        //预约模块
+        {
+          path: '/order',
+          name: 'order',
+          component: order,
+         },
+        {
+          path: '/order/orderdetail',component: orderDetail
+        },
+        {
+          path: '/order/orderlist',component: orderList
+        },
+        //统计模块
+        {
+          path: '/count',
+          name: 'count',
+          component: count,
+          children:[
+            { path: '/count/ReservationRegistration', component: ReservationRegistration},
+            { path: '/count/RegistrationClassification', component: RegistrationClassification}
+          ]
+        },
+        //基础数据
+        {
+          path: '/setting',
+          name: 'setting',
+          component: setting,
         }
       ]
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: login
-    },
-    {
-      path: '/order/orderdetail',
-      name: 'orderdetail',
-      component: orderdetail
-    },
-    {
-      path: '/order/orderlist',
-      name: 'orderlist',
-      component: orderlist
-    },
-    {
-      path: '/count',
-      name: 'count',
-      component: count,
-      children:[
-        { path: '/count/ReservationRegistration', component: ReservationRegistration},
-        { path: '/count/RegistrationClassification', component: RegistrationClassification}
-      ]
-    },
-    {
-      path: '/setting',
-      name: 'setting',
-      component: setting,
-
-    },
+    }
   ]
 })

@@ -51,11 +51,11 @@ export default {
                             }
                             else {
                                 //失败
-                                this.$message({
-                                    message: tranCode + ':' + resHead.AckDesc,
-                                    type: 'error',
-                                    duration: 5 * 1000
-                                });
+                                // this.$message({
+                                //     message: tranCode + ':' + resHead.AckDesc,
+                                //     type: 'error',
+                                //     duration: 5 * 1000
+                                // });
                                 reject(response);
                             }
                         })
@@ -86,7 +86,7 @@ export default {
                             let resHead = data.Response.Head;
                             if (resHead.AckCode == "100.1" || resHead.AckCode == "100.2") {
                                 //成功
-                               this.$message(resHead.AckMessage);
+                               // this.$message(resHead.AckMessage);
                                 resolve(res);
                             } else {
                                 //失败
@@ -94,11 +94,11 @@ export default {
                             }
                         })
                         .catch(error => {
-                            this.$message({
-                                message: '发生异常错误,请刷新页面重试,或联系程序员,访问地址',
-                                type: 'error',
-                                duration: 5 * 1000
-                            });
+                            // this.$message({
+                            //     message: '发生异常错误,请刷新页面重试,或联系程序员,访问地址',
+                            //     type: 'error',
+                            //     duration: 5 * 1000
+                            // });
                             console.log(error); // for debug
                             reject(error);
                         });

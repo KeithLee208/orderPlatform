@@ -124,6 +124,7 @@
       return {
         loading: true,
         crumbs: [],//面包屑数据
+        mbdm:'',//模板代码
         serviceTypeList: [],//服务类型列表
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
@@ -133,11 +134,14 @@
       };
     },
     created(){
+      this.$root.eventHub.$on('scheduling/department/tptable/getMBBM', data => {
+        console.log(data);
+      });
       this.$nextTick(() => {
         setTimeout(_ => {
           this.init();
         },0);
-    })
+      })
     },
     methods: {
       init(){
@@ -145,7 +149,6 @@
         this.getCrumbs();
         //获取服务类型
         this.getServiceType();
-//        this.setServieNumber();
         //获取时间段
         this.getTimeSlot();
         //获取已选科室列表
@@ -163,7 +166,6 @@
       //获取统计接口
       setServieNumber(data){
         let fwlxtj = data;
-        console.log('fwlxtj',fwlxtj);
         this.serviceTypeList.map(item => {
             item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
         })
@@ -182,14 +184,13 @@
           ksdm: this.$store.state.login.userInfo.ksdm ,
           mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm']
         }).then(data => {
-          console.log('data',data);
           if(data=='')this.loading = false;
           else {
-          this.TpCard = data;
-          this.setServieNumber(data);
-          this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
-          this.loading = false;
-          this.allTypeList=arr.clone(this.templateData);
+            this.TpCard = data;
+            this.setServieNumber(data);
+            this.templateData = this.formatData(arr.classifyArr(data, 'ysdm'));
+            this.loading = false;
+            this.allTypeList=arr.clone(this.templateData);
           }
       }).catch(err => {
           console.log(err);
@@ -285,7 +286,7 @@
         if (!time)return;
         return time.split(' ')[1]
       },
-    },
+    }
   };
 </script>
 
