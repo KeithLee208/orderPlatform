@@ -6,12 +6,9 @@
           <input class="top-searchinput pull-left" placeholder="搜索院区／科室／医生">
           <i class="iconfont icon-sousuo"></i>
         </div>
-        <router-link
-          :to="'/scheduling/department/templateList'">
-          <i class="el-icon-close"></i>
-        </router-link>
+          <i @click="$router.go(-1)" class="el-icon-close"></i>
       </div>
-      <span v-for="(item,index) in crumbs">{{item}}<span v-if="index != crumbs.length-1"> / </span></span>
+      <span>{{mbmc}}</span>
     </div>
     <div class="setting-body" v-loading="loading" element-loading-text="拼命加载中">
       <div class="setting-main">
@@ -92,9 +89,9 @@
                           </p>
                         </div>
                         <div class="fixed-footer">
-                            <router-link tag="span" to="/scheduling/department/tpset">
-                                <span @click="selectDoc(week)">查看详情</span>
-                            </router-link>
+                            <span>
+                                  <span @click="selectDoc(week)">查看详情</span>
+                            </span>
                         </div>
                       </div>
                       <div slot="reference" class="ordered" :class="[week.mzlx]">
@@ -123,41 +120,38 @@
     data() {
       return {
         loading: true,
-        crumbs: [],//面包屑数据
-        mbdm:'',//模板代码
         serviceTypeList: [],//服务类型列表
         timeSlot: [],//时间段列表
         templateData: [],//排版模板数据
         checkList:[],//已选科室列表
         checkLIstActive:0,//已选科室列表点击active
-        allTypeList:[]
+        allTypeList:[],
+        test:1
       };
     },
+    props:{
+      mbmc:{
+          type:String,
+          required:true
+      },
+      mbdm:{
+        type:String,
+        required:true
+      }
+    },
     created(){
-      this.$root.eventHub.$on('scheduling/department/tptable/getMBBM', data => {
-        console.log(data);
-      });
       this.$nextTick(() => {
-        setTimeout(_ => {
-          this.init();
-        },0);
+        this.init();
       })
     },
     methods: {
       init(){
-        //获取面包屑
-        this.getCrumbs();
-        //获取服务类型
-        this.getServiceType();
-        //获取时间段
-        this.getTimeSlot();
-        //获取已选科室列表
-        this.getCheckList();
-        this.dataInit();
-      },
-      //获取面包屑
-      getCrumbs(){
-        this.crumbs = this.$store.state.scheduling.crumbs.tptable;
+        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}).then(() => {
+          this.getServiceType();
+          this.getTimeSlot();
+          this.getCheckList();
+          this.dataInit();
+        })
       },
       //获取服务类型
       getServiceType(){
@@ -181,8 +175,8 @@
       //科室数据初始化
       dataInit(){
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q02", {
-          ksdm: this.$store.state.login.userInfo.ksdm ,
-          mbdm: this.$store.state.scheduling.currentsSelectTemplate['mbdm']
+          ksdm: this.$store.state.login.userInfo.ksdm,
+          mbdm: this.mbdm
         }).then(data => {
           if(data=='')this.loading = false;
           else {
@@ -199,13 +193,13 @@
       //服务类型筛选
       listTypeChange(index,item){
         this.checkLIstActive=index;
-        let newArr=[];
-        newArr=arr.clone(this.allTypeList);
+        let newArr = [];
+        newArr = arr.clone(this.allTypeList);
         for(let i=0;i<newArr.length;i++){
           for(let x=0;x<newArr[i].slot.length;x++){
             for(let y=0;y<newArr[i].slot[x].weekday.length;y++){
               if(item.fwlxdm!==newArr[i].slot[x].weekday[y].fwlxdm){
-                newArr[i].slot[x].weekday[y]={};
+                  newArr[i].slot[x].weekday[y]={};
                 }
             }
           }
@@ -271,6 +265,7 @@
       //选择医生进入排班设置页
       selectDoc(item){
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item);
+        this.$router.push({name:'dTempalteSet', params: {mbmc:this.mbmc,mbdm:this.mbdm}});
       },
       //点击设置按钮进入设置页，默认请求获取当前科室普通排班
       handleSetClick(){
@@ -286,7 +281,7 @@
         if (!time)return;
         return time.split(' ')[1]
       },
-    }
+    },
   };
 </script>
 

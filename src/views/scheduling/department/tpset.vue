@@ -1,9 +1,9 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link to="/scheduling/department/tptable" class="pull-right">
-        <i class="el-icon-close"></i>
-      </router-link>
+      <a class="pull-right">
+        <i @click="$router.go(-1)" class="el-icon-close"></i>
+      </a>
       <span>设置出班信息</span>
     </div>
     <div v-loading="loading" element-loading-text="拼命加载中" class="set-body">
@@ -224,30 +224,37 @@
         dialogVisible: false //确认覆盖弹窗显示
       };
     },
+    props:{
+      mbmc:{
+        type:String,
+        required:true
+      },
+      mbdm:{
+        type:String,
+        required:true
+      }
+    },
     created() {
       this.$nextTick(() => {
-        setTimeout(_ => {
           this.init();
-        }, 0);
       })
     },
     methods: {
       init() {
-        this.getDicData(); //获取字典数据
-        this.getDoc(); //获取医生列表
-        this.getDocScheduleList(); //获取医生出班模板列表
-      },
-      //获取各种字典数据
-      getDicData() {
-        this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-        this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-        this.formOptions.slotTime.list = this.timeSlot = this.$store.state.scheduling.timeSlotList;
+        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}).then(() => {
+          this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+          this.formOptions.department.list = this.$store.state.scheduling.departmentList;
+          this.formOptions.slotTime.list = this.$store.state.scheduling.timeSlotList;
+          this.timeSlot = this.$store.state.scheduling.timeSlotList;
+          this.getDoc(); //获取医生列表
+          this.getDocScheduleList(); //获取医生出班模板列表
+        })
       },
       //科室选择不同医生
       getDoc() {
         this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-          kstybm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          yydm: this.$store.state.login.userInfo.yydm
+          kstybm: this.$store.state.login.userInfo.ksdm,
+          yydm:   this.$store.state.login.userInfo.yydm
         }).then(data => {
           this.formOptions.doctor.list = data;
           let ordinary = {
@@ -273,14 +280,13 @@
             };
           });
         })
-
       },
       //获取医生出班模板列表
       getDocScheduleList() {
         let params = {
-          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
-          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm,
-          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm,
+          ksdm: this.$store.state.login.userInfo.ksdm,
+          mbdm: this.mbdm,
+          ysdm: this.$store.state.login.userInfo.context.zgxx.zgtybm,
         };
         this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
           for(let i=0;i<this.formOptions.doctor.list.length;i++){
@@ -293,7 +299,6 @@
             this.getDocScheduleListDefault();
           } else {
             this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-            console.log('排班表信息', this.currentDocSchedule);
             this.setDefaultInfo();
           }
         }).catch(err => {
