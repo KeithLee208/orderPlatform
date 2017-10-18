@@ -69,16 +69,16 @@ export default new Router({
             //科室出班模板
             {path:'/scheduling/department/templateList',component: dTemplateList},
             {
-              path:'/scheduling/department/tptable/mb/:mbdm/mc/:mbmc',
+              path:'/scheduling/department/tptable/mbdm/:mbdm/mc/:mbmc',
               component: dTemplateTable,
               name:'dTemplateTable',
               props: (route) => ({mbmc:route.params.mbmc ,mbdm:route.params.mbdm})
             },
             {
-              path:'/scheduling/department/tpset/mb/:mbdm',
+              path:'/scheduling/department/tpset/mbdm/:mbdm/ysdm/:ysdm',
               component: dTempalteSet,
               name:'dTempalteSet',
-              props: (route) => ({mbmc:route.params.mbmc ,mbdm:route.params.mbdm})
+              props: (route) => ({mbmc:route.params.mbmc ,mbdm:route.params.mbdm,ysdm:route.params.ysdm})
             },
             //科室出班表
             {path:'/scheduling/department/worktable',component: dWorkTable},

@@ -71,12 +71,6 @@
             <el-option v-for="item in formOptions.doctor.list" :label="item.zgxm" :value="item.zgtybm"></el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item v-if="formOptions.disease.isShow" label="选择病种">-->
-        <!--<el-select @change="diseaseChange" multiple v-model="form.zydmList" value-key="zydm" placeholder="请选择病种">-->
-        <!--<el-option v-for="item in formOptions.disease.list" :key="item.zydm" :label="item.zymc" :value="item">-->
-        <!--</el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
         <el-form-item label="就诊时间">
           <el-checkbox-group v-model="form.cbrqlx">
             <el-checkbox v-for="item in formOptions.visitTime.list" :label="item.val" :value="item.val" name="time"></el-checkbox>
@@ -124,7 +118,7 @@
           ghfdm: '',
           hxzs: '',
           jssj: '',
-          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm,
+          ksdm: this.$store.state.login.userInfo.ksdm,
           ksmc: this.$store.state.scheduling.currentSchedulingSet.ksmc,
           kssj: '',
           lrsj: '',
@@ -225,10 +219,8 @@
       };
     },
     props:{
-      mbmc:{
-        type:String,
-        required:true
-      },
+      mbmc:'',
+      ysdm:'',
       mbdm:{
         type:String,
         required:true
@@ -240,158 +232,115 @@
       })
     },
     methods: {
-      init() {
-        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}).then(() => {
-          this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-          this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-          this.formOptions.slotTime.list = this.$store.state.scheduling.timeSlotList;
-          this.timeSlot = this.$store.state.scheduling.timeSlotList;
-          this.getDoc(); //获取医生列表
-          this.getDocScheduleList(); //获取医生出班模板列表
-        })
-      },
-      //科室选择不同医生
-      getDoc() {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.BASEINFO.Q04", {
-          kstybm: this.$store.state.login.userInfo.ksdm,
-          yydm:   this.$store.state.login.userInfo.yydm
-        }).then(data => {
-          this.formOptions.doctor.list = data;
-          let ordinary = {
-            zgxm: '普通门诊',
-            zgtybm: ''
-          };
-          this.formOptions.doctor.list.push(ordinary);
-        }).catch(err => {
-          console.log(err);
-        });
-      },
-      //获取医生排班模板列表缺省信息
-      getDocScheduleListDefault() {
-        this.timeSlot.map((slot, index) => {
-          this.currentDocSchedule.slot[index] = Object.assign({}, arr.clone(slot))
-        });
-        this.currentDocSchedule.slot.map(slot => {
-          slot.weekday = [];
-          this.formOptions.visitTime.list.map((item, index) => {
-            slot.weekday[index] = {
-              cbrqlx: [item.val],
-              sjddm: [slot.sjddm]
-            };
-          });
-        })
+      async init() {
+        await this.$store.dispatch('scheduling/getTimeSlotList',{yydm:this.$store.state.login.userInfo.yydm});
+        this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
+        this.formOptions.department.list = this.$store.state.scheduling.departmentList;
+        this.formOptions.slotTime.list = this.$store.state.scheduling.timeSlotList;
+        this.timeSlot = this.$store.state.scheduling.timeSlotList;
+        this.formOptions.doctor.list = await this.$store.dispatch('scheduling/getDocListByDepartment',{kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm});
+        let _ORDINARY = {zgxm: '普通门诊',zgtybm: ''};
+        this.formOptions.doctor.list.push(_ORDINARY);
+
+        this.form.mbdm = this.mbdm;
+        this.form.ysdm = this.ysdm.trim();
+
+        this.getDocScheduleList(); //获取医生出班模板列表
       },
       //获取医生出班模板列表
-      getDocScheduleList() {
+      async getDocScheduleList() {
         let params = {
           ksdm: this.$store.state.login.userInfo.ksdm,
           mbdm: this.mbdm,
-          ysdm: this.$store.state.login.userInfo.context.zgxx.zgtybm,
+          ysdm: this.form.ysdm,
         };
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-          for(let i=0;i<this.formOptions.doctor.list.length;i++){
-            if(this.formOptions.doctor.list[i].zgtybm==this.$store.state.scheduling.currentSchedulingSet.ysdm){
-              this.currentDocSchedule.ysmc=this.formOptions.doctor.list[i].zgxm;
-            }
-          }
-          if (data == '') {
-            this.loading = false;
-            this.getDocScheduleListDefault();
-          } else {
-            this.currentDocSchedule = this.formatData(arr.classifyArr(data, 'ysmc'))[0];
-            this.setDefaultInfo();
-          }
-        }).catch(err => {
-          console.log(err);
-        });
-
+        let res = await this.$store.dispatch('scheduling/getDocScheduleList',params);
+        this.currentDocSchedule.ysmc = this.formOptions.doctor.list.find(item => item.zgtybm == this.form.ysdm).zgxm;
+        if(res.length){
+          this.currentDocSchedule = this.formatData(arr.classifyArr(res, 'ysmc'))[0];
+        }else{
+          this.currentDocSchedule.slot = this.getDocScheduleListDefault(this.formOptions.visitTime.list,this.timeSlot);
+        }
+        this.loading = false;
+      },
+      //获取医生排班模板列表缺省信息
+      getDocScheduleListDefault(visitTime,timeSlot) {
+        let _visitTime = arr.clone(visitTime);
+        let _timeSlot = arr.clone(timeSlot);
+        let slot = _timeSlot.map(item => {
+                        return Object.assign({weekday:[]}, arr.clone(item))
+                    });
+            slot.map(item => {
+              _visitTime.map((time, index) => {
+                item.weekday[index] = {
+                  cbrqlx: [time.val],
+                  sjddm: [item.sjddm]
+                };
+              });
+            })
+        return slot;
       },
       //获取默认信息:有医生信息，科室、医生会被自动拉取
       setDefaultInfo() {
         //科室默认
-        this.form.ksdm = this.$store.state.scheduling.currentSchedulingSet.ksdm;
+        this.form.ksdm = this.$store.state.login.userInfo.ksdm;
         //医生默认
-        this.form.ysdm = this.$store.state.scheduling.currentSchedulingSet.ysdm;
+        this.form.ysdm = this.ysdm && '';
       },
       //数据处理
       formatData(list) {
         //医生→时间段→日期
-        let newArr = [];
-        list.map((item, index) => {
-          newArr[index] = {
-            "ysmc": item.name,
-            "slot": []
-          };
-          this.timeSlot.map(slot => {
-            slot.weekday = [
-              {
-                cbrqlx: ['星期一'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期二'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期三'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期四'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期五'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期六'],
-                sjddm: [slot.sjddm]
-              },
-              {
-                cbrqlx: ['星期日'],
-                sjddm: [slot.sjddm]
-              }
-            ];
-            item.children.map(week => {
-              newArr[index].ysmc = week.ysmc;
-              if (week.sjddm != slot.sjddm) return
-              if (week.cbrqlx === '星期一') {
-                Object.assign(slot.weekday[0], week)
-              }
-              if (week.cbrqlx === '星期二') {
-                Object.assign(slot.weekday[1], week)
-              }
-              if (week.cbrqlx === '星期三') {
-                Object.assign(slot.weekday[2], week)
-              }
-              if (week.cbrqlx === '星期四') {
-                Object.assign(slot.weekday[3], week)
-              }
-              if (week.cbrqlx === '星期五') {
-                Object.assign(slot.weekday[4], week)
-              }
-              if (week.cbrqlx === '星期六') {
-                Object.assign(slot.weekday[5], week)
-              }
-              if (week.cbrqlx === '星期日') {
-                Object.assign(slot.weekday[6], week)
+        let newArr = arr.clone(list);
+        let timeSlot = arr.clone(this.timeSlot);
+        timeSlot.map(slot => {
+          slot.weekday = [
+            {cbrqlx:['星期一'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期二'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期三'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期四'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期五'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期六'],sjddm:[slot.sjddm]},
+            {cbrqlx:['星期日'],sjddm:[slot.sjddm]}
+          ];
+        });
+        newArr.map(item => {
+          item.slot = arr.clone(timeSlot);
+          item.slot.map(slot => {
+            let weekTemp = item.children.filter(child => child.sjddm == slot.sjddm);
+            weekTemp.map(week => {
+              item.ysmc = week.ysmc;
+              switch (week.cbrqlx) {
+                case '星期一':
+                  Object.assign(slot.weekday[0],week);
+                  break;
+                case '星期二':
+                  Object.assign(slot.weekday[1],week);
+                  break;
+                case '星期三':
+                  Object.assign(slot.weekday[2],week);
+                  break;
+                case '星期四':
+                  Object.assign(slot.weekday[3],week);
+                  break;
+                case '星期五':
+                  Object.assign(slot.weekday[4],week);
+                  break;
+                case '星期六':
+                  Object.assign(slot.weekday[5],week);
+                  break;
+                case '星期日':
+                  Object.assign(slot.weekday[6],week);
+                  break;
               }
             })
-            newArr[index].slot.push(slot);
-            this.loading = false;
-          });
+          })
         });
+
         return newArr;
       },
       //获取单次出班信息
       getSingleSchedule(i, j, item) {
-        console.log(item);
-        for (let i = 0; i < this.formOptions.serviceType.list.length; i++) {
-          if (item.fwlxdm == this.formOptions.serviceType.list[i].fwlxdm) {
-            this.formOptions.serviceType.activeIndex = i;
-          }
-        }
+        this.formOptions.serviceType.activeIndex = this.formOptions.serviceType.list.findIndex(service => service.fwlxdm == item.fwlxdm );
         this.schedulingSelectIndex = [i, j]; //更新所选格子
         this.form = arr.clone(item);
         this.form.cbrqlx = [this.form.cbrqlx]; //处理多选出班日期
@@ -404,9 +353,7 @@
       },
       //
       docChange(val) {
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-          ysdm:val
-        });
+        this.form.ysdm = val;
         this.getDocScheduleList();
       },
       //设置新的排班信息
@@ -418,18 +365,18 @@
           cbrqlx: this.currentDocSchedule.slot[i].weekday[j].cbrqlx, //必填:表单获取
           cbzt: 'ZC', //必填:默认值
           czdz: '', //必填:表单获取
-          czry: this.$store.state.login.userInfo.userId, //必填:登录信息
+          czry: this.$store.state.login.userInfo.employeeUser.userId, //必填:登录信息
           yxzt: 'YX', //必填:默认值
-          mbdm: this.$store.state.scheduling.currentSchedulingSet.mbdm, //必填
+          mbdm: this.mbdm, //必填
           fwlxdm: this.form.fwlxdm, //必填:表单获取
           ghfdm: '', //必填:挂号费 数据转换
           zlfdm: '', //必填:诊疗费 数据转换
           sjddm: this.currentDocSchedule.slot[i].weekday[j].sjddm, //必填:表单获取
           kssj: '', //必填:时间段列表 数据转换
           jssj: '', //必填:时间段列表 数据转换
-          ysdm: this.$store.state.scheduling.currentSchedulingSet.ysdm, //必填:医生列表 数据转换
+          ysdm: this.form.ysdm, //必填:医生列表 数据转换
           ysmc: '', //必填:表单获取
-          ksdm: this.$store.state.scheduling.currentSchedulingSet.ksdm, //必填:科室列表 数据转换
+          ksdm: this.$store.state.login.userInfo.ksdm, //必填:科室列表 数据转换
           ksmc: '', //必填:表单获取
           mxxh: '',
           hxzs: '',
@@ -437,7 +384,7 @@
           lrsj: '',
           zydmList: [],
         };
-        console.log('data',_data)
+//        console.log('data',_data)
         this.setForm(_data);
       },
       //数据转换
@@ -492,19 +439,6 @@
           type: 'success'
         });
       },
-      diseaseChange(nowvalue) {
-        let value = arr.clone(nowvalue);
-        let diseaseValue = [];
-        for (let i = 0; i < value.length; i++) {
-          let arrValue = {
-            zydm: value[i].zydm,
-            zymc: value[i].zymc
-          }
-          diseaseValue.push(arrValue);
-        }
-        //        this.form.zydmList=diseaseValue;
-        //        console.log('hehe',diseaseValue);
-      },
       selection(index) {
         this.form.fwlxdm = this.formOptions.serviceType.list[index].fwlxdm;
         this.formOptions.serviceType.activeIndex = index;
@@ -515,7 +449,6 @@
           this.formOptions.disease.isShow = false;
           this.form.zydmList = [];
         }
-        console.log(this.formOptions.disease.list)
       },
       //保存/新增接口
       save() {
@@ -527,22 +460,21 @@
           });
           return
         } else {
-          console.log('保存时的数据 %o', data);
           this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
             insert: data,
             ifCover: this.isCover
           }).then(data => {
             if(data){
-              if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
-                this.$message(data.BizErrorMessage);
-                return
-              }
-              else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
-                this.$message(data.BizErrorMessage);
-                this.dialogVisible = true;
-                return
-              }
-              }
+                if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
+                  this.$message(data.BizErrorMessage);
+                  return
+                }
+                else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
+                  this.$message(data.BizErrorMessage);
+                  this.dialogVisible = true;
+                  return
+                }
+            }
                else {
                 this.$message('保存成功');
                 this.isCover = false;

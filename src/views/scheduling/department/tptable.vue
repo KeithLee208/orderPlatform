@@ -265,7 +265,7 @@
       //选择医生进入排班设置页
       selectDoc(item){
         this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item);
-        this.$router.push({name:'dTempalteSet', params: {mbmc:this.mbmc,mbdm:this.mbdm}});
+        this.$router.push({name:'dTempalteSet', params: {mbmc:this.mbmc,mbdm:this.mbdm,ysdm:item.ysdm || ' '}});
       },
       //点击设置按钮进入设置页，默认请求获取当前科室普通排班
       handleSetClick(){
