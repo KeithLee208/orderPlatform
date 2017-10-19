@@ -61,12 +61,6 @@
       },
       //卡片点击事件
       handleLinkTo(card){
-        //面包屑交互
-        this.$store.commit('scheduling/SET_CRUMBS',{
-          key:'tptable',
-          val:[card.mbmc]
-        });
-        this.$store.commit('scheduling/SET_CURRENTSELECTTEMPLATE',card);
         this.$router.push({name:'dTemplateTable', params: {mbmc:card.mbmc,mbdm:card.mbdm}});
       }
     },

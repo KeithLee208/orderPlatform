@@ -21,7 +21,6 @@
     methods:{
       init(){
         this.$store.commit('login/SET_USERINFO',this.$wnstorage.get('userInfo'));
-        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}); //获取字典数据
       },
     },
     components: {

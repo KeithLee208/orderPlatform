@@ -26,9 +26,9 @@
                 <span class="icon-group">
                   <el-tooltip class="item" effect="dark"
                               content="设置出班模板" placement="bottom">
-                      <router-link tag="span"  to="/scheduling/department/tpset">
+                      <span>
                          <i @click="handleSetClick" class="icon iconfont icon iconfont icon-shezhi_"></i>
-                       </router-link>
+                       </span>
                   </el-tooltip>
                 </span>
               </span>
@@ -145,17 +145,10 @@
       })
     },
     methods: {
-      init(){
-        this.$store.dispatch('scheduling/getAllDicData',{yydm:this.$store.state.login.userInfo.yydm}).then(() => {
-          this.getServiceType();
-          this.getTimeSlot();
-          this.getCheckList();
-          this.dataInit();
-        })
-      },
-      //获取服务类型
-      getServiceType(){
-        this.serviceTypeList = this.$store.state.scheduling.serviceTypeList;
+      async init(){
+        this.serviceTypeList = await this.$store.dispatch('datasets/getServiceTypeList',{yydm:this.$store.state.login.userInfo.yydm});
+        this.timeSlot = await this.$store.dispatch('datasets/getTimeSlotList',{yydm:this.$store.state.login.userInfo.yydm});
+        this.dataInit();
       },
       //获取统计接口
       setServieNumber(data){
@@ -163,10 +156,6 @@
         this.serviceTypeList.map(item => {
             item.number = fwlxtj.filter(tItem => tItem.fwlxdm == item.fwlxdm).length;
         })
-      },
-      //获取时间段列表
-      getTimeSlot(){
-        this.timeSlot = this.$store.state.scheduling.timeSlotList;
       },
       //获取已选科室列表
       getCheckList(){
@@ -264,16 +253,11 @@
       },
       //选择医生进入排班设置页
       selectDoc(item){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', item);
         this.$router.push({name:'dTempalteSet', params: {mbmc:this.mbmc,mbdm:this.mbdm,ysdm:item.ysdm || ' '}});
       },
       //点击设置按钮进入设置页，默认请求获取当前科室普通排班
       handleSetClick(){
-        this.$store.commit('scheduling/SET_CURRENTSCHEDULING', {
-            ysdm:'',
-            mbdm:this.$store.state.scheduling.currentsSelectTemplate.mbdm,
-            ksdm:this.$store.state.login.userInfo.ksdm
-        });
+        this.$router.push({name:'dTempalteSet', params: {mbmc:this.mbmc,mbdm:this.mbdm,ysdm:' '}});
       }
     },
     filters: {

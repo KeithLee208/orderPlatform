@@ -104,6 +104,7 @@
 </template>
 <script>
   import * as arr from '../../../filters/array'
+  import * as validator from '../../../filters/validator'
   export default {
     data() {
       return {
@@ -233,15 +234,18 @@
     },
     methods: {
       async init() {
-        await this.$store.dispatch('scheduling/getTimeSlotList',{yydm:this.$store.state.login.userInfo.yydm});
-        this.formOptions.serviceType.list = this.$store.state.scheduling.serviceTypeList;
-        this.formOptions.department.list = this.$store.state.scheduling.departmentList;
-        this.formOptions.slotTime.list = this.$store.state.scheduling.timeSlotList;
-        this.timeSlot = this.$store.state.scheduling.timeSlotList;
-        this.formOptions.doctor.list = await this.$store.dispatch('scheduling/getDocListByDepartment',{kstybm:this.$store.state.login.userInfo.ksdm,yydm:this.$store.state.login.userInfo.yydm});
+        let _YYDM = this.$store.state.login.userInfo.yydm;
+        let _KSDM = this.$store.state.login.userInfo.ksdm;
         let _ORDINARY = {zgxm: '普通门诊',zgtybm: ''};
-        this.formOptions.doctor.list.push(_ORDINARY);
 
+        this.formOptions.serviceType.list = await this.$store.dispatch('datasets/getServiceTypeList',{yydm:_YYDM});
+        this.formOptions.department.list = await this.$store.dispatch('datasets/getDepartmentList',{yydm:_YYDM});
+        this.formOptions.slotTime.list = await this.$store.dispatch('datasets/getTimeSlotList',{yydm:_YYDM});
+        this.formOptions.doctor.list = await this.$store.dispatch('scheduling/getDocListByDepartment',{kstybm:_KSDM,yydm:_YYDM});
+
+        this.formOptions.doctor.list.push(_ORDINARY);
+        this.timeSlot = this.formOptions.slotTime.list;
+        this.form.ksdm = this.$store.state.login.userInfo.ksdm;
         this.form.mbdm = this.mbdm;
         this.form.ysdm = this.ysdm.trim();
 
@@ -279,13 +283,6 @@
               });
             })
         return slot;
-      },
-      //获取默认信息:有医生信息，科室、医生会被自动拉取
-      setDefaultInfo() {
-        //科室默认
-        this.form.ksdm = this.$store.state.login.userInfo.ksdm;
-        //医生默认
-        this.form.ysdm = this.ysdm && '';
       },
       //数据处理
       formatData(list) {
@@ -451,66 +448,46 @@
         }
       },
       //保存/新增接口
-      save() {
-        let data = this.formDataFormat(this.form);
-        if (data.fwlxdm == '') {
-          this.$message({
-            message: '请选择服务类型',
-            type: 'warning'
-          });
-          return
-        } else {
-          this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
-            insert: data,
-            ifCover: this.isCover
-          }).then(data => {
-            if(data){
-                if(data.BizErrorCode=='HIS.APPOINTMENT.BE1006') {
-                  this.$message(data.BizErrorMessage);
-                  return
-                }
-                else if(data.BizErrorCode =='HIS.APPOINTMENT.BE10005') {
-                  this.$message(data.BizErrorMessage);
-                  this.dialogVisible = true;
-                  return
-                }
-            }
-               else {
-                this.$message('保存成功');
-                this.isCover = false;
-                this.getDocScheduleList(); //获取医生出班模板列表
-              }
-          }).catch(err => {
-            console.log(err);
-            //这里错误有2种错误
-            //1. 服务端业务错误，错误码邮件中有
-            //2. 网络错误，本地网络断开、超时等
-          });
+      async save() {
+        let insert = this.formDataFormat(this.form);
+        let params = {
+          insert: insert,
+          ifCover: this.isCover
+        };
+        let res = await this.$store.dispatch('scheduling/saveDocSchedule',params);
+        let isFLAG1= 'HIS.APPOINTMENT.BE10005';
+        let isFLAG2 = 'HIS.APPOINTMENT.BE10006';
+        if(!res){
+          this.$message('保存成功');
+          this.isCover = false;
+          this.getDocScheduleList(); //获取医生出班模板列表
+        }
+        if( res.BizErrorCode == isFLAG2 ){
+          this.$message( res.BizErrorMessage );
+          this.getDocScheduleList(); //获取医生出班模板列表
+        }else if( res.BizErrorCode == isFLAG1 ){
+          this.$message( res.BizErrorMessage );
+          this.dialogVisible = true;
         }
       },
       //删除
-      delSchedule(item) {
-        this.$wnhttp("PAT.WEB.APPOINTMENT.SCHEDULE.S02", {
+      async delSchedule(item) {
+        let params = {
           delete: [{
             mxxh: item.mxxh
           }],
           ifCover: true
-        }).then(data => {
-          console.log('data',data);
-          if(data.BizErrorCode=='HIS.APPOINTMENT.BE1007'){
-            this.$message(data.BizErrorMessage);
-            return
-          }
-          else {
-            this.$message('已删除');
-            this.getDocScheduleList(); //获取医生出班模板列表
-          }
-        }).catch(err => {
-          console.log(err);
-          //这里错误有2种错误
-          //1. 服务端业务错误，错误码邮件中有
-          //2. 网络错误，本地网络断开、超时等
-        });
+        };
+        let isFLAG = 'HIS.APPOINTMENT.BE10007';
+        let res = await this.$store.dispatch('scheduling/delDocSchedule',params);
+        if(!res){
+          this.$message('已删除');
+          this.getDocScheduleList(); //获取医生出班模板列表
+        }
+        if( res.BizErrorCode == isFLAG ){
+          this.$message(res.BizErrorMessage);
+          return
+        }
       },
       handleClose(done) {
         this.$confirm('确认关闭？')

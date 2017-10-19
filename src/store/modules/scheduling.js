@@ -104,31 +104,6 @@ const mutations = {
 
 //异步操作
 const actions = {
-  //获取相关字典
-  getAllDicData({dispatch,commit},params){
-    return new Promise((resolve, reject) => {
-        Promise.all([dispatch('getDepartmentList',params),dispatch('getServiceTypeList',params),dispatch('getTimeSlotList',params),dispatch('getSpecDiseaseList',params)]).then(() => {
-          console.log("%c%s", "color:blue" , "=======> 字典数据加载成功");
-          resolve();
-        }).catch(err => {
-          console.log("%c%s", "color:blue" , "=======> 字典数据加载失败");
-          reject(err);
-        })
-    })
-  },
-  //获取医院所有预约科室
-  getDepartmentList({commit} ,params){
-    return new Promise((resolve, reject) =>{
-      api.post("PAT.WEB.APPOINTMENT.BASEINFO.Q02", params).then(data => {
-        commit('SET_DEPARTMENTLIST',data);
-        console.log("%c%s", "color:blue" , "=======> 医院所有预约科室列表加载成功");
-        resolve(data);
-      }).catch(err => {
-        console.log(err);
-        reject();
-      });
-    })
-  },
   //通过科室选择医生列表
   getDocListByDepartment({commit} ,params){
     return new Promise((resolve, reject) =>{
@@ -141,65 +116,42 @@ const actions = {
       });
     })
   },
-  //获取服务类型
-  getServiceTypeList({commit} ,params){
-    return new Promise((resolve, reject) =>{
-      api.post("PAT.WEB.APPOINTMENT.BASEINFO.Q05", params).then(data => {
-        commit('SET_SERVICETYPELIST',data);
-        console.log("%c%s", "color:blue" , "=======> 服务类型列表加载成功");
-        resolve(data);
-      }).catch(err => {
-        console.log("%c%s", "color:red" , "=======> 服务类型列表加载失败");
-        reject(err);
-      });
-    })
-  },
-  //获取时间段列表
-  getTimeSlotList({commit} ,params){
-    return new Promise((resolve, reject) =>{
-      api.post("PAT.WEB.APPOINTMENT.BASEINFO.Q06", params).then(data => {
-        for (var i = 0; i < data.length; i++) {
-          if (data[i].sjdmc === '全天') {
-            let allday=data[i];
-            data.splice(i, 1);
-            data.push(allday);
-            break;
-          }
-        }
-        console.log("%c%s", "color:blue" , "=======> 时间段列表加载成功");
-        commit('SET_TIMESLOTLIST',data);
-        resolve(data);
-      }).catch(err => {
-        console.log("%c%s", "color:red" , "=======> 时间段列表加载失败");
-        reject(err);
-      });
-    })
-  },
-  //获取专病信息
-  getSpecDiseaseList({commit} ,params){
-    return new Promise((resolve, reject) =>{
-      api.post("PAT.WEB.APPOINTMENT.BASEINFO.Q07", params).then(data => {
-        commit('SET_SPECDISEASELIST',data);
-        console.log("%c%s", "color:blue" , "=======> 专病信息列表加载成功");
-        resolve(data);
-      }).catch(err => {
-        console.log("%c%s", "color:red" , "=======> 专病信息列表加载失败");
-        reject(err);
-      });
-    })
-  },
   //获取医生出班模板列表
   getDocScheduleList({commit} ,params){
     return new Promise((resolve, reject) =>{
       api.post("PAT.WEB.APPOINTMENT.SCHEDULE.Q04", params).then(data => {
-        console.log("%c%s", "color:blue" , "=======> 医生出班模板列表加载成功");
+        console.log("%c%s", "color:blue" , "=======> 医生排班列表加载成功");
         resolve(data);
       }).catch(err => {
-        console.log("%c%s", "color:red" , "=======> 医生出班模板列表加载失败");
+        console.log("%c%s", "color:red" , "=======> 医生排班列表加载失败");
         reject(err);
       });
     })
-  }
+  },
+  //保存排班表
+  saveDocSchedule({commit} ,params){
+    return new Promise((resolve, reject) =>{
+      api.post("PAT.WEB.APPOINTMENT.SCHEDULE.S02", params).then(data => {
+        console.log("%c%s", "color:blue" , "=======> 医生排班保存成功");
+        resolve(data);
+      }).catch(err => {
+        console.log("%c%s", "color:red" , "=======> 医生排班保存失败");
+        reject(err);
+      });
+    })
+  },
+  //删除排班表
+  delDocSchedule({commit} ,params){
+    return new Promise((resolve, reject) =>{
+      api.post("PAT.WEB.APPOINTMENT.SCHEDULE.S02", params).then(data => {
+        console.log("%c%s", "color:blue" , "=======> 医生排班保存成功");
+        resolve(data);
+      }).catch(err => {
+        console.log("%c%s", "color:red" , "=======> 医生排班保存失败");
+        reject(err);
+      });
+    })
+  },
 };
 
 export default {

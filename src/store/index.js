@@ -8,6 +8,7 @@ import state from './state'
 import getters from './getters'
 import actions from './actions'
 import mutations from './mutations'
+import datasets from './modules/datasets'
 import login from './modules/login'
 import scheduling from './modules/scheduling'
 import order from './modules/order'
@@ -20,6 +21,7 @@ export default new Vuex.Store({
   mutations,
   actions,
   modules: {
+    datasets,
     login,
     scheduling,
     order
