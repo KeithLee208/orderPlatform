@@ -118,6 +118,67 @@
           </tr>
           </tbody>
         </table>
+        <el-table
+          :data="orderlist"
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="bingRenXinXiEntity.hzxm"
+            align="center"
+            label="患者姓名">
+          </el-table-column>
+          <el-table-column
+            prop="bingRenXinXiEntity.hzsfzh"
+            label="卡号"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="fuWuLeiXingEntity.fwlxmc"
+            label="服务类型"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="microRegistrationChuBanMingXiHaoXuEntity.qddm"
+            label="预约渠道"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="bingRenXinXiEntity.yydm"
+            label="预约医院"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="microChuBanMingXiEntity.ksdm"
+            label="预约科室"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            prop="microChuBanMingXiEntity.ysmc"
+            label="预约医生"
+            align="center">
+          </el-table-column>
+          <el-table-column
+            label="预约时间"
+            align="center"
+          width=125>
+            <template scope="scope">
+            <p>{{scope.row.microChuBanMingXiEntity.cbrq}}</p>
+            <p>{{scope.row.microChuBanMingXiEntity.shiJianDuanEntity.sjdmc}}{{scope.row.microChuBanMingXiEntity.shiJianDuanEntity.kssj}}-{{scope.row.microChuBanMingXiEntity.shiJianDuanEntity.jssj}}</p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="预约状态"
+            align="center">
+            <template scope="scope">
+              <span v-if="scope.row.yyjd=='DJ'" class="allcan">待挂号</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="fuWuLeiXingEntity.fwlxmc"
+            label="操作"
+            align="center">
+          </el-table-column>
+        </el-table>
       </div>
     </div>
     <!--取消预约弹框-->
@@ -192,57 +253,6 @@
         cancelShow:false,
         btntext:'展开',
         value:'',
-        tableData: [
-          {
-          date: '2016-05-02',
-          name: '王小虎虎',
-          num: '3343669984',
-          type:'普通门诊',
-          channel:'院内预约',
-          hospital:'静中心东院区',
-          department:"胸外科1",
-          doctor:'李芸芸',
-          time1:'2017/05/03',
-          time2:'上午8:00-12:00',
-          state:'待挂号'
-        },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            num: '3343669984',
-            type:'普通门诊',
-            channel:'院内预约',
-            hospital:'静中心东院区',
-            department:"胸外科1",
-            doctor:'李芸芸',
-            time:'2017/05/03 上午8:00-12:00',
-            state:'待挂号'
-        },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            num: '3343669984',
-            type:'普通门诊',
-            channel:'院内预约',
-            hospital:'静中心东院区',
-            department:"胸外科1",
-            doctor:'李芸芸',
-            time:'2017/05/03 上午8:00-12:00',
-            state:'待挂号'
-        },
-          {
-            date: '2016-05-02',
-            name: '王小虎',
-            num: '3343669984',
-            type:'普通门诊',
-            channel:'院内预约',
-            hospital:'静中心东院区',
-            department:"胸外科1",
-            doctor:'李芸芸',
-            time:'2017/05/03 上午8:00-12:00',
-            state:'待挂号'
-        }
-        ],
         orderlist:  [
           {
             bingRenXinXiEntity: {
@@ -457,10 +467,43 @@
           console.log(err);
         });
       },
+      //预约取消
       orderCancel(item){
-        console.log(item);
         this.cancelShow=true;
         this.selectOrder=item;
+        let param={
+          czry:'',
+          yyxh:''
+        };
+          this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y08", param).then(data => {
+          console.log(data);return;
+          if(data==''){
+
+          }else {
+
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      },
+      //预约恢复
+      orderrecovery(item){
+        this.cancelShow=true;
+        this.selectOrder=item;
+        let param={
+          czry:'',
+          yyxh:''
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y09", param).then(data => {
+          console.log(data);return;
+          if(data==''){
+
+          }else {
+
+          }
+        }).catch(err => {
+          console.log(err);
+        });
       },
       collapse(){
         if(this.btntext=='展开'){
@@ -592,7 +635,7 @@
   .type-filter > .somecan,.table>tbody>tr>td>.somecan{
     color: rgb(32, 160, 255);
   }
-  .type-filter > .allcan,.table>tbody>tr>td>.allcan{
+  .type-filter > .allcan,.cell>.allcan{
     color: rgb(12, 175, 148);
   }
   .type-filter > .cant,.table>tbody>tr>td>.cant{

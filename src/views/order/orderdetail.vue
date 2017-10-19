@@ -1,63 +1,47 @@
 <template>
   <div class="setting-wraaper">
     <div class="setting-header">
-      <router-link to="/order" class="pull-right">
-        <i class="el-icon-close"></i>
-      </router-link>
+        <span class="pull-right">
+          <i class="el-icon-close"></i>
+        </span>
       <span>预约凭证打印</span>
     </div>
     <div class="set-body">
       <div class="box-title">
         <span>预约信息</span>
       </div>
-      <el-form :inline="true" label-width="100px" class="demo-form-inline">
-        <el-row class="padding-left-15">
-          <el-form-item>
-            <el-radio-group class="width-230" >
-              <el-radio label="普通门诊"></el-radio>
-              <el-radio label="特需 上午8:00-12:00"></el-radio>
-              <el-radio label="专病 下午14:00-16:00"></el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-row>
+      <el-form :model="orderForm" :inline="true" label-width="100px" class="demo-form-inline">
         <el-row>
           <el-col :span="8">
             <el-form-item label="预约医生：">
-              普通门诊医生
+              {{orderForm.ysmc}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="服务类型：">
-              普通门诊
+              {{orderForm.fuWuLeiXingEntity.fwlxmc}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="预约医院：">
-              黄埔院区
+            <el-form-item label="预约科室：">
+              {{orderForm.ksmc}}
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="预约科室：">
-              胸外科1
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item label="预约时间：">
-              2017/05/01 上午8:00-12:00
+             {{orderForm.cbrq}} {{orderForm.shiJianDuanEntity.sjdmc}}{{orderForm.shiJianDuanEntity.kssj}}-{{orderForm.shiJianDuanEntity.jssj}}
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="服务费用：">
-              20元
+              {{orderForm.fuWuLeiXingEntity.zlfdj}}元
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
+          <el-col :span="8">
             <el-form-item label="就诊地址：">
-              3号楼9楼胸外科1
+              {{orderForm.czdz}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -66,105 +50,75 @@
         <div class="box-title">
           <span>患者基本信息 </span><p>就诊卡号：238288666528</p>
         </div>
-        <el-form :inline="true" label-width="100px" class="demo-form-inline">
+        <el-form :model="patientForm" :inline="true" label-width="100px" class="demo-form-inline">
           <el-row>
             <el-col :span="8">
               <el-form-item label="姓名：">
-                <el-input placeholder="请输入姓名" value="张小凡"></el-input>
+                <span>{{patientForm.hzxm}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="性别：">
+                {{patientForm.hzxb}}
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="身份证号：">
-                <el-input placeholder="请输入身份证号" value="342220199008282323"></el-input>
+                {{patientForm.hzsfzh}}
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="联系电话：">
-                <el-input  placeholder="请输入联系电话" value="18088669966"></el-input>
+                {{patientForm.lxdh}}
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="性别：">
-                <el-radio-group value="男" class="width-230" >
-                  <el-radio label="男" value="男"></el-radio>
-                  <el-radio label="女"></el-radio>
-                  <el-radio label="不详"></el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="婚姻状况：">
-                <el-radio-group value="已婚" class="width-230" >
-                  <el-radio label="已婚" value="已婚"></el-radio>
-                  <el-radio label="未婚"></el-radio>
-                  <el-radio label="不详"></el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="初复诊：">
-                <el-input  placeholder="请输入初复诊" value="初诊"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="联系地址：">
-                <el-input  placeholder="请输入民族" value="上海徐汇区浦北路323号"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="费用类别：">
-                <el-input  placeholder="请输入联系地址" value="自费"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="患者职业：">
-                <el-input  placeholder="请输入患者职业" value="工人"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="民族：">
-                <el-input  placeholder="请输入婚姻状况" value="汉"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="户口地|省：">
-                <el-input  placeholder="请输入户口所在地" value="上海徐汇区"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="16">
-              <el-form-item label="详细地址：">
-                <el-input class="width-469" placeholder="请输入详细地址" value="上海徐汇区浦北路323号"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="居住地|省：">
-                <el-input  placeholder="请输入居住地址" value="上海徐汇区"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="16">
-              <el-form-item label="详细地址：">
-                <el-input  class="width-469"  placeholder="请输入详细地址" value="上海徐汇区浦北路323号"></el-input>
+                {{patientForm.lxdz}}
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
+      <div class="fixed-line"></div>
+      <div class="box-title">
+        <span>患者凭证信息 </span>
+      </div>
+      <el-form :inline="true" label-width="100px" class="demo-form-inline">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="凭证号：">
+              <el-input value="hp2013004"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="医院名称：">
+              <el-input  value="黄埔院区"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="科室名称：">
+              <el-input value="泌尿外科"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="服务类型：">
+              <el-input  value="普通门诊"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="联系地址：">
+              <el-input  placeholder="请输入民族" value="上海徐汇区浦北路323号"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
        <span class="pull-right">
-         <router-link tag="span" to="/order">
-            <el-button type="defalut">
-            取消
-            </el-button>
-           </router-link>
-            <el-button type="primary">预约并打印</el-button>
+            <el-button type="defalut">取消</el-button>
+            <el-button @click="orderPost" type="primary">预约并打印</el-button>
          </span>
     </div>
 
@@ -173,7 +127,87 @@
 <script>
 
   export default{
+   data(){
+   return{
+     orderForm:{
+       fuWuLeiXingEntity:{},
+       shiJianDuanEntity:{}
+     },//预约信息
+     patientForm:{},//患者基本信息
+     voucherForm:{}//凭证信息
+   }
+   },
+    created(){
+      this.$nextTick(() => {
+        this.init();
+      });
+    },
+    methods:{
+      init(){
+        this.detailGet();
+      },
+      detailGet(){
+        this.orderForm=this.$store.state.order.detailInfo;
+        this.patientForm=this.$store.state.order.patientInfo;
+        console.log('this.patientForm',this.patientForm);
+      },
+      orderPost(){
+       this.hxLock();
+       this.orderRegister();
+      },
+     //号序状态修改-锁定
+     hxLock(){
+       let param={
+         czry:'20000000.zjj1',
+         xh:this.orderForm.nowXh,
+       };
+       console.log('param1',param);return
+       this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y12", param).then(data => {
+         console.log(data);return;
+         if(data==''){
 
+         }else {
+
+         }
+       }).catch(err => {
+         console.log(err);
+       });
+     },
+     //预约登记
+     orderRegister(){
+       let param={
+         czry:'20000000.zjj1',
+         fscj:'',
+         hx:this.orderForm.nowHx,
+         hzdm:this.patientForm.hzdm,
+         mxxh:this.orderForm.mxxh
+       };
+       console.log('param2',param);return
+       this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y01", param).then(data => {
+         console.log(data);return;
+         if(data==''){
+
+         }else {
+
+         }
+     })
+    },
+     //预约记录状态修改-出凭据
+     orderProof(){
+        let param={
+          czry:'20000000.zjj1',
+          yyxh:'',
+        };
+        this.$wnhttp("PAT.WEB.APPOINTMENT.REGISTRATION.Y02", param).then(data => {
+          console.log(data);return;
+          if(data==''){
+
+          }else {
+
+          }
+        })
+      }
+  }
   }
 </script>
 
